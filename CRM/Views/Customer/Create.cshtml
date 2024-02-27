@@ -1,0 +1,130 @@
+﻿@model CRM.Models.ViewModels.CustomerCreateViewModel
+
+
+<div class="main">
+	@await Component.InvokeAsync("Header")
+	@if (TempData["ErrorMessage"] != null)
+	{
+		<div class="alertSendFile">
+			<div id="spanAlert" class="spanAlert">
+				<span>
+					<b>@TempData["ErrorMessage"]</b>
+				</span>
+			</div>
+		</div>
+
+	}
+	@if (TempData["SuccessMessage"] != null)
+	{
+		<div class="alertSendFile">
+			<div id="spanAlert" class="spanAlert spanAlertSuccess">
+				<span>
+					<b>@TempData["SuccessMessage"]</b>
+				</span>
+			</div>
+		</div>
+
+	}
+	<div class="formCreateCustomer">
+		<h1>Cadastro de Cliente</h1>
+
+		<form class="customerCreateForm" asp-action="Create" asp-controller="Customer" method="post">
+			<label for="codigo" class="span3">
+				<p>Código</p>
+				<input id="codigo" value="" type="text" asp-for="Codigo" maxlength="5" />
+			</label>
+			<label for="cnpj" class="span3">
+				<p class="bgWhite">
+					Cnpj
+				</p>
+				<input id="cnpj" value="" type="text" asp-for="Cnpj" />
+			</label>
+			<label for="razaoSocial" class="span3">
+				<p>
+					Razão Social
+				</p>
+				<input id="razaoSocial" value="" type="text" asp-for="RazaoSocial" />
+			</label>
+			<label for="contato" class="span3 ">
+				<p class="bgWhite">
+					Contato
+				</p>
+				<input id="contato" value="" type="text" asp-for="Contato" />
+			</label>
+			<label for="cidade" class="span3 ">
+				<p class="bgWhite">
+					Cidade
+				</p>
+				<input id="cidade" value="" type="text" asp-for="Cidade" />
+			</label>
+			<label for="uf" class="select span3">
+				<p>
+					UF
+				</p>
+				<select id="uf" asp-for="Uf">
+					<option value="RO">RO</option>
+					<option value="AC">AC</option>
+					<option value="AM">AM</option>
+					<option value="RR">RR</option>
+					<option value="PA">PA</option>
+					<option value="AP">AP</option>
+					<option value="TO">TO</option>
+					<option value="MA">MA</option>
+					<option value="PI">PI</option>
+					<option value="CE">CE</option>
+					<option value="RN">RN</option>
+					<option value="PB">PB</option>
+					<option value="PE">PE</option>
+					<option value="AL">AL</option>
+					<option value="SE">SE</option>
+					<option value="BA">BA</option>
+					<option value="MG">MG</option>
+					<option value="ES">ES</option>
+					<option value="RJ">RJ</option>
+					<option value="SP" selected>SP</option>
+					<option value="PR">PR</option>
+					<option value="SC">SC</option>
+					<option value="RS">RS</option>
+					<option value="MS">MS</option>
+					<option value="MT">MT</option>
+					<option value="GO">GO</option>
+					<option value="DF">DF</option>
+
+				</select>
+			</label>
+			<div id="email" class="span3">
+				<label for="email" class="span3">
+					<p>
+						<a id="InsertEmailField" class="InsertField">
+							Email
+							<i class="fa-solid fa-plus"></i>
+						</a>
+					</p>
+					<input id="email" value="" type="email" asp-for="Emails" name="Emails" />
+				</label>
+			</div>
+
+			<div id="phone" class="span3">
+				<label for="phone" class="span3">
+					<p>
+						<a id="InsertPhoneField" class="InsertField">
+							Telefone
+							<i class="fa-solid fa-plus"></i>
+						</a>
+					</p>
+					<input id="phone" type="text" asp-for="Phones" name="Phones" value="" />
+				</label>
+
+			</div>
+
+			<div class="formCreateCustomer_buttons span6">
+				<Button class="backBtn" asp-action="Index" asp-controller="Customer">Voltar</Button>
+				<Button class="cleanBtn" type="reset">Limpar campos</Button>
+				<Button class="saveBtn" type="submit">Salvar</Button>
+			</div>
+
+		</form>
+	</div>
+</div>
+<script src="/js/InsertNewField.js"></script>
+<script src="/js/Alerts.js"></script>

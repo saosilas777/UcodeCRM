@@ -1,0 +1,343 @@
+﻿@model AnalyticsModel
+@{
+	double totalSales = double.Parse(Model.TotalSalesMonth.ToString());
+	string _totalSales = totalSales.ToString("C2", new System.Globalization.CultureInfo("pt-BR"));
+	double commission = double.Parse(Model.Commission.ToString());
+	string _commission = commission.ToString("C2", new System.Globalization.CultureInfo("pt-BR"));
+	double pwr = double.Parse(Model.PaidWeeklyRest.ToString());
+	string _pwr = pwr.ToString("C2", new System.Globalization.CultureInfo("pt-BR"));
+	double totalPayment = double.Parse(Model.TotalPayment.ToString());
+	string _totalPayment = totalPayment.ToString("C2", new System.Globalization.CultureInfo("pt-BR"));
+	double _baseSalary = double.Parse(Model.BaseSalary.ToString());
+	string baseSalary = _baseSalary.ToString("C2", new System.Globalization.CultureInfo("pt-BR"));
+}
+
+<div class="main">
+	@await Component.InvokeAsync("Header")
+	<section class="content-cards display analytics">
+		<div class="tickets people ">
+			<span class="ticket_figure"><i class="fa-solid fa-people-group"></i></span>
+			<div class="ticket_header">
+				<p>Total de Clientes</p>
+			</div>
+			<span class="horizontal-line"></span>
+			<div class="ticket_content">
+
+				<p class="margin_right"></p>
+				<p id="TotalPortfolio">@Model.TotalCustomers</p>
+			</div>
+		</div>
+		<div class="tickets handshake">
+			<span class="ticket_figure"><i class="fa-regular fa-handshake"></i></span>
+			<div class="ticket_header">
+				<p>Clientes Ativos</p>
+			</div>
+			<span class="horizontal-line"></span>
+			<div class="ticket_content">
+				<p>@Model.ActiveCustomers</p>
+			</div>
+		</div>
+		<div class="tickets arrow">
+			<span class="ticket_figure"><i class="fa-solid fa-arrow-trend-down"></i></span>
+			<div class="ticket_header">
+				<p>Clientes Inativos</p>
+			</div>
+			<span class="horizontal-line"></span>
+			<div class="ticket_content">
+				<p>@Model.InactiveCustomers</p>
+			</div>
+		</div>
+		<div class="tickets dollar">
+			<span class="ticket_figure"><i class="fa-solid fa-hand-holding-dollar"></i></span>
+			<div class="ticket_header">
+				<p>Venda Mensal Total</p>
+			</div>
+			<span class="horizontal-line"></span>
+			<div class="ticket_content">
+				<p>@_totalSales</p>
+			</div>
+		</div>
+
+	</section>
+	<section class="content-cards display analytics">
+		<div class="tickets people2 ">
+			<span class="ticket_figure"><i class="fa-solid fa-dollar-sign"></i></span>
+			<div class="ticket_header">
+				<p>Salário Base</p>
+			</div>
+			<span class="horizontal-line"></span>
+			<div class="ticket_content">
+
+				<p class="margin_right"></p>
+				<p id="TotalPortfolio">@baseSalary</p>
+			</div>
+		</div>
+		<div class="tickets handshake2">
+			<span class="ticket_figure"><i class="fa-solid fa-sack-dollar"></i></span>
+			<div class="ticket_header">
+				<p>Comissão</p>
+			</div>
+			<span class="horizontal-line"></span>
+			<div class="ticket_content">
+				@{
+
+				}
+				<p>@_commission</p>
+			</div>
+		</div>
+		<div class="tickets arrow2">
+			<span class="ticket_figure"><i class="fa-solid fa-socks"></i></span>
+			<div class="ticket_header">
+				<p>DSR</p>
+			</div>
+			<span class="horizontal-line"></span>
+			<div class="ticket_content">
+				<p>@_pwr</p>
+			</div>
+		</div>
+		<div class="tickets dollar2">
+			<span class="ticket_figure"><i class="fa-regular fa-money-bill-1"></i></span>
+			<div class="ticket_header">
+				<p>Total de vencimentos</p>
+			</div>
+			<span class="horizontal-line"></span>
+			<div class="ticket_content">
+				<p>@_totalPayment</p>
+			</div>
+		</div>
+
+	</section>
+
+	<!-- Graphics -->
+	<section class="content_graphics-cards">
+		<article class="tickets">
+			<div class="content_graphics-content">
+				<p>Clientes atendidos no mês</p>
+			</div>
+			<div class="content_graphics-graphics">
+				<canvas id="myChart2"></canvas>
+			</div>
+		</article>
+		<article class="tickets">
+			<div class="content_graphics-content">
+				<p>Total de vendas por mês</p>
+			</div>
+			<div class="content_graphics-graphics">
+
+				<canvas id="myChart"></canvas>
+			</div>
+		</article>
+	</section>
+
+
+</div>
+<footer class="footer">
+	<p> &copy; <a href="#">U.Code</a> development</p>
+	<p class="footer_link">Visite nosso site <a href="#">U.code</a> </p>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+@*<script src="/js/chart.js"></script>*@
+@*<script src="/js/newChartTeste.js"></script>*@
+<script>
+	let backgroundColor = ""
+	const ctx1 = document.getElementById('myChart');
+	const ctx2 = document.getElementById('myChart2');
+	let _data = [];
+	_data[0] = @Model.TotalAnnualSales.January
+		_data[1] = @Model.TotalAnnualSales.February
+			_data[2] = @Model.TotalAnnualSales.March
+				_data[3] = @Model.TotalAnnualSales.April
+					_data[4] = @Model.TotalAnnualSales.May
+						_data[5] = @Model.TotalAnnualSales.June
+							_data[6] = @Model.TotalAnnualSales.July
+								_data[7] = @Model.TotalAnnualSales.August
+									_data[8] = @Model.TotalAnnualSales.September
+										_data[9] = @Model.TotalAnnualSales.Octuber
+											_data[10] = @Model.TotalAnnualSales.November
+												_data[11] = @Model.TotalAnnualSales.December
+													new Chart(ctx1, {
+
+														type: 'bar',
+														data: {
+															labels: ['jan', 'fev', 'mar', 'abr', 'maio', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'],
+															datasets: [{
+																label: 'Vendas Mês',
+																data: _data,
+																borderWidth: 0,
+
+																backgroundColor: color => {
+																	// console.log(color)
+																	let colors = []
+																	for (let i = 0; i < _data.length; i++) {
+																		if (_data[i] >= '100000') {
+
+																			colors[i] = "rgba(21,168,21,0.7)"
+																		}
+																		else {
+																			colors[i] = "rgba(227, 52, 102, 0.7)"
+																		}
+																	}
+																	return colors
+																},
+																borderColor: color => {
+																	// console.log(color)
+																	let colors = []
+																	for (let i = 0; i < _data.length; i++) {
+																		if (_data[i] > 10) {
+
+																			colors[i] = "rgba(227, 52, 102,1)"
+																		}
+																		else {
+																			colors[i] = "rgba(232, 116, 155)"
+																		}
+																	}
+																	return colors
+																},
+															}]
+														},
+
+														options: {
+															maintainAspectRatio: false,
+															aspectRatio: 1,
+															responsive: true,
+															barPercentage: 0.7,
+															categoryPercentage: 0.6,
+															scales: {
+																x: {
+																	grid: {
+																		display: false,
+																	},
+																	ticks: {
+																		display: true,
+																		color: 'rgb(0, 0, 0)',
+																		padding: 10,
+																		font: {
+																			size: 14,
+																			weight: 300,
+																			family: "Open-Sans",
+																			style: 'normal',
+																			lineHeight: 0,
+
+
+																		},
+																	},
+
+																},
+
+															},
+															plugins: {
+
+																tooltip: {
+																	display: true,
+																	borderWidth: 0,
+																	backgroundColor: 'rgba(0, 0, 255, 0.6)',
+																	intersect: false
+																},
+																legend: {
+																	display: false
+																}
+															},
+														},
+
+													});
+
+	let _data2 = [];
+	_data2[0] = @Model.CustomersServedPerMonth.January
+		_data2[1] = @Model.CustomersServedPerMonth.February
+			_data2[2] = @Model.CustomersServedPerMonth.March
+				_data2[3] = @Model.CustomersServedPerMonth.April
+					_data2[4] = @Model.CustomersServedPerMonth.May
+						_data2[5] = @Model.CustomersServedPerMonth.June
+							_data2[6] = @Model.CustomersServedPerMonth.July
+								_data2[7] = @Model.CustomersServedPerMonth.August
+									_data2[8] = @Model.CustomersServedPerMonth.September
+										_data2[9] = @Model.CustomersServedPerMonth.Octuber
+											_data2[10] = @Model.CustomersServedPerMonth.November
+												_data2[11] = @Model.CustomersServedPerMonth.December
+
+													new Chart(ctx2, {
+
+														type: 'bar',
+														data: {
+															labels: ['jan', 'fev', 'mar', 'abr', 'maio', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'],
+															datasets: [{
+																label: 'CLientes atendidos no mês',
+																data: _data2,
+																borderWidth: 0,
+																backgroundColor: color => {
+																	let colors = []
+																	for (let i = 0; i < _data2.length; i++) {
+																		if (_data2[i] > '50') {
+
+																			colors[i] = "rgba(21,168,21,0.7)"
+																		}
+																		else {
+																			colors[i] = "rgba(227, 52, 102, 0.7)"
+																		}
+																	}
+																	return colors
+																},
+																borderColor: color => {
+																	let colors = []
+																	for (let i = 0; i < _data2.length; i++) {
+																		if (_data[i] > '50') {
+
+																			colors[i] = "rgba(227, 52, 102,1)"
+																		}
+																		else {
+																			colors[i] = "rgba(232, 116, 155)"
+																		}
+																	}
+																	return colors
+																},
+															}]
+														},
+
+														options: {
+															maintainAspectRatio: false,
+															aspectRatio: 1,
+															responsive: true,
+															barPercentage: 0.5,
+															categoryPercentage: 0.5,
+															scales: {
+																x: {
+																	grid: {
+																		display: false,
+																	},
+																	ticks: {
+																		display: true,
+																		color: 'rgb(0, 0, 0)',
+																		padding: 10,
+																		font: {
+																			size: 14,
+																			weight: 300,
+																			family: "Open-Sans",
+																			style: 'normal',
+																			lineHeight: 0,
+																		},
+																	},
+
+																},
+															},
+															plugins: {
+
+																tooltip: {
+																	display: true,
+																	borderWidth: 0,
+																	backgroundColor: 'rgba(0, 0, 255, 0.6)',
+																	intersect: false
+																},
+																legend: {
+																	display: false
+																}
+															},
+														},
+
+													});
+</script>
+
+
+
+
+

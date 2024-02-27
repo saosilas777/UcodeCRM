@@ -1,0 +1,70 @@
+﻿@model CRM.Models.ViewModels.LoginViewModel
+@{
+	Layout = "_LayoutOffLine";
+	ViewData["Title"] = "Login";
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+	<div class="alertSendFile">
+		<div id="spanAlert" class="spanAlert spanAlertSuccess">
+			<span>
+				<b>@TempData["SuccessMessage"]</b>
+			</span>
+		</div>
+	</div>
+
+}
+@if (TempData["ErrorMessage"] != null)
+{
+	<div class="alertSendFile">
+		<div id="spanAlert" class="spanAlert">
+			<span>
+				<b>@TempData["ErrorMessage"]</b>
+			</span>
+		</div>
+	</div>
+
+}
+<div class="container">
+	<div class="loginContainer">
+		<div class="loginHeader">
+			<div class="loginHeader_content">
+				<h1>Login</h1>
+				<div class="loginHeader_icons">
+					<i class="fa-brands fa-google"></i>
+					<i class="fa-brands fa-instagram"></i>
+					<i class="fa-brands fa-facebook"></i>
+				</div>
+
+			</div>
+		</div>
+		<div class="loginForm">
+			<form class="loginForm_content" asp-controller="Login" asp-action="Entrar" method="post">
+				<label for="login">
+					<input type="text" asp-for="Login" id="inputLogin" placeholder="Usuário ou E-mail">
+					@Html.ValidationMessageFor(x => x.Login)
+				</label>
+				<label for="pwd">
+					<input type="password" asp-for="Password" id="inputPwd" placeholder="Senha">
+				</label>
+				
+					<a asp-action="ForgotPassword" asp-controller="Login">Esqueceu a senha?</a>
+				
+				<label for="submit">
+					<input type="submit" value="Entrar" name="submit" id="inputSubmit" class="inputButton">
+					<a href="/principal.html" id="index"></a>
+				</label>
+				<label for="signUp">
+					Ainda não possue uma conta? <a asp-action="SignUp" asp-controller="Login" id="signUp">Crie agora!</a>
+				</label>
+			</form>
+		</div>
+	</div>
+	<footer class="login_footer">
+		<p>Development by &copy; <span>U.code</span></p>
+	</footer>
+</div>
+<script src="/js/Alerts.js"></script>
+
+

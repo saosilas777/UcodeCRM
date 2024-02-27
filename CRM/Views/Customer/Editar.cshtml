@@ -1,0 +1,175 @@
+﻿@model CRM.Models.ViewModels.CustomerEditViewModel
+@{
+	string date;
+	date = DateTime.Parse(@Model.NextContactDate).ToString("yyyy-MM-dd");
+}
+
+<div class="main">
+	@await Component.InvokeAsync("Header")
+	
+	<section class="customerBody">
+		<article class="customerCard">
+			<div id="spanAlertContainer">
+				<div id="spanAlert" class="spanAlert">
+					<span>
+						Deseja realmente deletar o cliente:<br />
+						<b>@Model.RazaoSocial</b>
+					</span>
+				</div>
+			</div>
+			<h3>Informações</h3>
+
+			<div class="card_container">
+				<section class="registrationsContainer">
+					<form asp-controller="Customer" asp-action="RegistrationContact" method="post">
+						<div class="registrationsContent">
+							<div class="registrationTitle">
+								<h1>Registros de contato</h1>
+							</div>
+							@{
+								int _count = Model.ContactRecordsAnotation.Length - 1;
+
+								if (_count < 0)
+								{
+									<div>
+										<p>Ainda não há registros de contatos recentes</p>
+									</div>
+								}
+								else
+								{
+									@for (int i = _count; i >= 0; i--)
+									{
+										<div class="registrationsCard">
+											<span>@Model.ContactRecordsDate[i] - @Model.RazaoSocial</span>
+											<div class="contentRegistration">
+												@Model.ContactRecordsAnotation[i]
+											</div>
+										</div>
+									}
+								}
+
+							}
+						</div>
+
+						<div class="registrationInput">
+
+							<textarea id="ContactRecordsAnotation" name="ContactRecordsAnotation"></textarea>
+							<div class="registrationInputCta">
+								@{
+
+									<input id="ContactRecordsDate"  type="date" value="@date" asp-for="@Model.NextContactDate" required />
+									<input type="text"  value="@Model.Id" asp-for="@Model.Id" hidden />
+								}
+
+								<button type="submit" class="card_cta-saveChanges btnInsertContact">Enviar</button>
+							</div>
+
+						</div>
+					</form>
+				</section>
+				<form asp-action="Edit" asp-action="Delete" asp-controller="Customer" method="post" class="card_content" id="EditForm">
+					<input asp-for="@Model.Id" hidden />
+					<div class="contentHeader">
+						<span><b>Cliente:</b>@Model.RazaoSocial</span>
+					</div>
+					<div class="editContainer">
+						<div class="contentBody">
+							<div class="contentBody-labels">
+								<label>Código:</label>
+								<label>CNPJ:</label>
+								<label>Razão Social:</label>
+								<label>Comprador(es)</label>
+								<label for="select_disabled">Status:</label>
+								<label>Telefone:</label>
+								<label>Email:</label>
+								<label>Cidade:</label>
+								<label>UF:</label>
+								<label>Data última compra:</label>
+								<label>Compra mensal:</label>
+								<label>Próximo contato:</label>
+								@*<label>Registrar contato:</label>*@
+
+							</div>
+							<div class="contentBody-inputs">
+								<input class="editable" value="@Model.Codigo" asp-for="@Model.Codigo" disabled />
+								<input class="editable" value="@Model.Cnpj" asp-for="@Model.Cnpj" disabled />
+								<input class="editable" value="@Model.RazaoSocial" asp-for="@Model.RazaoSocial" disabled />
+								<input class="editable" value="@Model.Contact" asp-for="@Model.Contact" disabled />
+								<select class="editable" type="text" value="@Model.Status" asp-for="@Model.Status"
+										disabled>
+									<option value="true">Ativo</option>
+									<option value="false">Inativo</option>
+								</select>
+								@foreach (var item in Model.Phones)
+								{
+									<input class="editable" value="@item" asp-for="@Model.Phones" name="Phones" disabled />
+								}
+
+								@foreach (var item in Model.Emails)
+								{
+									<input class="editable" value="@item" asp-for="@Model.Phones" name="Emails" disabled />
+								}
+
+
+								<input class="editable" value="@Model.Cidade" asp-for="@Model.Cidade" disabled />
+								<input class="editable" value="@Model.Uf" asp-for="@Model.Uf" disabled />
+								<input class="editable" type="date" value="@Model.LastPurchaseDate.ToString("yyyy-MM-dd")" asp-for="@Model.LastPurchaseDate" disabled />
+								<input class="editable" value="@Model.LastPurchaseValue" asp-for="@Model.LastPurchaseValue" disabled />
+								@{
+
+									<input class="editable" id="reciver" type="date" value="@date" asp-for="@Model.NextContactDate" disabled />
+
+								}
+
+								@*	//var count = (Model.ContactRecordsAnotation.Length - 1);
+								//if (count < 0)
+								//{
+								//	<textarea class="editableInsert" value="" name="ContactRecordsAnotation" disabled></textarea>
+								//}
+								//else
+								//{
+								//	<textarea class="editableInsert" value="" asp-for="@Model.ContactRecordsAnotation[count]" name="ContactRecordsAnotation" disabled></textarea>
+								//}*@
+
+								@*<div class="insertBtns">
+								<button id="insertBtn" type="button" class="card_cta-saveChanges btnInsertContact">Inserir Registro</button>
+								<button id="cancelInsertBtn" type="button" class="card_cta-edit btnInsertContact" hidden>Cancelar</button>
+								<button id="saveInsertBtn" type="button" class="card_cta-saveChanges btnInsertContact" hidden>Salvar</button>
+								<button id="submitInsertBtn" type="submit" asp-action="RegistrationContact" hidden></button>
+								</div>*@
+								<div class="card_cta">
+									<div id="editOrDelete">
+										<button type="button" class="card_cta-edit" id="btnEdit">Editar</button>
+										<button type="button" class="card_cta-delet" id="deletarBtn">Deletar</button>
+									</div>
+									<div id="cancelOrSave">
+										<button type="reset" class="card_cta-delet cancelDelete" id="cancelEdit">Cancelar</button>
+										<button type="button" class="card_cta-saveChanges" id="card_cta-saveChanges">Salvar</button>
+									</div>
+
+									<div class="spanAlertContainer" id="deleteConfirm">
+										<button type="reset" class="card_cta-delet cancelDelete" id="cancelDelete">Cancelar</button>
+										<button type="button" class="card_cta-saveChanges" id="confirmDelete">Confirmar</button>
+									</div>
+									<button id="btnSubmitDelete" class="btnSubmit" type="submit" asp-action="Delete" disabled></button>
+									<button id="btnSubmitEdit" class="btnSubmit" type="submit" asp-action="Edit" disabled></button>
+								</div>
+							</div>
+
+
+
+						</div>
+
+					</div>
+				</form>
+			</div>
+		</article>
+	</section>
+
+</div>
+<footer class="footer">
+	<p> &copy; <a href="#">U.Code</a> development</p>
+	<p class="footer_link">Visite nosso site <a href="#">U.code</a> </p>
+</footer>
+<script src="/js/customer.js"></script>
+
