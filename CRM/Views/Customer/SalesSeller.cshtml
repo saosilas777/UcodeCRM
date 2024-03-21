@@ -1,0 +1,150 @@
+﻿@model List<CustomerPurchases>
+
+@{
+	double totalSales = 0;
+}
+
+
+<div class="main">
+	@await Component.InvokeAsync("Header")
+
+	@if (TempData["ErrorMessage"] != null)
+	{
+		<div class="alertSendFile">
+			<div id="spanAlert" class="spanAlert">
+				<span>
+					<b>@TempData["ErrorMessage"]</b>
+				</span>
+			</div>
+		</div>
+
+	}
+	@if (TempData["SuccessMessage"] != null)
+	{
+		<div class="alertSendFile">
+			<div id="spanAlert" class="spanAlertSuccess">
+				<span>
+					<b>@TempData["SuccessMessage"]</b>
+				</span>
+			</div>
+		</div>
+
+	}
+
+	<section id="table_row">
+		<!-- <table id="myTable2" class="table_Securytis"> -->
+		<div class="card">
+			<div class="card_header">
+				<div class="table_float">
+					Clientes
+					<form class="table_float-dates" asp-action="SalesSeller" asp-controller="Customer" method="post">
+						<span>Buscar proximos contatos entre:</span>
+						<input type="date" id="initialDate" name="initialDate" />
+						<input type="date" id="finalDate" name="finalDate" />
+						<button id="dataFindBtn" class="dataFindBtn" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+					</form>
+				</div>
+			</div>
+			<div class="card_body">
+				<table id="myTable" class="myTable display wrap">
+
+					<thead>
+
+						<tr>
+							<th>
+								Nº
+							</th>
+							<th>
+								Codigo do cliente
+							</th>
+							<th>
+								Data da venda
+							</th>
+							<th>
+								Valor da venda
+							</th>
+							<th>
+								Ações
+							</th>
+						</tr>
+						
+					</thead>
+
+					<tbody id="tbody">
+						@if (Model.Count() > 0 || Model != null)
+						{
+							var x = 1;
+
+							foreach (var item in Model)
+							{
+								totalSales += @item.PurchaseValue;
+
+								<tr>
+									<td>@x.ToString()</td>
+									<td>
+										<p class="thead_id ">@item.CustomerCode</p>
+									</td>
+									<td class="dateConvert">
+										<p>
+											<b>@item.PurchaseDate.ToString("yyyy/MM/dd")</b>
+										</p>
+									</td>
+									<td class="razao minWidth">
+										<p>
+											@item.PurchaseValue
+										</p>
+
+									</td>
+									<td><a href="#">Editar / Excluir</a></td>
+
+								</tr>
+								
+								x++;
+								
+							}
+						}
+						else
+						{
+							<tr>
+								<td>
+								</td>
+								<td>
+								</td>
+								<td>
+								</td>
+								<td>
+								</td>
+							</tr>
+						}
+					</tbody>
+					<thead>
+
+						<tr>
+							<th colspan="5" style="text-align:center; font-weight:bold; color:#0e54c4;font-size:1.2rem;border:none;border-top:1px solid #ccc">
+								Total de Vendas
+							</th>
+
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td colspan="5" style="text-align:center; font-weight:bold; color:red;font-size:1.4rem">
+								@totalSales.ToString("C2", new System.Globalization.CultureInfo("pt-BR"))
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</section>
+
+</div>
+<footer class="footer">
+	<p> &copy; <a href="#">U.Code</a> development</p>
+	<p class="footer_link">Visite nosso site <a href="#">U.code</a> </p>
+</footer>
+<script src="/js/SelectTableItems.js"></script>
+<script src="/js/Alerts.js"></script>
+
+
+

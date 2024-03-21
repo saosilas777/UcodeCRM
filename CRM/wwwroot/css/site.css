@@ -788,6 +788,30 @@ img {
     .divFlexColumn input {
         max-width: 2rem;
     }
+
+.analytics_totalSalaries{
+    display:flex;
+    gap:.3rem;
+    width:100%;
+    border-bottom:1px solid #ccc;
+    color:#ccc;
+    margin-top:.2rem;
+    padding:.6rem;
+}
+.analytics_totalSalariesBtn {
+    color:#d7d7d7;
+    background-color: transparent;
+    border:none;
+    font-size:1rem;
+    letter-spacing:0.2rem;
+    cursor:pointer
+}
+.totalSalaries{
+    display: none;
+}
+.totalSalariesShow{
+    display:flex;
+}
 /*Customers*/
 .dataTables_wrapper {
     display: flex;
@@ -1421,7 +1445,7 @@ p.newField {
         color: #424b70;
     }
 
-.lastPurchase {
+#lastPurchase {
     padding: .5rem;
 }
 

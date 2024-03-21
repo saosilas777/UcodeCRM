@@ -43,6 +43,7 @@ $(document).ready(function () {
     getTable(myTable)
     getTable(myTable2)
     SortingDates()
+    ConvertDates()
 
     function getTable(id) {
         new DataTable(id, {
@@ -78,12 +79,9 @@ let today = new Date()
 let todayBr = new Date(today).toLocaleDateString('pt-BR')
 
 function SortingDates() {
-
     let datas = document.querySelectorAll('.lastPurchase')
 
-
     datas.forEach(function (data) {
-
         let date = data.innerText
         let _newdate = new Date(date).toLocaleDateString('pt-BR')
         const dateLong = new Date(date)
@@ -93,10 +91,18 @@ function SortingDates() {
         else {
             data.innerHTML = `<p class="lastPurchase">${_newdate}</p>`
         }
-
     })
+}
+function ConvertDates() {
+    let datas = document.querySelectorAll('.dateConvert')
 
-
+    datas.forEach(function (data) {
+        let date = data.innerText
+        let _newdate = new Date(date).toLocaleDateString('pt-BR')
+        const dateLong = new Date(date)
+        data.innerHTML = `<p>${_newdate}</p>`
+        
+    })
 }
 
 
@@ -136,6 +142,7 @@ const btnSendFile = document.getElementById('btn-send-file')
 btnSendFile.addEventListener('change', () => {
     document.getElementById('inputFileName').innerText = btnSendFile.files[0].name
 })
+
 
 
 /*menuHideBtn.addEventListener('click', function () {

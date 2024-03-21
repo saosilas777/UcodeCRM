@@ -3,6 +3,7 @@ using CRM.Interfaces;
 using CRM.Models;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace CRM.Services
 {
@@ -143,91 +144,211 @@ namespace CRM.Services
 						purchases.Add(customer[i].CustomerPurchases[j]);
 					}
 				}
-				CustomersServedPerMonth customersServed = new();
+
+				#region Canvas
 				var year = date.Year;
+				List<CustomerModel> _customers = new();
+				CustomersServedPerMonth customersServed = new();
+
 				foreach (var item in purchases)
 				{
-					if(item.PurchaseDate >= DateTime.Parse($"{year - 1}-12-21") 
+					if (item.PurchaseDate >= DateTime.Parse($"{year - 1}-12-21")
 					&& item.PurchaseDate <= DateTime.Parse($"{year}-01-20"))
 					{
 						totalAnnualSales.January += item.PurchaseValue;
-						customersServed.January += 1;
+						if (!_customers.Contains(item.Customer))
+						{
+							_customers.Add(item.Customer);
+							customersServed.January = _customers.Count();
+						}
 					}
+
+				}
+				_customers.Clear();
+				foreach (var item in purchases)
+				{
+					
 					if (item.PurchaseDate >= DateTime.Parse($"{year}-01-21")
 					&& item.PurchaseDate <= DateTime.Parse($"{year}-02-20"))
 					{
 						totalAnnualSales.February += item.PurchaseValue;
-						customersServed.February += 1;
+						if (!_customers.Contains(item.Customer))
+						{
+							_customers.Add(item.Customer);
+							customersServed.February = _customers.Count();
+						}
 					}
+
+				}
+				_customers.Clear();
+				foreach (var item in purchases)
+				{
+					
 					if (item.PurchaseDate >= DateTime.Parse($"{year}-02-21")
 					&& item.PurchaseDate <= DateTime.Parse($"{year}-03-20"))
 					{
 						totalAnnualSales.March += item.PurchaseValue;
-						customersServed.March += 1;
+						if (!_customers.Contains(item.Customer))
+						{
+							_customers.Add(item.Customer);
+							customersServed.March = _customers.Count();
+						}
 					}
+
+				}
+				_customers.Clear();
+				foreach (var item in purchases)
+				{
+
 					if (item.PurchaseDate >= DateTime.Parse($"{year}-03-21")
 					&& item.PurchaseDate <= DateTime.Parse($"{year}-04-20"))
 					{
 						totalAnnualSales.April += item.PurchaseValue;
-						customersServed.April += 1;
+						if (!_customers.Contains(item.Customer))
+						{
+							_customers.Add(item.Customer);
+							customersServed.April = _customers.Count();
+						}
 					}
+
+				}
+				_customers.Clear();
+				foreach (var item in purchases)
+				{
+
 					if (item.PurchaseDate >= DateTime.Parse($"{year}-04-21")
 					&& item.PurchaseDate <= DateTime.Parse($"{year}-05-20"))
 					{
 						totalAnnualSales.May += item.PurchaseValue;
-						customersServed.May += 1;
+						if (!_customers.Contains(item.Customer))
+						{
+							_customers.Add(item.Customer);
+							customersServed.May = _customers.Count();
+						}
 					}
+
+				}
+				_customers.Clear();
+				foreach (var item in purchases)
+				{
+
 					if (item.PurchaseDate >= DateTime.Parse($"{year}-05-21")
 					&& item.PurchaseDate <= DateTime.Parse($"{year}-06-20"))
 					{
 						totalAnnualSales.June += item.PurchaseValue;
-						customersServed.June += 1;
+						if (!_customers.Contains(item.Customer))
+						{
+							_customers.Add(item.Customer);
+							customersServed.June = _customers.Count();
+						}
 					}
+
+				}
+				_customers.Clear();
+				foreach (var item in purchases)
+				{
+
 					if (item.PurchaseDate >= DateTime.Parse($"{year}-06-21")
 					&& item.PurchaseDate <= DateTime.Parse($"{year}-07-20"))
 					{
 						totalAnnualSales.July += item.PurchaseValue;
-						customersServed.July += 1;
+						if (!_customers.Contains(item.Customer))
+						{
+							_customers.Add(item.Customer);
+							customersServed.July = _customers.Count();
+						}
 					}
+
+				}
+				_customers.Clear();
+				foreach (var item in purchases)
+				{
+
 					if (item.PurchaseDate >= DateTime.Parse($"{year}-07-21")
 					&& item.PurchaseDate <= DateTime.Parse($"{year}-08-20"))
 					{
 						totalAnnualSales.August += item.PurchaseValue;
-						customersServed.August += 1;
+						if (!_customers.Contains(item.Customer))
+						{
+							_customers.Add(item.Customer);
+							customersServed.August = _customers.Count();
+						}
 					}
+
+				}
+				_customers.Clear();
+				foreach (var item in purchases)
+				{
+
 					if (item.PurchaseDate >= DateTime.Parse($"{year}-08-21")
 					&& item.PurchaseDate <= DateTime.Parse($"{year}-09-20"))
 					{
 						totalAnnualSales.September += item.PurchaseValue;
-						customersServed.September += 1;
+						if (!_customers.Contains(item.Customer))
+						{
+							_customers.Add(item.Customer);
+							customersServed.September = _customers.Count();
+						}
 					}
+
+				}
+				_customers.Clear();
+				foreach (var item in purchases)
+				{
+
 					if (item.PurchaseDate >= DateTime.Parse($"{year}-09-21")
 					&& item.PurchaseDate <= DateTime.Parse($"{year}-10-20"))
 					{
 						totalAnnualSales.Octuber += item.PurchaseValue;
-						customersServed.Octuber += 1;
+						if (!_customers.Contains(item.Customer))
+						{
+							_customers.Add(item.Customer);
+							customersServed.Octuber = _customers.Count();
+						}
 					}
+
+				}
+				_customers.Clear();
+				foreach (var item in purchases)
+				{
+
 					if (item.PurchaseDate >= DateTime.Parse($"{year}-10-21")
 					&& item.PurchaseDate <= DateTime.Parse($"{year}-11-20"))
 					{
 						totalAnnualSales.November += item.PurchaseValue;
-						customersServed.November += 1;
+						if (!_customers.Contains(item.Customer))
+						{
+							_customers.Add(item.Customer);
+							customersServed.November = _customers.Count();
+						}
 					}
+
+				}
+				_customers.Clear();
+				foreach (var item in purchases)
+				{
+
 					if (item.PurchaseDate >= DateTime.Parse($"{year}-11-21")
 					&& item.PurchaseDate <= DateTime.Parse($"{year}-12-20"))
 					{
 						totalAnnualSales.December += item.PurchaseValue;
-						customersServed.December += 1;
+						if (!_customers.Contains(item.Customer))
+						{
+							_customers.Add(item.Customer);
+							customersServed.December = _customers.Count();
+						}
 					}
-					
-				}				
+
+				}
+				#endregion
 				analytics.TotalAnnualSales = totalAnnualSales;
 				analytics.CustomersServedPerMonth = customersServed;
 
 				return analytics;
 			}
+			
 			return new AnalyticsModel();
-
+			
 
 		}
 

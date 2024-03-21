@@ -4,6 +4,7 @@ using CRM.Interfaces;
 using CRM.Models;
 using CRM.Models.ViewModels;
 using CRM.Services;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CRM.Repository
 {
@@ -21,7 +22,7 @@ namespace CRM.Repository
 
 		public CustomerEditViewModel BuscarPorId(Guid id)
 		{
-			var custumerDb = _context.Customers.Include(x => x.ContactRecords).Include(x => x.Emails).Include(x => x.Phones).FirstOrDefault(x => x.Id == id);
+			var custumerDb = _context.Customers.Include(x => x.ContactRecords).Include(x => x.CustomerPurchases).Include(x => x.Emails).Include(x => x.Phones).FirstOrDefault(x => x.Id == id);
 
 			string[] emails = new string[custumerDb.Emails.Count()];
 			string[] phones = new string[custumerDb.Phones.Count()];
@@ -49,6 +50,13 @@ namespace CRM.Repository
 
 			}
 
+			DateTime date = DateTime.Now;
+			double lastPurchase = 0;
+			foreach (var item in custumerDb.CustomerPurchases)
+			{
+				date = item.PurchaseDate;
+				lastPurchase = item.PurchaseValue;
+			}
 
 			CustomerEditViewModel _CustomerEditView = new()
 			{
@@ -62,8 +70,8 @@ namespace CRM.Repository
 				Emails = emails,
 				Phones = phones,
 				Contact = custumerDb.Contact,
-				//LastPurchaseDate = custumerDb.LastPurchaseDate,
-				//LastPurchaseValue = custumerDb.LastPurchaseValue,
+				LastPurchaseDate = date,
+				LastPurchaseValue = lastPurchase,
 				ContactRecordsDate = recordsDate,
 				ContactRecordsAnotation = anotation,
 				NextContactDate = custumerDb.NextContactDate.ToShortDateString()
@@ -79,7 +87,7 @@ namespace CRM.Repository
 		}
 		public List<CustomerModel> BuscarTodos(Guid id)
 		{
-			return _context.Customers.Include(x => x.Emails).Include(x => x.ContactRecords).Include(x => x.CustomerPurchases).Include(x => x.Phones).Where(x => x.UserId == id).ToList();
+			return _context.Customers.Include(x => x.Emails).Include(x => x.ContactRecords).Include(x => x.CustomerPurchases).Include(x => x.Phones).Where(x => x.UserId == id).OrderByDescending(x => x.Status).ToList();
 		}
 		public List<CustomerModel> ListarTodos()
 		{
@@ -206,40 +214,62 @@ namespace CRM.Repository
 			return customers;
 		}
 		
-		public CustomerModel Atualizar(CustomerEditViewModel _customer)
+		public bool Atualizar(CustomerEditViewModel _customer)
 		{
-			var _customerDb = _context.Customers.FirstOrDefault(x => x.Id == _customer.Id);
-			var _phonesDb = _context.Phones.Where(x => x.Customer == _customerDb).ToList();
-			var _emailsDb = _context.Emails.Where(x => x.Customer == _customerDb).ToList();
-
-
-			for (int i = 0; i < _customer.Phones.Length; i++)
+			try
 			{
-				_phonesDb[i].Phone = _customer.Phones[i];
-			}
+				var user = _session.GetUserSection();
+				
 
-			
-			for (int i = 0; i < _customer.Emails.Length; i++)
+				var _customerDb = _context.Customers.FirstOrDefault(x => x.Id == _customer.Id);
+				var _phonesDb = _context.Phones.Where(x => x.Customer == _customerDb).ToList();
+				var _emailsDb = _context.Emails.Where(x => x.Customer == _customerDb).ToList();
+				for (int i = 0; i < _customer.Phones.Length; i++)
+				{
+					_phonesDb[i].Phone = _customer.Phones[i];
+				}
+
+				for (int i = 0; i < _customer.Emails.Length; i++)
+				{
+					_emailsDb[i].Email = _customer.Emails[i];
+				}
+
+				_customerDb.Codigo = _customer.Codigo;
+				_customerDb.Cnpj = _customer.Cnpj;
+				_customerDb.RazaoSocial = _customer.RazaoSocial;
+				_customerDb.Status = _customer.Status;
+				_customerDb.Cidade = _customer.Cidade;
+				_customerDb.Uf = _customer.Uf;
+				_customerDb.Contact = _customer.Contact;
+				_customerDb.NextContactDate = DateTime.Parse(_customer.NextContactDate);
+				
+
+				if (_customer.LastPurchaseValue > 0)
+				{
+					CustomerPurchases purchase = new();
+					purchase.Customer = _customerDb;
+
+					purchase.PurchaseDate = DateTime.Parse(_customer.LastPurchaseDate.ToString());
+					purchase.PurchaseValue = double.Parse(_customer.LastPurchaseValue.ToString());
+					purchase.CustomerCode = int.Parse(_customer.Codigo);
+					purchase.UserId = user.Id;
+
+					List<CustomerPurchases> purchases = new();
+					purchases.Add(purchase);
+					_customerDb.CustomerPurchases = purchases;
+
+				}
+
+				_context.Customers.Update(_customerDb);
+				_context.SaveChanges();
+				return true;
+
+			}
+			catch (Exception)
 			{
-				_emailsDb[i].Email = _customer.Emails[i];
+
+				return false ;
 			}
-
-			
-			_customerDb.Codigo = _customer.Codigo;
-			_customerDb.Cnpj = _customer.Cnpj;
-			_customerDb.RazaoSocial = _customer.RazaoSocial;
-			_customerDb.Status = _customer.Status;
-			_customerDb.Cidade = _customer.Cidade;
-			_customerDb.Uf = _customer.Uf;
-			_customerDb.Contact = _customer.Contact;
-			//_customerDb.LastPurchaseDate = _customer.LastPurchaseDate;
-			//_customerDb.LastPurchaseValue = _customer.LastPurchaseValue;
-			_customerDb.NextContactDate = DateTime.Parse(_customer.NextContactDate);
-
-
-			_context.Customers.Update(_customerDb);
-			_context.SaveChanges();
-			return _customerDb;
 		}
 		public List<CustomerModel> AdicionarTodos(List<CustomerModel> customers)
 		{

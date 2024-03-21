@@ -8,6 +8,7 @@ using CRM.Services;
 using OfficeOpenXml.FormulaParsing.LexicalAnalysis;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 namespace CRM.Controllers
 {
@@ -15,14 +16,16 @@ namespace CRM.Controllers
 	{
 		#region Dependencies
 		private readonly ICustomerRepository _customer;
+		private readonly ICustomerPurchasesRepository _purchases;
+
 		private readonly IUserSession _session;
 		public CustomerController(ICustomerRepository customer,
-								   IUserSession session
+								   IUserSession session, ICustomerPurchasesRepository purchasesRepository
 									)
 		{
 			_customer = customer;
 			_session = session;
-
+			_purchases = purchasesRepository;
 		}
 		#endregion
 
@@ -32,11 +35,37 @@ namespace CRM.Controllers
 			if (user != null)
 			{
 				List<CustomerModel> customers = _customer.BuscarTodos(user.Id);
-				
+
 				return View(customers);
 			}
 			TempData["ErrorMessage"] = "É necessário efetuar seu login!";
 			return RedirectToAction("Login", "Login");
+		}
+
+		public IActionResult SalesSeller()
+		{
+			var user = _session.GetUserSection();
+			if(user != null)
+			{
+				List<CustomerPurchases> purchases = new();
+
+				return View(purchases);
+			}
+			TempData["ErrorMessage"] = "É necessário efetuar seu login!";
+			return RedirectToAction("Login", "Login");
+		}
+
+
+		[HttpPost]
+		public IActionResult SalesSeller(string initialDate, string finalDate)
+		{
+			var user = _session.GetUserSection();
+
+			List<CustomerPurchases> purchases = _purchases.GetPurchases().Where(x => x.UserId == user.Id 
+			&& x.PurchaseDate >= DateTime.Parse(initialDate) 
+			&& x.PurchaseDate <= DateTime.Parse(finalDate)).ToList();
+
+			return View(purchases);
 		}
 
 		public IActionResult Editar(Guid id)
@@ -45,12 +74,13 @@ namespace CRM.Controllers
 			if (user != null)
 			{
 				CustomerEditViewModel customerDb = _customer.BuscarPorId(id);
-			return View(customerDb);
+				return View(customerDb);
 			}
 			TempData["ErrorMessage"] = "É necessário efetuar seu login!";
 			return RedirectToAction("Login", "Login");
 
 		}
+
 		public IActionResult Create()
 		{
 			var user = _session.GetUserSection();
@@ -115,8 +145,14 @@ namespace CRM.Controllers
 		[HttpPost]
 		public IActionResult Edit(CustomerEditViewModel customer)
 		{
-			_customer.Atualizar(customer);
-			return RedirectToAction("Index", "Customer");
+			var update = _customer.Atualizar(customer);
+			if (update)
+			{
+				TempData["SuccessMessage"] = "Atualização feita com sucesso";
+				return RedirectToAction("Editar", "Customer", new { customer.Id });
+			}
+			TempData["ErrorMessage"] = "Ocorreu um erro ao tentar atualizar o cadastro";
+			return RedirectToAction("Editar", "Customer", new { customer.Id });
 		}
 		[HttpPost]
 		public IActionResult RegistrationContact(CustomerEditViewModel customer)

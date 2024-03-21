@@ -24,14 +24,14 @@ namespace CRM.Services
 			_puchasesRepository = puchasesRepository;
 		}
 		#endregion
-		public bool ReadXls(IFormFile uploadFile)
+		public string ReadXls(IFormFile uploadFile)
 		{
 			var streamFile = ReadStrem(uploadFile);
 
 			var user = _session.GetUserSection();
 			List<CustomerModel> customers = _customerRepository.BuscarTodos(user.Id);
 			List<CustomerPurchases> purchases = new();
-
+			string result = string.Empty;
 			ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
 
 			using (ExcelPackage package = new((Stream)streamFile))
@@ -64,9 +64,9 @@ namespace CRM.Services
 
 						purchases.Add(purchase);
 					};
-					if (!VerifyDuplicatedPurchases(purchases)) return false;
+					result = VerifyDuplicatedPurchases(purchases);
 
-					return true;
+					return result;
 				}
 				else
 				{
@@ -115,76 +115,91 @@ namespace CRM.Services
 
 						customers.Add(customer);
 					}
-					VerifyDuplicatedCustomers(customers);
+
 				}
-				return true;
+				result = VerifyDuplicatedCustomers(customers);
+				return result;
 			}
 		}
 
-		public void VerifyDuplicatedCustomers(List<CustomerModel> customer)
+		public string VerifyDuplicatedCustomers(List<CustomerModel> customer)
 		{
 			var user = _session.GetUserSection();
 			List<CustomerModel> customerDb = _customerRepository.BuscarTodos(user.Id);
-
+			int customerCount = customer.Count();
 			if (customerDb.Count() > 0)
 			{
-				foreach (var item in customerDb)
+				for (int i = 0; i < customerCount; i++)
 				{
-					for (int i = 0; i < customer.Count(); i++)
+					for (int j = 0; j < customerDb.Count(); j++)
 					{
-						if (item.Codigo == customer[i].Codigo)
+						if (customerDb[j].Codigo == customer[i].Codigo
+							&& customerDb[j].Cnpj == customer[i].Cnpj
+							)
+
 						{
 							customer.Remove(customer[i]);
+							break;
 						}
+
 					}
 				}
 			}
 			if (customer.Count() > 0)
 			{
 				_customerRepository.AdicionarTodos(customer);
+				return "Valores atualizados com sucesso!";
 			}
+			return "Nenhum valor a ser atualizado";
 		}
 
 
 		//TODO
 		//implementar e verificar se não há duplicidade no envio das compras por cliente ()
-		public bool VerifyDuplicatedPurchases(List<CustomerPurchases> purchases)
+		public string VerifyDuplicatedPurchases(List<CustomerPurchases> purchases)
 		{
 			List<CustomerPurchases> purchasesDb = _puchasesRepository.GetPurchases();
 
+			Guid id = Guid.NewGuid();
 			if (purchasesDb.Count() > 0)
 			{
 				for (int i = 0; i < purchases.Count(); i++)
 				{
 					for (int j = 0; j < purchasesDb.Count(); j++)
 					{
-						if (purchases[i].CustomerCode == purchasesDb[j].CustomerCode 
-							&& purchases[i].PurchaseValue == purchasesDb[j].PurchaseValue 
-							&& purchases[i].PurchaseDate == purchasesDb[j].PurchaseDate)
+						if (purchases[i].CustomerCode == purchasesDb[j].CustomerCode
+							&& purchases[i].PurchaseDate == purchasesDb[j].PurchaseDate
+							&& purchases[i].PurchaseValue == purchasesDb[j].PurchaseValue)
+
 						{
-							purchases.Remove(purchases[i]);
+							purchases[i].Id = id;
 						}
+
 					}
 				}
 			}
 
+
 			for (int i = 0; i < purchases.Count(); i++)
 			{
-				if (purchases[i].Customer == null)
+				if (purchases[i].Id == id || purchases[i].Customer == null)
 				{
 					purchases.Remove(purchases[i]);
+					i = -1;
 				}
 			}
+
+
+
 			if (purchases.Count() > 0)
 			{
 				_puchasesRepository.SavePurchases(purchases);
-				return true;
+				return "Valores atualizados com sucesso";
 			}
-			return false;
+			return "Nenhum valor a ser atualizado";
 
 
 		}
-
 		public MemoryStream ReadStrem(IFormFile file)
 		{
 			using var stream = new MemoryStream();
@@ -193,5 +208,8 @@ namespace CRM.Services
 			var byteArray = stream.ToArray();
 			return new MemoryStream(byteArray);
 		}
+
 	}
 }
+
+

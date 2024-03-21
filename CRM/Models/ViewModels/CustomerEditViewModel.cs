@@ -16,7 +16,7 @@ namespace CRM.Models.ViewModels
 		public string[] Phones { get; set; } = new string[3];
 		public string Contact { get; set; }
 		public DateTime LastPurchaseDate { get; set; }
-		public double? LastPurchaseValue { get; set; }
+		public double LastPurchaseValue { get; set; } = 0;
 		public string[] ContactRecordsDate { get; set; } = new string[3];
 		public string[] ContactRecordsAnotation { get; set; } = new string[3];
 		public string NextContactDate { get; set; } = string.Empty;

@@ -58,7 +58,6 @@
 				</div>
 			</div>
 			<div class="card_body">
-
 				<table id="myTable" class="myTable display wrap">
 
 					<thead>
@@ -93,12 +92,13 @@
 							<th>
 								UF
 							</th>
-							@*<th id="lastPurchase">
-							Última Compra
-							</th>*@
 							<th>
-								Última compra
+								Última Compra
 							</th>
+							<th id="lastPurchase">
+								R$
+							</th>
+							
 							<th id="ultimoContato">
 								Último contato
 							</th>
@@ -171,16 +171,22 @@
 								<td class="td_width">
 									<p>@item.Uf</p>
 								</td>
-								@*<td class="lastPurchase">
-							@item.LastPurchaseDate.ToString("yyyy/MM/dd")
-							</td>*@
+
 								@{
 									double purchaseValue = 0;
+									string purchaseDate = "01/01/1999";
 									foreach (var purchase in item.CustomerPurchases)
 									{
 										purchaseValue = purchase.PurchaseValue;
+										if (purchase.PurchaseDate != null)
+										{	purchaseDate = purchase.PurchaseDate.ToString("yyyy/MM/dd");
+
+										}										
 									}
 								}
+								<td class="dateConvert">
+									@purchaseDate
+								</td>
 								<td>
 									<p>
 										@purchaseValue.ToString("F2")
@@ -214,13 +220,13 @@
 										if (@item.NextContactDate < DateTime.Now)
 										{
 
-												<p class="">@item.NextContactDate.ToString("yyyy/MM/dd")</p>
+											<p class="">@item.NextContactDate.ToString("yyyy/MM/dd")</p>
 										}
 										else
 										{
 
 
-												<p>@item.NextContactDate.ToString("yyyy/MM/dd")</p>
+											<p>@item.NextContactDate.ToString("yyyy/MM/dd")</p>
 
 										}
 
@@ -238,11 +244,11 @@
 
 								</td>
 
+
 							</tr>
 						}
 					</tbody>
 				</table>
-
 			</div>
 		</div>
 	</section>

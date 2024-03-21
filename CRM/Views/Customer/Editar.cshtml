@@ -2,11 +2,35 @@
 @{
 	string date;
 	date = DateTime.Parse(@Model.NextContactDate).ToString("yyyy-MM-dd");
+	var lastPurchaseValue = double.Parse(Model.LastPurchaseValue.ToString());
+	string lastPurchase = lastPurchaseValue.ToString("C2", new System.Globalization.CultureInfo("pt-BR"));
+
 }
 
 <div class="main">
 	@await Component.InvokeAsync("Header")
-	
+	@if (TempData["ErrorMessage"] != null)
+	{
+		<div class="alertSendFile">
+			<div id="spanAlert" class="spanAlert">
+				<span>
+					<b>@TempData["ErrorMessage"]</b>
+				</span>
+			</div>
+		</div>
+
+	}
+	@if (TempData["SuccessMessage"] != null)
+	{
+		<div class="alertSendFile">
+			<div id="spanAlert" class="spanAlertSuccess">
+				<span>
+					<b>@TempData["SuccessMessage"]</b>
+				</span>
+			</div>
+		</div>
+
+	}
 	<section class="customerBody">
 		<article class="customerCard">
 			<div id="spanAlertContainer">
@@ -57,8 +81,8 @@
 							<div class="registrationInputCta">
 								@{
 
-									<input id="ContactRecordsDate"  type="date" value="@date" asp-for="@Model.NextContactDate" required />
-									<input type="text"  value="@Model.Id" asp-for="@Model.Id" hidden />
+									<input id="ContactRecordsDate" type="date" value="@date" asp-for="@Model.NextContactDate" required />
+									<input type="text" value="@Model.Id" asp-for="@Model.Id" hidden />
 								}
 
 								<button type="submit" class="card_cta-saveChanges btnInsertContact">Enviar</button>
@@ -85,7 +109,7 @@
 								<label>Cidade:</label>
 								<label>UF:</label>
 								<label>Data última compra:</label>
-								<label>Compra mensal:</label>
+								<label>Última compra:</label>
 								<label>Próximo contato:</label>
 								@*<label>Registrar contato:</label>*@
 
@@ -114,7 +138,8 @@
 								<input class="editable" value="@Model.Cidade" asp-for="@Model.Cidade" disabled />
 								<input class="editable" value="@Model.Uf" asp-for="@Model.Uf" disabled />
 								<input class="editable" type="date" value="@Model.LastPurchaseDate.ToString("yyyy-MM-dd")" asp-for="@Model.LastPurchaseDate" disabled />
-								<input class="editable" value="@Model.LastPurchaseValue" asp-for="@Model.LastPurchaseValue" disabled />
+
+								<input class="editable" value="@lastPurchase" asp-for="@Model.LastPurchaseValue" disabled />
 								@{
 
 									<input class="editable" id="reciver" type="date" value="@date" asp-for="@Model.NextContactDate" disabled />
@@ -172,4 +197,5 @@
 	<p class="footer_link">Visite nosso site <a href="#">U.code</a> </p>
 </footer>
 <script src="/js/customer.js"></script>
+<script src="/js/Alerts.js"></script>
 

@@ -13,12 +13,12 @@ namespace CRM.Controllers
 	{
 		#region Dependencies
 
-		
+
 		private readonly SendFileService _sendFileService;
 		private readonly SendFileImageRepository _sendFileImageRepository;
 		private readonly IUserSession _session;
 		private readonly ICustomerRepository _customerRepository;
-		public SendFileController(IUserSession section, SendFileService sendFileService, 
+		public SendFileController(IUserSession section, SendFileService sendFileService,
 								  ICustomerRepository customerRepository,
 								  SendFileImageRepository sendFileImage)
 		{
@@ -34,20 +34,15 @@ namespace CRM.Controllers
 		{
 			try
 			{
-				if(uploadFile != null )
+				if (uploadFile != null)
 				{
 					string extension = Path.GetExtension(uploadFile.FileName);
 					if (extension == ".xlsx")
 					{
-						if (_sendFileService.ReadXls(uploadFile))
-						{
-							TempData["SuccessMessage"] = "Valores atualizados com sucesso";
-							return RedirectToAction("Index", "Customer");
-						}
-						TempData["ErrorMessage"] = "Não foi possível atualizar os dados, tente novamente!";
+						var result = _sendFileService.ReadXls(uploadFile);
+						TempData["SuccessMessage"] = result;
 						return RedirectToAction("Index", "Customer");
 					}
-
 					TempData["ErrorMessage"] = "O formato do arquivo precisa ser \".xlsx\" !";
 					return RedirectToAction("Index", "Customer");
 				}
@@ -57,7 +52,7 @@ namespace CRM.Controllers
 			catch (Exception e)
 			{
 
-				TempData["ErrorMessage"] = "Não foi possível ler o arquivo inserido, se o erro persistir verifique se não há falhas no arquivo.";
+				TempData["ErrorMessage"] = $"Não foi possível ler o arquivo inserido. Error({e.Message})" ;
 				return RedirectToAction("Index", "Customer");
 			}
 		}
@@ -72,7 +67,7 @@ namespace CRM.Controllers
 		{
 			try
 			{
-				if(url == null || url == "")
+				if (url == null || url == "")
 				{
 					TempData["ErrorMessage"] = "Nenhum arquivo foi selecionado ou não é suportado, tente novamente!";
 					return RedirectToAction("sendFileImage", "SendFile");
@@ -99,7 +94,7 @@ namespace CRM.Controllers
 			return RedirectToAction("Index", "Home");
 		}
 
-		
-		
+
+
 	}
 }

@@ -40,7 +40,6 @@
 
 
     function SubmitEdit() {
-        alert()
         btnSubmitEdit.disabled = !btnSubmitEdit.disabled
 
         btnSubmitEdit.click();
