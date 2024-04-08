@@ -41,11 +41,15 @@ namespace CRM.Controllers
 			TempData["ErrorMessage"] = "É necessário efetuar seu login!";
 			return RedirectToAction("Login", "Login");
 		}
+		public IActionResult GetByStatus()
+		{
+			return View();
+		}
 
 		public IActionResult SalesSeller()
 		{
 			var user = _session.GetUserSection();
-			if(user != null)
+			if (user != null)
 			{
 				List<CustomerPurchases> purchases = new();
 
@@ -55,14 +59,24 @@ namespace CRM.Controllers
 			return RedirectToAction("Login", "Login");
 		}
 
+		[HttpPost]
+		public IActionResult GetByStatus(string status)
+		{
+			if (status == null) return View("Index");
+			var user = _session.GetUserSection();
+			List<CustomerModel> customers = _customer.GetByStatus(status);
+			return View(customers);
+
+		}
+
 
 		[HttpPost]
 		public IActionResult SalesSeller(string initialDate, string finalDate)
 		{
 			var user = _session.GetUserSection();
 
-			List<CustomerPurchases> purchases = _purchases.GetPurchases().Where(x => x.UserId == user.Id 
-			&& x.PurchaseDate >= DateTime.Parse(initialDate) 
+			List<CustomerPurchases> purchases = _purchases.GetPurchases().Where(x => x.UserId == user.Id
+			&& x.PurchaseDate >= DateTime.Parse(initialDate)
 			&& x.PurchaseDate <= DateTime.Parse(finalDate)).ToList();
 
 			return View(purchases);

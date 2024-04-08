@@ -8,6 +8,7 @@ namespace CRM.Interfaces
 		bool Create(CustomerCreateViewModel customer);
 		CustomerEditViewModel BuscarPorId(Guid id);
 		List<CustomerModel> BuscarTodos(Guid id);
+		List<CustomerModel> GetByStatus(string status);
 		bool Deletar(CustomerModel customer);
 		List<CustomerModel> AdicionarTodos(List<CustomerModel> customers);
 		bool Atualizar(CustomerEditViewModel customers);

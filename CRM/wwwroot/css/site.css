@@ -1287,9 +1287,13 @@ table.myTable {
     font-size: 2rem;
 }
 
-.bgImageLink {
-    background-color: #2c2a2a;
-    box-shadow: 0 0 2px 1px white;
+.header_nav a.bgImageLink {
+    color: #e6a94d;
+    border-top:1px solid #fff;
+    border-bottom:1px solid #fff;
+    text-shadow: 1px 1px 5px black;
+    font-weight: bold;
+    /*box-shadow: 0 0 2px 1px #e6a94daa;*/
 }
 
 .TotalInvestiment {
@@ -1678,6 +1682,22 @@ p.newField {
     max-width: 12rem;
 }
 
+
+/*Home*/
+.homeContainer{
+    margin-top:1rem;
+    background-color:white;
+    border-radius:4px;
+    padding:.5rem;
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:1rem;
+}
+#tasks{
+    height:40vh;
+    overflow:auto;
+}
+/*end Home*/
 @media screen and (max-width:90.100rem) {
     /* .aside {
         max-width: 9.525rem;
@@ -1703,13 +1723,13 @@ p.newField {
             font-weight: 700;
             display: block;
             text-align: center;
-            font-size: .8rem;
+            font-size: 1rem;
             width: 100%;
         }
 
             .header_nav-links li a {
                 display: block;
-                padding: .8rem 1rem;
+                padding: .8rem 0;
                 border-radius: 6px;
             }
 

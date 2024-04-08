@@ -19,7 +19,6 @@ namespace CRM.Repository
 			_session = section;
 		}
 
-
 		public CustomerEditViewModel BuscarPorId(Guid id)
 		{
 			var custumerDb = _context.Customers.Include(x => x.ContactRecords).Include(x => x.CustomerPurchases).Include(x => x.Emails).Include(x => x.Phones).FirstOrDefault(x => x.Id == id);
@@ -312,5 +311,20 @@ namespace CRM.Repository
 
 		}
 
+		public List<CustomerModel> GetByStatus(string status)
+		{
+			bool _status;
+
+			if (status.ToUpper() == "ATIVO")
+			{
+				_status = true;
+			}
+			else
+			{
+				_status = false;
+			}
+			var customers =  _context.Customers.Include(x => x.CustomerPurchases).Include(x => x.Emails).Include(x => x.Phones).Include(x => x.ContactRecords).Where(x => x.Status == _status).ToList();
+			return customers;
+		}
 	}
 }

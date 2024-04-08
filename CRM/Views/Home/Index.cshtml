@@ -1,7 +1,45 @@
-﻿<div class="main">
+﻿@model CRM.Models.ViewModels.HomeViewModels
+@{
+	var date = DateTime.Now;
+}
+
+<div class="main">
 	@await Component.InvokeAsync("Header")
-<h1>Bem Vindo!</h1>
-	
+
+	<div class="homeContainer">
+		<h1>Bem Vindo!</h1>
+		<section id="tasks">
+			<article>
+				<ul>
+					
+				
+				@foreach (var item in Model.Customers)
+				{
+					if(item.NextContactDate <= date){
+							<li>
+
+								<a asp-route-id="@item.Id" asp-controller="Customer" asp-action="Editar" style="color:blue">
+								@*<div hidden>@item.Id.ToString().Substring(0,8)</div>*@
+								@item.Codigo
+								-
+								@item.RazaoSocial
+								-
+								@item.Phones[0].Phone
+								</a>
+							</li>
+					}
+					
+
+				}
+				</ul>
+				
+			</article>
+		</section>
+		<section id="userProfile">
+
+		</section>
+
+	</div>
 </div>
 <footer class="footer">
 	<p> &copy; <a href="#">U.Code</a> development</p>

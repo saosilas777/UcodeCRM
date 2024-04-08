@@ -8,9 +8,10 @@ setTimeout(function () {
 let _alert = document.getElementById('alert');
 
 
-const customer = document.getElementById('Customers')
-const analytics = document.getElementById('Analytics')
-const home = document.getElementById('Home')
+const customer = document.getElementById('customers')
+const analytics = document.getElementById('analytics')
+const home = document.getElementById('home')
+const sales = document.getElementById('sales')
 const keyBtn = document.getElementById('keyBtn')
 
 const url = window.location.pathname
@@ -21,11 +22,14 @@ if (url.includes('Home')) {
 if (url.includes('Analytics')) {
     analytics.classList.add('bgImageLink')
 }
-if (url.includes('Customer')) {
+if (url.includes('Customer/Index') || url.includes('Customer/Editar') ) {
     customer.classList.add('bgImageLink')
 }
 if (url.includes('ChangePassword')) {
     keyBtn.classList.add('keyBtnColor')
+}
+if (url.includes('SalesSeller')) {
+    sales.classList.add('bgImageLink')
 }
 
 

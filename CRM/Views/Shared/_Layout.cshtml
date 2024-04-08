@@ -34,10 +34,10 @@
 						</div>
 						<span class="horizontal-line"></span>
 						<ul class="header_nav-links">
-							<li class="home"><a id="Home" asp-controller="Home" asp-action="Index">Página Inicial</a></li>
-							<li class="Customers"><a id="Customers" asp-action="Index" asp-controller="Customer">Clientes</a></li>
-							<li class="Analytics"><a id="Analytics" asp-action="Index" asp-controller="Analytics">Analíticos</a></li>
-							<li class="Analytics"><a id="Analytics" asp-action="SalesSeller" asp-controller="Customer">Vendas</a></li>
+							<li class="home"><a id="home" asp-controller="Home" asp-action="Index">Página Inicial</a></li>
+							<li class="customers"><a id="customers" asp-action="Index" asp-controller="Customer">Clientes</a></li>
+							<li class="analytics"><a id="analytics" asp-action="Index" asp-controller="Analytics">Analíticos</a></li>
+							<li class="sales"><a id="sales" asp-action="SalesSeller" asp-controller="Customer">Vendas</a></li>
 						</ul>
 					</div>
 					<ul class="logout-btn">
@@ -67,7 +67,6 @@
 		<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
 		<script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.dataTables.min.js"></script>
 
-		<script src="/js/index.js"></script>
 		<script src="/js/site.js" asp-append-version="true"></script>
 		@await RenderSectionAsync("Scripts", required: false)
 	</body>
