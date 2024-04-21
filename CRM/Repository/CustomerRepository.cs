@@ -86,15 +86,19 @@ namespace CRM.Repository
 		}
 		public List<CustomerModel> BuscarTodos(Guid id)
 		{
-			return _context.Customers.Include(x => x.Emails).Include(x => x.ContactRecords).Include(x => x.CustomerPurchases).Include(x => x.Phones).Where(x => x.UserId == id).OrderByDescending(x => x.Status).ToList();
+			return  _context.Customers.Include(x => x.Emails).Include(x => x.ContactRecords).Include(x => x.CustomerPurchases).Include(x => x.Phones).Where(x => x.UserId == id).OrderBy(x => x.NextContactDate).AsNoTracking().ToList();
 		}
 		public List<CustomerModel> ListarTodos()
 		{
 			return _context.Customers.ToList();
 		}
 
-		public bool Create(CustomerCreateViewModel customer)
+		public string Create(CustomerCreateViewModel customer)
 		{
+			var hasCustomerDb = _context.Customers.FirstOrDefault(x => x.Codigo == customer.Codigo || x.Cnpj == customer.Cnpj);
+
+			if (hasCustomerDb != null) return "Código ou CNPJ já existente!";
+				
 			var user = _session.GetUserSection();
 			List<EmailModel> emails = new();
 			EmailModel email = new();
@@ -138,7 +142,7 @@ namespace CRM.Repository
 
 			_context.Add(customerModel);
 			_context.SaveChanges();
-			return true;
+			return "Cadastro realizado com sucesso!";
 		}
 		public bool CreateAll(List<CustomerModel> customers)
 		{
@@ -155,24 +159,6 @@ namespace CRM.Repository
 			return true;
 		}
 
-		/*public bool Editar(_CustomerModel customer)
-		{
-			_CustomerModel customerDb = BuscarPorId(customer.Id);
-
-			customerDb.Codigo = customer.Codigo;
-			customerDb.RazaoSocial = customer.RazaoSocial;
-			customerDb.Contact = customer.Contact;
-			customerDb.Status = customer.Status;
-			customerDb.LastPurchaseDate = customer.LastPurchaseDate;
-			customerDb.LastPurchaseValue = customer.LastPurchaseValue;
-			customerDb.ContactRecords = customer.ContactRecords;
-			customerDb.NextContactDate = customer.NextContactDate;
-
-			_context.Update(customerDb);
-			_context.SaveChanges();
-			return true;
-
-		}*/
 		public List<CustomerModel> CreateAt()
 		{
 			List<CustomerModel> _customers = new List<CustomerModel>();
@@ -217,6 +203,7 @@ namespace CRM.Repository
 		{
 			try
 			{
+				var date = DateTime.Now;
 				var user = _session.GetUserSection();
 				
 
@@ -243,7 +230,7 @@ namespace CRM.Repository
 				_customerDb.NextContactDate = DateTime.Parse(_customer.NextContactDate);
 				
 
-				if (_customer.LastPurchaseValue > 0)
+				if (_customer.LastPurchaseValue != 0)
 				{
 					CustomerPurchases purchase = new();
 					purchase.Customer = _customerDb;
@@ -255,6 +242,11 @@ namespace CRM.Repository
 
 					List<CustomerPurchases> purchases = new();
 					purchases.Add(purchase);
+					if(_customer.LastPurchaseDate.Month < (date.Month - 3))
+					{
+						_customerDb.Status = false;
+					}
+					_customerDb.Status = true;
 					_customerDb.CustomerPurchases = purchases;
 
 				}

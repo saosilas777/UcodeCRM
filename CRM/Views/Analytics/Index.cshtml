@@ -14,7 +14,8 @@
 
 <div class="main">
 	@await Component.InvokeAsync("Header")
-	<section class="content-cards display analytics">
+	<div class="positionRelative">
+	<section id="firstSection" class="content-cards display analytics">
 		<div class="tickets people ">
 			<span class="ticket_figure"><i class="fa-solid fa-people-group"></i></span>
 			<div class="ticket_header">
@@ -110,9 +111,10 @@
 		</div>
 
 	</section>
+	</div>
 
 	<!-- Graphics -->
-	<section class="content_graphics-cards">
+	<section id="showCash" class="content_graphics-cards">
 		<article class="tickets">
 			<div class="content_graphics-content">
 				<p>Clientes atendidos no mês</p>
@@ -161,7 +163,7 @@
 
 														type: 'bar',
 														data: {
-															labels: ['jan', 'fev', 'mar', 'abr', 'maio', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'],
+															labels: ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'],
 															datasets: [{
 																label: 'Vendas Mês',
 																data: _data,
@@ -173,10 +175,10 @@
 																	for (let i = 0; i < _data.length; i++) {
 																		if (_data[i] >= '100000') {
 
-																			colors[i] = "rgba(21,168,21,0.7)"
+																			colors[i] = "rgb(21, 168, 21)"
 																		}
 																		else {
-																			colors[i] = "rgba(227, 52, 102, 0.7)"
+																			colors[i] = "#F62F63"
 																		}
 																	}
 																	return colors
@@ -185,12 +187,12 @@
 																	// console.log(color)
 																	let colors = []
 																	for (let i = 0; i < _data.length; i++) {
-																		if (_data[i] > 10) {
+																		if (_data[i] >= '100000') {
 
-																			colors[i] = "rgba(227, 52, 102,1)"
+																			colors[i] = "rgb(21, 168, 21)"
 																		}
 																		else {
-																			colors[i] = "rgba(232, 116, 155)"
+																			colors[i] = "#F62F63"
 																		}
 																	}
 																	return colors
@@ -202,8 +204,8 @@
 															maintainAspectRatio: false,
 															aspectRatio: 1,
 															responsive: true,
-															barPercentage: 0.7,
-															categoryPercentage: 0.6,
+															barPercentage: .8,
+															categoryPercentage: 0.5,
 															scales: {
 																x: {
 																	grid: {
@@ -211,10 +213,10 @@
 																	},
 																	ticks: {
 																		display: true,
-																		color: 'rgb(0, 0, 0)',
+																		color: 'rgb(255,255,255)',
 																		padding: 10,
 																		font: {
-																			size: 14,
+																			size: 16,
 																			weight: 300,
 																			family: "Open-Sans",
 																			style: 'normal',
@@ -232,7 +234,7 @@
 																tooltip: {
 																	display: true,
 																	borderWidth: 0,
-																	backgroundColor: 'rgba(0, 0, 255, 0.6)',
+																	backgroundColor: 'rgba(0,0,0,.3)',
 																	intersect: false
 																},
 																legend: {
@@ -261,7 +263,7 @@
 
 														type: 'bar',
 														data: {
-															labels: ['jan', 'fev', 'mar', 'abr', 'maio', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'],
+															labels: ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'],
 															datasets: [{
 																label: 'CLientes atendidos no mês',
 																data: _data2,
@@ -271,10 +273,10 @@
 																	for (let i = 0; i < _data2.length; i++) {
 																		if (_data2[i] > '50') {
 
-																			colors[i] = "rgba(21,168,21,0.7)"
+																			colors[i] = "rgb(21, 168, 21)"
 																		}
 																		else {
-																			colors[i] = "rgba(227, 52, 102, 0.7)"
+																			colors[i] = "#F62F63"
 																		}
 																	}
 																	return colors
@@ -284,10 +286,10 @@
 																	for (let i = 0; i < _data2.length; i++) {
 																		if (_data[i] > '50') {
 
-																			colors[i] = "rgba(227, 52, 102,1)"
+																			colors[i] = "rgb(21, 168, 21)"
 																		}
 																		else {
-																			colors[i] = "rgba(232, 116, 155)"
+																			colors[i] = "#F62F63"
 																		}
 																	}
 																	return colors
@@ -299,25 +301,31 @@
 															maintainAspectRatio: false,
 															aspectRatio: 1,
 															responsive: true,
-															barPercentage: 0.5,
+															barPercentage: .8,
 															categoryPercentage: 0.5,
 															scales: {
+																y: {
+																	
+																},
 																x: {
 																	grid: {
 																		display: false,
+																		
 																	},
 																	ticks: {
 																		display: true,
-																		color: 'rgb(0, 0, 0)',
+																		color: 'rgb(255,255,255,.8)',
 																		padding: 10,
 																		font: {
-																			size: 14,
+																			size: 16,
 																			weight: 300,
 																			family: "Open-Sans",
 																			style: 'normal',
 																			lineHeight: 0,
 																		},
+
 																	},
+																	
 
 																},
 															},
@@ -326,8 +334,10 @@
 																tooltip: {
 																	display: true,
 																	borderWidth: 0,
-																	backgroundColor: 'rgba(0, 0, 255, 0.6)',
-																	intersect: false
+																	backgroundColor: 'rgba(0,0,0,.3)',
+																	intersect: true,
+																	
+
 																},
 																legend: {
 																	display: false

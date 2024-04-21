@@ -76,10 +76,10 @@ new Chart(ctx1, {
                 },
                 ticks: {
                     display: true,
-                    color: 'rgb(0, 0, 0)',
+                    color: 'rgb(255,255,255)',
                     padding: 10,
                     font: {
-                        size: 14,
+                        size: 32,
                         weight: 300,
                         family: "Open-Sans",
                         style: 'normal',
@@ -97,11 +97,11 @@ new Chart(ctx1, {
             tooltip: {
                 display: true,
                 borderWidth: 0,
-                backgroundColor: 'rgba(0, 0, 255, 0.6)',
+                backgroundColor: 'rgba(255,255,255)',
                 intersect: false
             },
             legend: {
-                display: false
+                display: false,
             }
         },
     },
@@ -183,7 +183,7 @@ new Chart(ctx2, {
             tooltip: {
                 display: true,
                 borderWidth: 0,
-                backgroundColor: 'rgba(0, 0, 255, 0.6)',
+                
                 intersect: false
             },
             legend: {

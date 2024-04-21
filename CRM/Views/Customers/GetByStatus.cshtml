@@ -39,10 +39,10 @@
 			<div id="inputFileName"></div>
 		</div>
 		<div class="addCustomerBtn">
-			<a asp-action="Create" asp-controller="Customer">Adicionar Novo Cliente <i class="fa-solid fa-hand-pointer"></i></a>
+			<a asp-action="Create" asp-controller="Customers">Adicionar Novo Cliente <i class="fa-solid fa-hand-pointer"></i></a>
 		</div>
 	</div>
-	<form asp-controller="Customer" asp-action="GetByStatus" method="post" hidden>
+	<form asp-controller="Customers" asp-action="GetByStatus" method="post" hidden>
 		<input id="statusValue" value="" name="status"/>
 		<button id="statusSend" type="submit"></button>
 	</form>
@@ -52,7 +52,7 @@
 			<div class="card_header">
 				<div class="table_float">
 					Clientes
-					<form class="table_float-dates" asp-action="FindCustomerByDate" asp-controller="Customer" method="post">
+					<form class="table_float-dates" asp-action="FindCustomerByDate" asp-controller="Customers" method="post">
 						<span>Buscar proximos contatos entre:</span>
 						<input type="date" id="initialDate" name="initialDate" />
 						<input type="date" id="finalDate" name="finalDate" />
@@ -237,7 +237,7 @@
 								</td>
 
 								<td>
-									<a asp-action="Editar" asp-controller="Customer" asp-route-id="@item.Id" class="table_actions">
+									<a asp-action="Editar" asp-controller="Customers" asp-route-id="@item.Id" class="table_actions">
 										<div class="contact_cta">
 											<i class="fa-solid fa-pen-to-square"></i>
 											<i class="fa-regular fa-trash-can"></i>

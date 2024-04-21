@@ -6,12 +6,12 @@ using CRM.Services;
 
 namespace CRM.Controllers
 {
-	public class UserController : Controller
+	public class UsersController : Controller
 	{
 		private readonly ILoginRepository _loginRepository;
 		private readonly IUserSession _session;
 
-		public UserController(ILoginRepository loginRepository, IUserSession section)
+		public UsersController(ILoginRepository loginRepository, IUserSession section)
 		{
 			_loginRepository = loginRepository;
 			_session = section;

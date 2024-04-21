@@ -5,7 +5,7 @@ namespace CRM.Interfaces
 {
 	public interface ICustomerRepository
 	{
-		bool Create(CustomerCreateViewModel customer);
+		string Create(CustomerCreateViewModel customer);
 		CustomerEditViewModel BuscarPorId(Guid id);
 		List<CustomerModel> BuscarTodos(Guid id);
 		List<CustomerModel> GetByStatus(string status);

@@ -6,5 +6,6 @@ namespace CRM.Interfaces
 	{
 		bool SavePurchases(List<CustomerPurchases> purchases);
 		List<CustomerPurchases> GetPurchases();
+		bool DeletePurchase(Guid id);
 	}
 }

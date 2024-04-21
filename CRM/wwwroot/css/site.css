@@ -1,5 +1,11 @@
 ﻿:root {
     --grey-line: #000;
+    --bg: #101926;
+    --hero-nav1: #2c2d2e;
+    --hero-nav2: #2c2d2eaa;
+    --table-bg: #f2f2f2;
+    --card-header-body: #f2f2f2;
+    --action-btn: #F62F63;
 }
 
 * {
@@ -21,7 +27,7 @@ html, body {
 body {
     display: block;
     margin: 0;
-    background-color: #313131;
+    background-color: var(--bg);
     font-family: 'Open Sans', sans-serif;
 }
 
@@ -73,7 +79,7 @@ img {
     min-width: 100%;
     display: flex;
     flex-direction: column;
-    background-image: linear-gradient(195deg,rgba(26, 32, 53),#4a5267,#292f3e);
+    background-image: linear-gradient(43deg, var(--hero-nav2) 40%, var(--hero-nav1) 80%);
     box-shadow: 0 0 10px 2px black;
     position: sticky;
     top: 0;
@@ -125,10 +131,10 @@ img {
 }
 
 .logout-btn a {
-    color: white;
+    color: #f2f2f2;
     border-radius: 8px;
-    background-color: rgba(26, 32, 53);
-    box-shadow: 0 0 2px 1px white;
+    background-color: var(--action-btn);
+    box-shadow: 0 0 2px 1px #000;
 }
 
 
@@ -196,7 +202,7 @@ img {
 .main_hero-nav {
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: end;
     align-items: center;
     padding: 0 1rem;
     font-size: 1.5rem;
@@ -209,19 +215,19 @@ img {
     display: flex;
     justify-content: end;
     align-items: center;
-    color: #939497;
+    color: #f2f2f2;
 }
 
     .main_hero-navContent input {
         background-color: transparent;
-        color: rgba(255,255,255,.5);
-        border: 1px solid #939497;
+        color: #f2f2f2;
+        border: 1px solid #f2f2f2;
         outline: none;
         border-radius: 6px;
     }
 
         .main_hero-navContent input::placeholder {
-            color: rgba(255,255,255,.5);
+            color: #f2f2f2;
             letter-spacing: 1px;
         }
 
@@ -252,29 +258,39 @@ img {
     }
 
 .content_graphics-cards {
+    position: absolute;
+    top: 15.5rem;
+    background-color: #101926;
+    width: 100%;
     display: grid;
     grid-template-columns: repeat(2,1fr);
     grid-auto-rows: max-content;
     gap: 1rem;
     margin-top: 2rem;
+    transition: all 1s;
 }
 
+.totalSalariesShow {
+    top: 26rem;
+}
 
-    .content_graphics-cards ~ .tickets {
-        grid-column: 1;
-    }
+.content_graphics-cards ~ .tickets {
+    grid-column: 1;
+}
 
-    .content_graphics-cards .tickets {
-        border-radius: 8px;
-        padding: .5rem;
-    }
+.content_graphics-cards .tickets {
+    border-radius: 8px;
+    padding: .5rem;
+}
 
 .tickets {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    background-color: rgb(255, 255, 255);
+    background-color: #ffffff0b;
+    border: 1px solid white;
+    color: white;
 }
 
 .horizontal-line {
@@ -316,7 +332,7 @@ img {
     display: flex;
     justify-content: flex-end;
     padding: 1.3rem;
-    color: #1a73e8;
+    color: #aaa;
     font-weight: 700;
     font-size: 2rem;
 }
@@ -340,8 +356,7 @@ img {
     font-weight: 700;
     font-size: 1.3rem;
     color: #fff;
-    background-image: linear-gradient(195deg,rgba(26, 32, 53) 10%,#292f3e);
-    border-radius: 8px;
+    border-bottom: 1px solid #f3f3f35c;
     padding: .5rem;
     text-align: right;
 }
@@ -789,29 +804,29 @@ img {
         max-width: 2rem;
     }
 
-.analytics_totalSalaries{
-    display:flex;
-    gap:.3rem;
-    width:100%;
-    border-bottom:1px solid #ccc;
-    color:#ccc;
-    margin-top:.2rem;
-    padding:.6rem;
+.analytics_totalSalaries {
+    display: flex;
+    gap: .3rem;
+    width: 100%;
+    border-bottom: 1px solid #ccc;
+    color: #ccc;
+    margin-top: .2rem;
+    padding: .6rem;
 }
+
 .analytics_totalSalariesBtn {
-    color:#d7d7d7;
+    color: #d7d7d7;
     background-color: transparent;
-    border:none;
-    font-size:1rem;
-    letter-spacing:0.2rem;
-    cursor:pointer
+    border: none;
+    font-size: 1rem;
+    letter-spacing: 0.2rem;
+    cursor: pointer
 }
-.totalSalaries{
-    display: none;
+
+.totalSalaries {
+    display: flex;
 }
-.totalSalariesShow{
-    display:flex;
-}
+
 /*Customers*/
 .dataTables_wrapper {
     display: flex;
@@ -819,7 +834,7 @@ img {
     flex-direction: column;
     width: 98% !important;
     min-width: 69.19rem;
-    background-color: white;
+    background-color: #E0CCCC;
     border: none;
     border-radius: 1rem;
     font-size: .7rem !important;
@@ -831,7 +846,7 @@ img {
     width: 100%;
     position: relative;
     height: 3rem;
-    background-color: white;
+    background-color: var(--card-header-body);
     border-radius: 1rem 1rem 0 0;
     margin-top: 3rem;
     display: flex;
@@ -851,7 +866,7 @@ img {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: rgb(255, 255, 255);
+    background-color: var(--card-header-body);
     font-family: 'Roboto', Helvetica, Arial, sans-serif;
     border-radius: 0 0 1rem 1rem;
     overflow: auto;
@@ -859,6 +874,7 @@ img {
 }
 
 #myTable_wrapper {
+    background-color: var(--table-bg);
     border-collapse: collapse;
     font-size: .7rem !important;
     color: rgb(123, 128, 154);
@@ -890,7 +906,7 @@ img {
     align-items: center;
     gap: 1rem;
     height: 50%;
-    margin:0;
+    margin: 0;
     margin-right: 1rem;
     font-size: 1.1rem;
 }
@@ -954,7 +970,7 @@ img {
 
 table.myTable {
     text-align: left;
-    color: rgb(105, 105, 105);
+    color: #232323;
 }
 
     table.myTable p {
@@ -1071,6 +1087,7 @@ table.myTable {
     flex-direction: column;
     color: #000
 }
+
     .contentBody-labels label, .contentBody-inputs * {
         margin: 0;
         padding: 0;
@@ -1256,19 +1273,19 @@ table.myTable {
     align-items: center;
     position: absolute;
     top: 0;
+    right: 0;
     width: 100%;
     height: 100%;
     background-color: transparent;
 }
 
 #spanAlert {
-    width: 90%;
-    padding: .5rem 1rem;
+    width: fit-content;
+    padding: .5rem 4rem;
     border-radius: 6px;
     justify-content: center;
     align-items: center;
     text-align: center;
-    font-size: 1.2rem;
     color: #fff;
     text-shadow: 2px 2px 2px black;
     z-index: 1;
@@ -1284,13 +1301,13 @@ table.myTable {
 
 #spanAlert b {
     color: #fff;
-    font-size: 2rem;
+    font-size: 1.5rem;
 }
 
 .header_nav a.bgImageLink {
     color: #e6a94d;
-    border-top:1px solid #fff;
-    border-bottom:1px solid #fff;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #fff;
     text-shadow: 1px 1px 5px black;
     font-weight: bold;
     /*box-shadow: 0 0 2px 1px #e6a94daa;*/
@@ -1314,6 +1331,7 @@ table.myTable {
     display: flex;
     width: 100%;
     text-align: left;
+    background-color: var(--table-bg);
     color: inherit;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -1322,6 +1340,10 @@ table.myTable {
     align-items: flex-end;
 }
 
+    #selection option {
+        background-color: var(--table-bg);
+    }
+
     #selection:focus {
         border: 1px solid #ccc;
         border-radius: 4px;
@@ -1329,9 +1351,8 @@ table.myTable {
     }
 
 .formCreateCustomer {
-    width: 60%;
+    width: 40%;
     margin-top: 1rem;
-    background-image: linear-gradient(45deg, #292f3e,#4a5267);
     box-shadow: 0 0 5px white;
     padding: 2rem;
     height: max-content;
@@ -1351,7 +1372,7 @@ table.myTable {
     .formCreateCustomer form {
         width: 100%;
         display: grid;
-        grid-template-columns: repeat(6,1fr);
+        grid-template-columns: repeat(4,1fr);
         grid-auto-rows: max-content;
         flex-wrap: wrap;
         gap: 1rem;
@@ -1362,6 +1383,7 @@ table.myTable {
         padding: .4rem;
         border-radius: 4px;
         outline: none;
+        border: none;
     }
 
 label.select p {
@@ -1439,14 +1461,14 @@ p.newField {
 }
 
 .addCustomerBtn {
-    background-color: #ffd300;
+    background-color: var(--action-btn);
     padding: .7rem 1rem;
     font-weight: bold;
     border-radius: 8px;
 }
 
     .addCustomerBtn a {
-        color: #424b70;
+        color: #f2f2f2;
     }
 
 #lastPurchase {
@@ -1485,8 +1507,28 @@ p.newField {
     grid-column: 1/ 7;
     grid-row: 1;
 }
-#btn-send-file{
-    appearance:none;
+
+#btn-send-file {
+    appearance: none;
+}
+
+.inputCountry {
+    grid-row: 3;
+    grid-column: span 3;
+}
+
+.select {
+    grid-row: 3;
+}
+
+.inputEmail {
+    grid-row: 4;
+    grid-column: 1/-1;
+}
+
+.inputPhone {
+    grid-row: 5;
+    grid-column: 1/-1;
 }
 /*////////////////////////////////////////////////////////////////////////////////////////////*/
 /*SendFile*/
@@ -1638,7 +1680,7 @@ p.newField {
 .keyBtn {
     border-radius: 8px;
     padding: .2rem;
-    color: rgba(255,255,255,.5);
+    color: #f2f2f2;
 }
 
 .keyBtnColor {
@@ -1667,9 +1709,9 @@ p.newField {
 .alertSendFile {
     width: 100%;
     position: absolute;
-    top: 6rem;
+    top: 1rem;
     display: flex;
-    justify-content: center;
+    justify-content: end;
     align-items: center;
 }
 
@@ -1684,18 +1726,20 @@ p.newField {
 
 
 /*Home*/
-.homeContainer{
-    margin-top:1rem;
-    background-color:white;
-    border-radius:4px;
-    padding:.5rem;
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:1rem;
+.homeContainer {
+    margin-top: 1rem;
+    border: 2px solid white;
+    color: white;
+    border-radius: 4px;
+    padding: .5rem;
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 1rem;
 }
-#tasks{
-    height:40vh;
-    overflow:auto;
+
+#tasks {
+    height: 40vh;
+    overflow: auto;
 }
 /*end Home*/
 @media screen and (max-width:90.100rem) {
@@ -1747,4 +1791,60 @@ p.newField {
     #myTable td, #myTable td .lastPurchase, .lastPurchaseRed {
         font-size: .7rem;
     }
+}
+/*Painel de agendamento prioritario*/
+
+.customersToday {
+    background-color: white;
+    margin: 0;
+    padding: 0;
+    height: 40vh;
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    grid-auto-rows: max-content;
+    gap: .5rem;
+    border: .5rem solid #FFF;
+    border-radius: .5rem;
+    overflow: auto;
+    font-size: .9rem;
+}
+
+    .customersToday li {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 6rem;
+        background-color: #001b35ff;
+        border-radius: 8px;
+        padding: .4rem;
+    }
+
+    .customersToday p {
+        margin: 0;
+    }
+
+    .customersToday a {
+        color: #fff;
+    }
+
+.customerCode {
+    color: #e6a94d;
+}
+
+.customerAnotation {
+    font-weight: lighter;
+}
+
+.customerAnotationDate {
+    justify-content: flex-end;
+    color: #ff0000;
+    font-weight:300;
+}
+
+.pd-1 {
+    margin-top: .5rem;
+    padding: 0;
+    border: 2px solid #101926;
+    border-radius: .5rem;
 }

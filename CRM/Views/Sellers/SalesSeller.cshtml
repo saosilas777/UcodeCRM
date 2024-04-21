@@ -1,4 +1,5 @@
-﻿@model List<CustomerPurchases>
+﻿@using CRM.Models
+@model List<CustomerPurchases>
 
 @{
 	double totalSales = 0;
@@ -37,7 +38,7 @@
 			<div class="card_header">
 				<div class="table_float">
 					Clientes
-					<form class="table_float-dates" asp-action="SalesSeller" asp-controller="Customer" method="post">
+					<form class="table_float-dates" asp-action="SalesSeller" asp-controller="Seller" method="post">
 						<span>Buscar proximos contatos entre:</span>
 						<input type="date" id="initialDate" name="initialDate" />
 						<input type="date" id="finalDate" name="finalDate" />
@@ -46,7 +47,7 @@
 				</div>
 			</div>
 			<div class="card_body">
-				<table id="myTable" class="myTable display wrap">
+				<table id="myTable" class="myTable2 myTable display wrap">
 
 					<thead>
 
@@ -56,6 +57,9 @@
 							</th>
 							<th>
 								Codigo do cliente
+							</th>
+							<th>
+								Razão Social
 							</th>
 							<th>
 								Data da venda
@@ -84,6 +88,9 @@
 									<td>
 										<p class="thead_id ">@item.CustomerCode</p>
 									</td>
+									<td>
+										<p class="">@item.Customer.RazaoSocial</p>
+									</td>
 									<td class="dateConvert">
 										<p>
 											<b>@item.PurchaseDate.ToString("yyyy/MM/dd")</b>
@@ -95,7 +102,7 @@
 										</p>
 
 									</td>
-									<td><a href="#">Editar / Excluir</a></td>
+									<td><a asp-controller="Sellers" asp-action="PurchaseDelete" asp-route-id="@item.Id">Excluir</a></td>
 
 								</tr>
 								

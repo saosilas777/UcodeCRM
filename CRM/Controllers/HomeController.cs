@@ -24,7 +24,7 @@ namespace CRM.Controllers
 		public IActionResult Index()
 		{
 			var user = _session.GetUserSection();
-			var customers = _customers.BuscarTodos(user.Id);
+			List<CustomerModel> customers = _customers.BuscarTodos(user.Id);
 
 			HomeViewModels homeModels = new();
 			homeModels.Customers = customers;

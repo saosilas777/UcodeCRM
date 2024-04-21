@@ -1,45 +1,60 @@
 ﻿@model CRM.Models.ViewModels.HomeViewModels
 @{
 	var date = DateTime.Now;
+	string lastAnotationData = "";
 }
 
 <div class="main">
 	@await Component.InvokeAsync("Header")
-
 	<div class="homeContainer">
-		<h1>Bem Vindo!</h1>
-		<section id="tasks">
+		<section id="userProfile">
+			<h1>Bem Vindo, @Model.User.FirstName</h1>
+
+		</section>
+		<section>
 			<article>
-				<ul>
-					
-				
-				@foreach (var item in Model.Customers)
-				{
-					if(item.NextContactDate <= date){
-							<li>
+				<h2>Agendamentos prioritários</h2>
+				<div class="pd-1">
+					<ul class="customersToday">
+						@foreach (var item in Model.Customers)
+						{
+							if (item.NextContactDate <= @date)
+							{
+								<a asp-action="Editar" asp-controller="Customer" asp-route-id="@item.Id">
+								<li>
+									<div>
+										<p class="customerCode">@item.Codigo - @item.RazaoSocial</p>
+										@{
+											if (item.ContactRecords.Any())
+											{
+												var lastAnotationCount = item.ContactRecords.Count();
+												lastAnotationData = item.ContactRecords[lastAnotationCount - 1].Anotation;
 
-								<a asp-route-id="@item.Id" asp-controller="Customer" asp-action="Editar" style="color:blue">
-								@*<div hidden>@item.Id.ToString().Substring(0,8)</div>*@
-								@item.Codigo
-								-
-								@item.RazaoSocial
-								-
-								@item.Phones[0].Phone
+											}
+											else{
+												lastAnotationData = "Nenhum registro de contato.";
+											}
+
+										}
+									<p class="customerAnotation">@lastAnotationData</p>
+									</div>
+									<div class="customerContent">
+									
+									<p class="customerAnotationDate">@item.NextContactDate.ToShortDateString()</p>
+									</div>
+								</li>
 								</a>
-							</li>
-					}
-					
+							}
 
-				}
-				</ul>
-				
+
+						}
+					</ul>
+				</div>
 			</article>
 		</section>
-		<section id="userProfile">
-
-		</section>
-
 	</div>
+	
+
 </div>
 <footer class="footer">
 	<p> &copy; <a href="#">U.Code</a> development</p>

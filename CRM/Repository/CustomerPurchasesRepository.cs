@@ -26,5 +26,16 @@ namespace CRM.Repository
 			return true;
 			
 		}
+		
+		public bool DeletePurchase(Guid id)
+		{
+			var purchases = _context.CustomerPurchases.FirstOrDefault(x => x.Id == id);
+			_context.CustomerPurchases.Remove(purchases);
+			_context.SaveChanges();
+			return true;
+			
+		}
+
+
 	}
 }

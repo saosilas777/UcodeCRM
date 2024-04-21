@@ -12,14 +12,14 @@ using System.Collections.Generic;
 
 namespace CRM.Controllers
 {
-	public class CustomerController : Controller
+	public class CustomersController : Controller
 	{
 		#region Dependencies
 		private readonly ICustomerRepository _customer;
 		private readonly ICustomerPurchasesRepository _purchases;
 
 		private readonly IUserSession _session;
-		public CustomerController(ICustomerRepository customer,
+		public CustomersController(ICustomerRepository customer,
 								   IUserSession session, ICustomerPurchasesRepository purchasesRepository
 									)
 		{
@@ -45,20 +45,6 @@ namespace CRM.Controllers
 		{
 			return View();
 		}
-
-		public IActionResult SalesSeller()
-		{
-			var user = _session.GetUserSection();
-			if (user != null)
-			{
-				List<CustomerPurchases> purchases = new();
-
-				return View(purchases);
-			}
-			TempData["ErrorMessage"] = "É necessário efetuar seu login!";
-			return RedirectToAction("Login", "Login");
-		}
-
 		[HttpPost]
 		public IActionResult GetByStatus(string status)
 		{
@@ -66,20 +52,6 @@ namespace CRM.Controllers
 			var user = _session.GetUserSection();
 			List<CustomerModel> customers = _customer.GetByStatus(status);
 			return View(customers);
-
-		}
-
-
-		[HttpPost]
-		public IActionResult SalesSeller(string initialDate, string finalDate)
-		{
-			var user = _session.GetUserSection();
-
-			List<CustomerPurchases> purchases = _purchases.GetPurchases().Where(x => x.UserId == user.Id
-			&& x.PurchaseDate >= DateTime.Parse(initialDate)
-			&& x.PurchaseDate <= DateTime.Parse(finalDate)).ToList();
-
-			return View(purchases);
 		}
 
 		public IActionResult Editar(Guid id)
@@ -139,13 +111,18 @@ namespace CRM.Controllers
 			{
 				if (ModelState.IsValid)
 				{
-					_customer.Create(customer);
-					TempData["SuccessMessage"] = "Cadastro realizado com sucesso!";
+					string res = _customer.Create(customer);
+					if (res == "Cadastro realizado com sucesso!")
+					{
+						TempData["SuccessMessage"] = res;
+						return View("Create");
+					}
+					TempData["ErrorMessage"] = res;
 					return View("Create");
 
 				}
 
-				TempData["ErrorMessage"] = "Não foi possível realizar o cadastro, tente novamente!";
+				TempData["ErrorMessage"] = "Todos os dados devem estar preenchidos, tente novamente!";
 				return View(customer);
 
 			}
@@ -182,6 +159,7 @@ namespace CRM.Controllers
 			return RedirectToAction("Index", "Customer");
 		}
 
+		
 
 	}
 }

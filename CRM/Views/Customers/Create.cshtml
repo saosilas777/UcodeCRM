@@ -29,7 +29,7 @@
 		<h1>Cadastro de Cliente</h1>
 
 		<form class="customerCreateForm" asp-action="Create" asp-controller="Customer" method="post">
-			<label for="codigo" class="span3">
+			<label for="codigo" class="">
 				<p>Código</p>
 				<input id="codigo" value="" type="text" asp-for="Codigo" maxlength="5" />
 			</label>
@@ -45,19 +45,19 @@
 				</p>
 				<input id="razaoSocial" value="" type="text" asp-for="RazaoSocial" />
 			</label>
-			<label for="contato" class="span3 ">
+			<label for="contato" class=" ">
 				<p class="bgWhite">
 					Contato
 				</p>
 				<input id="contato" value="" type="text" asp-for="Contato" />
 			</label>
-			<label for="cidade" class="span3 ">
+			<label for="cidade" class="inputCountry">
 				<p class="bgWhite">
 					Cidade
 				</p>
 				<input id="cidade" value="" type="text" asp-for="Cidade" />
 			</label>
-			<label for="uf" class="select span3">
+			<label for="uf" class="select">
 				<p>
 					UF
 				</p>
@@ -92,8 +92,8 @@
 
 				</select>
 			</label>
-			<div id="email" class="span3">
-				<label for="email" class="span3">
+			<div id="email" class="inputEmail">
+				<label for="email">
 					<p>
 						<a id="InsertEmailField" class="InsertField">
 							Email
@@ -104,8 +104,8 @@
 				</label>
 			</div>
 
-			<div id="phone" class="span3">
-				<label for="phone" class="span3">
+			<div id="phone" class="inputPhone">
+				<label for="phone" class="">
 					<p>
 						<a id="InsertPhoneField" class="InsertField">
 							Telefone

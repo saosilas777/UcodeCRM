@@ -45,7 +45,7 @@
 
 			<div class="card_container">
 				<section class="registrationsContainer">
-					<form asp-controller="Customer" asp-action="RegistrationContact" method="post">
+					<form asp-controller="Customers" asp-action="RegistrationContact" method="post">
 						<div class="registrationsContent">
 							<div class="registrationTitle">
 								<h1>Registros de contato</h1>
@@ -91,7 +91,7 @@
 						</div>
 					</form>
 				</section>
-				<form asp-action="Edit" asp-action="Delete" asp-controller="Customer" method="post" class="card_content" id="EditForm">
+				<form asp-action="Edit" asp-action="Delete" asp-controller="Customers" method="post" class="card_content" id="EditForm">
 					<input asp-for="@Model.Id" hidden />
 					<div class="contentHeader">
 						<span><b>Cliente:</b>@Model.RazaoSocial</span>
@@ -145,23 +145,6 @@
 									<input class="editable" id="reciver" type="date" value="@date" asp-for="@Model.NextContactDate" disabled />
 
 								}
-
-								@*	//var count = (Model.ContactRecordsAnotation.Length - 1);
-								//if (count < 0)
-								//{
-								//	<textarea class="editableInsert" value="" name="ContactRecordsAnotation" disabled></textarea>
-								//}
-								//else
-								//{
-								//	<textarea class="editableInsert" value="" asp-for="@Model.ContactRecordsAnotation[count]" name="ContactRecordsAnotation" disabled></textarea>
-								//}*@
-
-								@*<div class="insertBtns">
-								<button id="insertBtn" type="button" class="card_cta-saveChanges btnInsertContact">Inserir Registro</button>
-								<button id="cancelInsertBtn" type="button" class="card_cta-edit btnInsertContact" hidden>Cancelar</button>
-								<button id="saveInsertBtn" type="button" class="card_cta-saveChanges btnInsertContact" hidden>Salvar</button>
-								<button id="submitInsertBtn" type="submit" asp-action="RegistrationContact" hidden></button>
-								</div>*@
 								<div class="card_cta">
 									<div id="editOrDelete">
 										<button type="button" class="card_cta-edit" id="btnEdit">Editar</button>
