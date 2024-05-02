@@ -1,4 +1,5 @@
-﻿:root {
+﻿
+:root {
     --grey-line: #000;
     --bg: #101926;
     --hero-nav1: #2c2d2e;
@@ -46,7 +47,7 @@ img {
     width: 100%;
     max-width: 10.625rem;
     padding: .5rem;
-    transition: all .5s;
+    /*transition: all .5s;*/
     z-index: 1;
 }
 
@@ -54,7 +55,7 @@ img {
     position: relative;
     margin-left: 11.125rem;
     transition: all .5s;
-    min-height: calc(100vh - 3.375rem);
+    min-height: calc(100vh - 1.575rem);
 }
 
 
@@ -258,10 +259,9 @@ img {
     }
 
 .content_graphics-cards {
-    position: absolute;
-    top: 15.5rem;
+    /*position: absolute;
+    top: 15.5rem;*/
     background-color: #101926;
-    width: 100%;
     display: grid;
     grid-template-columns: repeat(2,1fr);
     grid-auto-rows: max-content;
@@ -270,18 +270,16 @@ img {
     transition: all 1s;
 }
 
-.totalSalariesShow {
-    top: 26rem;
-}
 
-.content_graphics-cards ~ .tickets {
-    grid-column: 1;
-}
 
-.content_graphics-cards .tickets {
-    border-radius: 8px;
-    padding: .5rem;
-}
+    .content_graphics-cards ~ .tickets {
+        grid-column: 1;
+    }
+
+    .content_graphics-cards .tickets {
+        border-radius: 8px;
+        padding: .5rem;
+    }
 
 .tickets {
     display: flex;
@@ -408,34 +406,10 @@ img {
 }
 
 
-@media screen and (max-width:82rem) {
-    .aside {
-        margin-left: -50%;
-        opacity: 0;
-    }
 
-    .main {
-        margin: 0;
-        width: 100%;
-    }
-
-    .footer {
-        width: 100%;
-        margin: 0;
-        padding-left: .5rem
-    }
-}
 
 @media screen and (max-width:65rem) {
-    .aside {
-        margin-left: -50%;
-        opacity: 0;
-    }
 
-    .main {
-        margin: 0;
-        width: 100%;
-    }
 
     .content-cards {
         grid-template-columns: repeat(2,1fr);
@@ -462,17 +436,7 @@ img {
 }
 
 
-@media screen and (max-width:33.75rem) {
 
-    .content-cards {
-        grid-template-columns: repeat(1,1fr);
-        flex-wrap: wrap;
-    }
-
-    .main_hero-nav {
-        display: none;
-    }
-}
 
 
 /*Login*/
@@ -822,10 +786,9 @@ img {
     letter-spacing: 0.2rem;
     cursor: pointer
 }
-
-.totalSalaries {
-    display: flex;
-}
+/*.positionRelative{
+    position:relative;
+}*/
 
 /*Customers*/
 .dataTables_wrapper {
@@ -902,6 +865,7 @@ img {
 }
 
 .table_float-dates {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -1080,27 +1044,26 @@ table.myTable {
 
 .contentBody-inputs {
     width: 50%;
+    display: grid;
+    grid-template-columns: repeat(6,1fr);
+    grid-auto-rows: max-content;
+    gap: 1rem;
 }
 
-.contentBody-labels, .contentBody-inputs {
-    display: flex;
-    flex-direction: column;
-    color: #000
-}
-
-    .contentBody-labels label, .contentBody-inputs * {
-        margin: 0;
-        padding: 0;
-        font-size: 1rem;
-        margin-top: 1rem;
-        padding: .3rem;
-        outline: none;
-        border-radius: 4px;
+    .contentBody-inputs div {
+        grid-column: span 3;
+       
+    }
+    .contentBody-inputs .span6 {
+        grid-column: span 6;
     }
 
-        .contentBody-inputs *:focus :not(button) {
-            background-color: #fcff0020
-        }
+    .contentBody-inputs input, .contentBody-inputs select {
+        width: 100%;
+        padding: .5rem;
+        margin-top: .5rem
+    }
+
 
 .contentBody label {
     font-weight: bold;
@@ -1108,8 +1071,9 @@ table.myTable {
 
 .card_cta {
     display: flex;
+    width: 50%;
     justify-content: end;
-    z-index: 1;
+    z-index: 9 !important;
 }
 
     .card_cta button {
@@ -1133,6 +1097,7 @@ table.myTable {
     border: .6rem solid white;
     min-height: 42.1875rem;
     max-height: 42.1875rem;
+    max-width:23.625rem;
     box-shadow: 2px 0 10px 2px black;
     border-radius: 8px;
     background-color: white;
@@ -1272,11 +1237,11 @@ table.myTable {
     justify-content: center;
     align-items: center;
     position: absolute;
-    top: 0;
+    top: 50vh;
     right: 0;
-    width: 100%;
-    height: 100%;
     background-color: transparent;
+    z-index:1;
+
 }
 
 #spanAlert {
@@ -1471,8 +1436,12 @@ p.newField {
         color: #f2f2f2;
     }
 
-#lastPurchase {
-    padding: .5rem;
+/*#lastPurchase {
+        padding: .5rem;
+    }*/
+
+.lastPurchase {
+    cursor: pointer;
 }
 
 .lastPurchaseRed {
@@ -1517,6 +1486,10 @@ p.newField {
     grid-column: span 3;
 }
 
+.cep {
+    grid-column: span 2;
+}
+
 .select {
     grid-row: 3;
 }
@@ -1530,6 +1503,75 @@ p.newField {
     grid-row: 5;
     grid-column: 1/-1;
 }
+
+.customerCode {
+    color: #ff0000;
+    font-weight: bold;
+}
+
+#nextContactDateView {
+    width: 100vw;
+    height: 100vh;
+    background-color: #000000aa;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9;
+}
+
+    #nextContactDateView form {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #nextContactDateView .dateInput {
+        width: 10%;
+        height: 10%;
+        display: flex;
+        border-radius: 8px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(26, 32, 53);
+    }
+
+    #nextContactDateView .dateInputBtn button {
+        background-color: transparent;
+        color: #f1f1f1;
+        margin-top: 1rem;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+    }
+
+        #nextContactDateView .dateInputBtn button:hover {
+            color: #e6a94d
+        }
+
+.findByDateText {
+    position: absolute;
+    right: -2rem;
+    top: 3rem;
+    font-size: 1rem;
+    font-weight: lighter;
+    width: 12rem;
+    height: fit-content;
+    padding: 1rem;
+    background-color: #f1f1f1;
+    color: #000;
+    border: 1px solid #000;
+    border-radius: 8px;
+    display: none;
+}
+
 /*////////////////////////////////////////////////////////////////////////////////////////////*/
 /*SendFile*/
 .envio-arquivos {
@@ -1741,57 +1783,10 @@ p.newField {
     height: 40vh;
     overflow: auto;
 }
+
 /*end Home*/
-@media screen and (max-width:90.100rem) {
-    /* .aside {
-        max-width: 9.525rem;
-    }*/
-    /*.header_nav .title {
-        font-size: .9rem
-    }*/
-    /*  .header_nav span {
-        font-size: 1.6rem
-    }*/
-    /*.header_nav-links li a {
-        font-size: .9rem;
-    }
-    .header_nav-links li a {
-        padding: .8rem 1rem;
-    }*/
-    .header_nav-links {
-        padding: 0;
-        width: 100%;
-    }
 
-        .header_nav-links li {
-            font-weight: 700;
-            display: block;
-            text-align: center;
-            font-size: 1rem;
-            width: 100%;
-        }
 
-            .header_nav-links li a {
-                display: block;
-                padding: .8rem 0;
-                border-radius: 6px;
-            }
-
-    .logout-btn li {
-        padding: 0.3rem .9rem;
-        font-size: .8rem;
-    }
-    /* .main {
-        margin-left: 9.925rem
-    }*/
-    #myTable th {
-        font-size: .7rem;
-    }
-
-    #myTable td, #myTable td .lastPurchase, .lastPurchaseRed {
-        font-size: .7rem;
-    }
-}
 /*Painel de agendamento prioritario*/
 
 .customersToday {
@@ -1828,7 +1823,7 @@ p.newField {
         color: #fff;
     }
 
-.customerCode {
+.customerData {
     color: #e6a94d;
 }
 
@@ -1839,7 +1834,7 @@ p.newField {
 .customerAnotationDate {
     justify-content: flex-end;
     color: #ff0000;
-    font-weight:300;
+    font-weight: 300;
 }
 
 .pd-1 {
@@ -1847,4 +1842,106 @@ p.newField {
     padding: 0;
     border: 2px solid #101926;
     border-radius: .5rem;
+}
+
+/*end Painel de agendamento prioritario*/
+
+@media screen and (max-width:90rem) {
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        max-width: 100vw;
+        position: relative;
+    }
+
+    .aside {
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: #b1b1b1;
+        margin: 0;
+        padding: 0;
+        min-width: 100vw;
+        height: 6rem;
+        border: none;
+        display: flex;
+        flex-direction: row;
+        z-index: 9;
+    }
+
+    .main_hero {
+        margin-top: 6rem;
+        box-sizing: border-box;
+        width: 100%;
+        padding: 0;
+    }
+
+    .header_hero {
+        max-width: 100vw;
+        border-radius: 0;
+    }
+
+    .header_nav {
+        display: flex;
+        flex-direction: row;
+        padding: 0 2rem;
+    }
+
+    .logo-title {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+    }
+
+
+    .header_nav-links {
+        display: flex;
+        padding: 0 4rem;
+        gap: 2rem;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .header_nav-links li.home {
+            margin: 0;
+        }
+
+    .main {
+        padding: 0 1rem;
+        margin: 0;
+    }
+
+    .footer {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 0 .5rem;
+        margin-left: 0;
+    }
+
+        .footer p {
+            margin: .5rem;
+        }
+
+    .actionsContainer {
+        width: 100%;
+    }
+
+    span.horizontal-line {
+        display: none;
+    }
+
+    .content-cards {
+        grid-template-columns: repeat(1,1fr);
+        flex-wrap: wrap;
+    }
+
+    .positionRelative .content-cards {
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+        grid-auto-rows: max-content;
+    }
 }

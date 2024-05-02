@@ -23,7 +23,7 @@
 								<a asp-action="Editar" asp-controller="Customer" asp-route-id="@item.Id">
 								<li>
 									<div>
-										<p class="customerCode">@item.Codigo - @item.RazaoSocial</p>
+										<p class="customerData">@item.Codigo - @item.RazaoSocial</p>
 										@{
 											if (item.ContactRecords.Any())
 											{

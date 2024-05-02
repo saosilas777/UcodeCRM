@@ -1,5 +1,18 @@
 ﻿@model List<CustomerModel>
 
+<div id="nextContactDateView">
+	<form asp-controller="Customers" asp-action="ContactDateEdit" method="post">
+		<div class="dateInput">
+			<input type="date" name="nextContactDate">
+			<input id="customerId" value="" name="id" hidden />
+			<div class="dateInputBtn">
+				<button id="nextContactDateCancel" type="button">Cancelar</button>
+				<button id="nextContactDateSend" type="button">Enviar</button>
+				<button id="nextContactDateSubmit" type="submit" hidden></button>
+			</div>
+		</div>
+	</form>
+</div>
 <div class="main">
 	@await Component.InvokeAsync("Header")
 
@@ -43,7 +56,7 @@
 		</div>
 	</div>
 	<form asp-controller="Customers" asp-action="GetByStatus" method="post" hidden>
-		<input id="statusValue" value="" name="status"/>
+		<input id="statusValue" value="" name="status" />
 		<button id="statusSend" type="submit"></button>
 	</form>
 	<section id="table_row">
@@ -52,11 +65,12 @@
 			<div class="card_header">
 				<div class="table_float">
 					Clientes
-					<form class="table_float-dates" asp-action="FindCustomerByDate" asp-controller="Customers" method="post">
+					<form class="table_float-dates" asp-action="Index" asp-controller="Customers" method="get">
 						<span>Buscar proximos contatos entre:</span>
 						<input type="date" id="initialDate" name="initialDate" />
 						<input type="date" id="finalDate" name="finalDate" />
-						<button id="dataFindBtn" class="dataFindBtn" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+						<button id="dataFindBtn" class="dataFindBtn findByDateBtn" type="submit"><i class="findByDateBtn fa-solid fa-magnifying-glass"></i></button>
+						<span class="findByDateText">Para visualizar todos os clientes, não informe nenhuma data!</span>
 					</form>
 				</div>
 			</div>
@@ -68,10 +82,7 @@
 						<tr>
 
 							<th>
-								Codigo
-							</th>
-							<th>
-								Razão Social / CNPJ
+								Dados Principais
 							</th>
 							<th class="th_status">
 								<select id="selection">
@@ -101,7 +112,7 @@
 							<th id="lastPurchase">
 								R$
 							</th>
-							
+
 							<th id="ultimoContato">
 								Último contato
 							</th>
@@ -125,17 +136,16 @@
 
 								<td>
 
-									<p class="thead_id ">@item.Codigo</p>
+									<p><b>Código:</b><span class="customerCode"> @item.Codigo</span></p>
+									<p>
+										<b>Razão Social: </b>@item.RazaoSocial
+									</p>
+									<p>
+										<b>CNPJ: </b>@item.Cnpj
+									</p>
 
 								</td>
-								<td class="razao minWidth">
-									<p>
-										@item.RazaoSocial
-									</p>
-									<p>
-										<b>@item.Cnpj</b>
-									</p>
-								</td>
+
 								<td class="td_status">
 
 									@if (item.Status == true)
@@ -151,20 +161,13 @@
 										</p>
 									}
 								</td>
-								@foreach (var email in item.Emails)
-								{
-									<td class="wordBreak">
-										<p>@email.Email</p>
-									</td>
 
-								}
-								@foreach (var phone in item.Phones)
-								{
-									<td>
-										<p>@phone.Phone</p>
-									</td>
-
-								}
+								<td class="wordBreak">
+									<p>@item.Emails[0].Email</p>
+								</td>
+								<td>
+									<p>@item.Phones[0].Phone</p>
+								</td>
 								<td>
 									@item.Contact
 								</td>
@@ -182,9 +185,10 @@
 									{
 										purchaseValue = purchase.PurchaseValue;
 										if (purchase.PurchaseDate != null && purchase.PurchaseDate > DateTime.Parse(purchaseDate))
-										{	purchaseDate = purchase.PurchaseDate.ToString("yyyy/MM/dd");
+										{
+											purchaseDate = purchase.PurchaseDate.ToString("yyyy/MM/dd");
 
-										}										
+										}
 									}
 								}
 								<td class="dateConvert">
@@ -219,21 +223,7 @@
 									}
 								</td>
 								<td class="lastPurchase">
-									@{
-										if (@item.NextContactDate < DateTime.Now)
-										{
-
-												<p class="">@item.NextContactDate.ToString("yyyy/MM/dd")</p>
-										}
-										else
-										{
-
-
-												<p>@item.NextContactDate.ToString("yyyy/MM/dd")</p>
-
-										}
-
-									}
+									<p id="@item.Id">@item.NextContactDate.ToString("yyyy/MM/dd")</p>
 								</td>
 
 								<td>
@@ -256,6 +246,7 @@
 		</div>
 	</section>
 
+
 </div>
 <footer class="footer">
 	<p> &copy; <a href="#">U.Code</a> development</p>
@@ -266,14 +257,52 @@
 	const statusValue = document.getElementById('statusValue')
 	const statusSend = document.getElementById('statusSend')
 
-	selection.addEventListener('change',()=>{
+	selection.addEventListener('change', () => {
 		statusValue.value = selection.value
-		console.log(statusValue.value)
 		statusSend.click()
+	})
+</script>
+
+<script>
+	const tbody = document.getElementById('tbody')
+	const customerId = document.getElementById('customerId')
+	const nextContactDateView = document.getElementById('nextContactDateView')
+	const nextContactDateSend = document.getElementById('nextContactDateSend')
+	const nextContactDateSubmit = document.getElementById('nextContactDateSubmit')
+	const nextContactDateCancel = document.getElementById('nextContactDateCancel')
+
+
+
+
+	tbody.addEventListener('click', (e) => {
+		const id = e.target.getAttribute('id')
+		if (id != null) {
+			nextContactDateView.style.display = 'flex'
+			customerId.value = id
+		}
+	})
+	nextContactDateSend.addEventListener('click', () => {
+		nextContactDateSubmit.click()
+	})
+	nextContactDateCancel.addEventListener('click', () => {
+		nextContactDateView.style.display = 'none'
+	})
+
+</script>
+<script>
+	const tableFloatDates = document.querySelector('.table_float-dates')
+	const findByDateText = document.querySelector('.findByDateText')
+	tableFloatDates.addEventListener('mouseover', (e) => {
+		if (e.target.nodeName == 'BUTTON' || e.target.nodeName == 'I') {
+			findByDateText.style.display = 'flex'
+			setTimeout(function () {
+				findByDateText.style.display = 'none'
+			}, 5000)
+		}
+
 	})
 </script>
 <script src="/js/SelectTableItems.js"></script>
 <script src="/js/Alerts.js"></script>
-
 
 

@@ -13,7 +13,7 @@ namespace CRM.Repository
 		private readonly IUserSession _session;
 		private readonly Context _context;
 		public CustomerRepository(Context context,
-                                IUserSession section)
+								IUserSession section)
 		{
 			_context = context;
 			_session = section;
@@ -21,41 +21,7 @@ namespace CRM.Repository
 
 		public CustomerEditViewModel BuscarPorId(Guid id)
 		{
-			var custumerDb = _context.Customers.Include(x => x.ContactRecords).Include(x => x.CustomerPurchases).Include(x => x.Emails).Include(x => x.Phones).FirstOrDefault(x => x.Id == id);
-
-			string[] emails = new string[custumerDb.Emails.Count()];
-			string[] phones = new string[custumerDb.Phones.Count()];
-			string[] anotation = new string[custumerDb.ContactRecords.Count()];
-			string[] recordsDate = new string[custumerDb.ContactRecords.Count()];
-
-			for (int i = 0; i < custumerDb.Emails.Count(); i++)
-			{
-				emails[i] = custumerDb.Emails[i].Email;
-
-			}
-			for (int i = 0; i < custumerDb.Phones.Count(); i++)
-			{
-				phones[i] = custumerDb.Phones[i].Phone;
-
-			}
-			for (int i = 0; i < custumerDb.ContactRecords.Count(); i++)
-			{
-				anotation[i] = custumerDb.ContactRecords[i].Anotation;
-
-			}
-			for (int i = 0; i < custumerDb.ContactRecords.Count(); i++)
-			{
-				recordsDate[i] = custumerDb.ContactRecords[i].RegistrationDate.ToString();
-
-			}
-
-			DateTime date = DateTime.Now;
-			double lastPurchase = 0;
-			foreach (var item in custumerDb.CustomerPurchases)
-			{
-				date = item.PurchaseDate;
-				lastPurchase = item.PurchaseValue;
-			}
+			var custumerDb = _context.Customers.Include(x => x.ContactRecords).Include(x => x.CustomerPurchases.OrderByDescending(x=>x.PurchaseDate)).Include(x => x.Emails).Include(x => x.Phones).FirstOrDefault(x => x.Id == id);
 
 			CustomerEditViewModel _CustomerEditView = new()
 			{
@@ -66,16 +32,19 @@ namespace CRM.Repository
 				Status = custumerDb.Status,
 				Cidade = custumerDb.Cidade,
 				Uf = custumerDb.Uf,
-				Emails = emails,
-				Phones = phones,
+				Emails = custumerDb.Emails,
+				Phones = custumerDb.Phones,
 				Contact = custumerDb.Contact,
-				LastPurchaseDate = date,
-				LastPurchaseValue = lastPurchase,
-				ContactRecordsDate = recordsDate,
-				ContactRecordsAnotation = anotation,
+				ContactRecords = custumerDb.ContactRecords,
 				NextContactDate = custumerDb.NextContactDate.ToShortDateString()
 
 			};
+			if (custumerDb.CustomerPurchases.Count() > 0)
+			{
+				_CustomerEditView.LastPurchaseDate = custumerDb.CustomerPurchases[0].PurchaseDate;
+				_CustomerEditView.LastPurchaseValue = custumerDb.CustomerPurchases[0].PurchaseValue;
+
+			}
 
 			return (_CustomerEditView);
 
@@ -86,7 +55,7 @@ namespace CRM.Repository
 		}
 		public List<CustomerModel> BuscarTodos(Guid id)
 		{
-			return  _context.Customers.Include(x => x.Emails).Include(x => x.ContactRecords).Include(x => x.CustomerPurchases).Include(x => x.Phones).Where(x => x.UserId == id).OrderBy(x => x.NextContactDate).AsNoTracking().ToList();
+			return _context.Customers.Include(x => x.Emails).Include(x => x.ContactRecords).Include(x => x.CustomerPurchases.OrderBy(x => x.PurchaseDate)).Include(x => x.Phones).Where(x => x.UserId == id).OrderBy(x => x.NextContactDate).AsNoTracking().ToList();
 		}
 		public List<CustomerModel> ListarTodos()
 		{
@@ -98,12 +67,11 @@ namespace CRM.Repository
 			var hasCustomerDb = _context.Customers.FirstOrDefault(x => x.Codigo == customer.Codigo || x.Cnpj == customer.Cnpj);
 
 			if (hasCustomerDb != null) return "Código ou CNPJ já existente!";
-				
+
 			var user = _session.GetUserSection();
-			List<EmailModel> emails = new();
-			EmailModel email = new();
-			List<PhoneModel> phones = new();
-			PhoneModel phone = new();
+
+			List<EmailModel> emails = new List<EmailModel>();
+			List<PhoneModel> phones = new List<PhoneModel>();
 
 
 
@@ -116,26 +84,36 @@ namespace CRM.Repository
 				Contact = customer.Contato,
 				Cidade = customer.Cidade,
 				Uf = customer.Uf
-				
+
 
 			};
-			foreach (var item in customer.Emails)
+			for (int i = 0; i < customer.Emails.Count(); i++)
 			{
-				email.Email = item;
-				email.Customer = customerModel;
-				email.RegistrationDate = DateTime.Now;
+				EmailModel email = new()
+				{
+					Email = customer.Emails[i],
+					Customer = customerModel,
+					RegistrationDate = DateTime.Now
+
+				};
+
 				emails.Add(email);
 
 			}
-			foreach (var item in customer.Phones)
+			for (int i = 0; i < customer.Phones.Count(); i++)
 			{
-				phone.Phone = item;
-				phone.Customer = customerModel;
-				phone.RegistrationDate = DateTime.Now;
+				PhoneModel phone = new()
+				{
+					Phone = customer.Phones[i],
+					Customer = customerModel,
+					RegistrationDate = DateTime.Now
+
+				};
+
 				phones.Add(phone);
 
 			}
-			customerModel.Emails = emails;
+            customerModel.Emails = emails;
 			customerModel.Phones = phones;
 
 
@@ -198,60 +176,76 @@ namespace CRM.Repository
 			_context.SaveChanges();
 			return customers;
 		}
-		
+
 		public bool Atualizar(CustomerEditViewModel _customer)
 		{
 			try
 			{
 				var date = DateTime.Now;
+				List<EmailModel> emails = new();
+				List<PhoneModel> phones = new();
+
 				var user = _session.GetUserSection();
-				
 
-				var _customerDb = _context.Customers.FirstOrDefault(x => x.Id == _customer.Id);
-				var _phonesDb = _context.Phones.Where(x => x.Customer == _customerDb).ToList();
-				var _emailsDb = _context.Emails.Where(x => x.Customer == _customerDb).ToList();
-				for (int i = 0; i < _customer.Phones.Length; i++)
+				var customerDb = _context.Customers.Include(x => x.CustomerPurchases).Include(x => x.Phones).Include(x => x.Emails).FirstOrDefault(x => x.Id == _customer.Id);
+
+				customerDb.Codigo = _customer.Codigo;
+				customerDb.Cnpj = _customer.Cnpj;
+				customerDb.RazaoSocial = _customer.RazaoSocial;
+				customerDb.Contact = _customer.Contact;
+				customerDb.Status = _customer.Status;
+				customerDb.Cidade = _customer.Cidade;
+				customerDb.Uf = _customer.Uf;
+				//TODO
+				//Ajustar campos de emails e telefones para varios inputs
+
+				if(customerDb.Phones.Count() < _customer.Phones.Count())
 				{
-					_phonesDb[i].Phone = _customer.Phones[i];
-				}
-
-				for (int i = 0; i < _customer.Emails.Length; i++)
-				{
-					_emailsDb[i].Email = _customer.Emails[i];
-				}
-
-				_customerDb.Codigo = _customer.Codigo;
-				_customerDb.Cnpj = _customer.Cnpj;
-				_customerDb.RazaoSocial = _customer.RazaoSocial;
-				_customerDb.Status = _customer.Status;
-				_customerDb.Cidade = _customer.Cidade;
-				_customerDb.Uf = _customer.Uf;
-				_customerDb.Contact = _customer.Contact;
-				_customerDb.NextContactDate = DateTime.Parse(_customer.NextContactDate);
-				
-
-				if (_customer.LastPurchaseValue != 0)
-				{
-					CustomerPurchases purchase = new();
-					purchase.Customer = _customerDb;
-
-					purchase.PurchaseDate = DateTime.Parse(_customer.LastPurchaseDate.ToString());
-					purchase.PurchaseValue = double.Parse(_customer.LastPurchaseValue.ToString());
-					purchase.CustomerCode = int.Parse(_customer.Codigo);
-					purchase.UserId = user.Id;
-
-					List<CustomerPurchases> purchases = new();
-					purchases.Add(purchase);
-					if(_customer.LastPurchaseDate.Month < (date.Month - 3))
+					foreach (var item in _customer.Phones)
 					{
-						_customerDb.Status = false;
+						PhoneModel phone = new()
+						{
+							Customer = customerDb,
+							Phone = item.Phone,
+							RegistrationDate = DateTime.Now
+						};
+						phones.Add(phone);
 					}
-					_customerDb.Status = true;
-					_customerDb.CustomerPurchases = purchases;
-
+					customerDb.Phones = phones;
 				}
 
-				_context.Customers.Update(_customerDb);
+				if (customerDb.Emails.Count() < _customer.Emails.Count())
+				{
+					foreach (var item in _customer.Emails)
+					{
+						EmailModel mail = new()
+						{
+							Customer = customerDb,
+							Email = item.Email,
+							RegistrationDate = DateTime.Now
+						};
+						emails.Add(mail);
+					}
+					customerDb.Emails = emails;
+				}
+				
+				
+
+				var purchase = customerDb.CustomerPurchases.FirstOrDefault(x => x.PurchaseValue == _customer.LastPurchaseValue && x.PurchaseDate == _customer.LastPurchaseDate);
+				if (_customer.LastPurchaseValue > 0 && purchase != null || _customer.LastPurchaseValue != 0)
+				{
+					CustomerPurchases _purchase = new();
+					_purchase.PurchaseValue = _customer.LastPurchaseValue;
+					_purchase.PurchaseDate = _customer.LastPurchaseDate;
+					_purchase.PurchaseValue = _customer.LastPurchaseValue;
+					_purchase.CustomerCode = int.Parse(_customer.Codigo);
+					_purchase.Customer = customerDb;
+					_purchase.UserId = user.Id;
+					_context.CustomerPurchases.Add(_purchase);
+				}
+				customerDb.NextContactDate = DateTime.Parse(_customer.NextContactDate);
+
+				_context.Customers.Update(customerDb);
 				_context.SaveChanges();
 				return true;
 
@@ -259,12 +253,11 @@ namespace CRM.Repository
 			catch (Exception)
 			{
 
-				return false ;
+				return false;
 			}
 		}
 		public List<CustomerModel> AdicionarTodos(List<CustomerModel> customers)
 		{
-
 			_context.Customers.AddRange(customers);
 			_context.SaveChanges();
 			return customers;
@@ -315,8 +308,27 @@ namespace CRM.Repository
 			{
 				_status = false;
 			}
-			var customers =  _context.Customers.Include(x => x.CustomerPurchases).Include(x => x.Emails).Include(x => x.Phones).Include(x => x.ContactRecords).Where(x => x.Status == _status).ToList();
+			var customers = _context.Customers.Include(x => x.CustomerPurchases).Include(x => x.Emails).Include(x => x.Phones).Include(x => x.ContactRecords).Where(x => x.Status == _status).ToList();
 			return customers;
+		}
+
+		public void ContactDateEdit(DateTime date, Guid id)
+		{
+			var customer = _context.Customers.Find(id);
+			if (customer != null)
+			{
+				customer.NextContactDate = date;
+				_context.SaveChanges();
+
+			}
+		}
+
+		public List<CustomerModel> BuscarClientesDaAgendaAtual(Guid id)
+		{
+			var date = DateTime.Now;
+			return _context.Customers.Include(x => x.Emails).Include(x => x.ContactRecords)
+				.Include(x => x.CustomerPurchases).Include(x => x.Phones)
+				.Where(x => x.UserId == id && x.NextContactDate <= date).OrderBy(x => x.NextContactDate).AsNoTracking().ToList();
 		}
 	}
 }

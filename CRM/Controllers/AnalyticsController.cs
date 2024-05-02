@@ -31,7 +31,7 @@ namespace CRM.Controllers
 					var analytics = _analyticsServices.AnalyticsBuilder();
 					return View(analytics);
 				}
-				return RedirectToAction("NonUserPage", "User");
+				return RedirectToAction("Login", "Login");
 				
 
 			}

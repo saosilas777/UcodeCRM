@@ -15,102 +15,102 @@
 <div class="main">
 	@await Component.InvokeAsync("Header")
 	<div class="positionRelative">
-	<section id="firstSection" class="content-cards display analytics">
-		<div class="tickets people ">
-			<span class="ticket_figure"><i class="fa-solid fa-people-group"></i></span>
-			<div class="ticket_header">
-				<p>Total de Clientes</p>
-			</div>
-			<span class="horizontal-line"></span>
-			<div class="ticket_content">
+		<section id="firstSection" class="content-cards display analytics">
+			<div class="tickets people ">
+				<span class="ticket_figure"><i class="fa-solid fa-people-group"></i></span>
+				<div class="ticket_header">
+					<p>Total de Clientes</p>
+				</div>
+				<span class="horizontal-line"></span>
+				<div class="ticket_content">
 
-				<p class="margin_right"></p>
-				<p id="TotalPortfolio">@Model.TotalCustomers</p>
+					<p class="margin_right"></p>
+					<p id="TotalPortfolio">@Model.TotalCustomers</p>
+				</div>
 			</div>
-		</div>
-		<div class="tickets handshake">
-			<span class="ticket_figure"><i class="fa-regular fa-handshake"></i></span>
-			<div class="ticket_header">
-				<p>Clientes Ativos</p>
+			<div class="tickets handshake">
+				<span class="ticket_figure"><i class="fa-regular fa-handshake"></i></span>
+				<div class="ticket_header">
+					<p>Clientes Ativos</p>
+				</div>
+				<span class="horizontal-line"></span>
+				<div class="ticket_content">
+					<p>@Model.ActiveCustomers</p>
+				</div>
 			</div>
-			<span class="horizontal-line"></span>
-			<div class="ticket_content">
-				<p>@Model.ActiveCustomers</p>
+			<div class="tickets arrow">
+				<span class="ticket_figure"><i class="fa-solid fa-arrow-trend-down"></i></span>
+				<div class="ticket_header">
+					<p>Clientes Inativos</p>
+				</div>
+				<span class="horizontal-line"></span>
+				<div class="ticket_content">
+					<p>@Model.InactiveCustomers</p>
+				</div>
 			</div>
-		</div>
-		<div class="tickets arrow">
-			<span class="ticket_figure"><i class="fa-solid fa-arrow-trend-down"></i></span>
-			<div class="ticket_header">
-				<p>Clientes Inativos</p>
+			<div class="tickets dollar">
+				<span class="ticket_figure"><i class="fa-solid fa-hand-holding-dollar"></i></span>
+				<div class="ticket_header">
+					<p>Venda Mensal Total</p>
+				</div>
+				<span class="horizontal-line"></span>
+				<div class="ticket_content">
+					<p>@_totalSales</p>
+				</div>
 			</div>
-			<span class="horizontal-line"></span>
-			<div class="ticket_content">
-				<p>@Model.InactiveCustomers</p>
-			</div>
-		</div>
-		<div class="tickets dollar">
-			<span class="ticket_figure"><i class="fa-solid fa-hand-holding-dollar"></i></span>
-			<div class="ticket_header">
-				<p>Venda Mensal Total</p>
-			</div>
-			<span class="horizontal-line"></span>
-			<div class="ticket_content">
-				<p>@_totalSales</p>
-			</div>
-		</div>
 
-	</section>
+		</section>
 
-	<spam class="analytics_totalSalaries"><button class="analytics_totalSalariesBtn">Vencimentos <i class="fa-solid fa-plus"></i></button></spam>
+		<spam class="analytics_totalSalaries"><button class="analytics_totalSalariesBtn">Vencimentos <i class="fa-solid fa-eye"></i></button></spam>
 
-	<section id="analytics_totalSalaries" class="totalSalaries content-cards display analytics ">
-		<div class="tickets people2 ">
-			<span class="ticket_figure"><i class="fa-solid fa-dollar-sign"></i></span>
-			<div class="ticket_header">
-				<p>Salário Base</p>
-			</div>
-			<span class="horizontal-line"></span>
-			<div class="ticket_content">
+		<section id="analytics_totalSalaries" class="totalSalaries content-cards display analytics ">
+			<div class="tickets people2 ">
+				<span class="ticket_figure"><i class="fa-solid fa-dollar-sign"></i></span>
+				<div class="ticket_header">
+					<p>Salário Base</p>
+				</div>
+				<span class="horizontal-line"></span>
+				<div class="ticket_content">
+					<p class="valueHide" hidden>@baseSalary</p>
+					<p class="showValue">R$ ******</p>
 
-				<p class="margin_right"></p>
-				<p id="TotalPortfolio">@baseSalary</p>
+				</div>
 			</div>
-		</div>
-		<div class="tickets handshake2">
-			<span class="ticket_figure"><i class="fa-solid fa-sack-dollar"></i></span>
-			<div class="ticket_header">
-				<p>Comissão</p>
+			<div class="tickets handshake2">
+				<span class="ticket_figure"><i class="fa-solid fa-sack-dollar"></i></span>
+				<div class="ticket_header">
+					<p>Comissão</p>
+				</div>
+				<span class="horizontal-line"></span>
+				<div class="ticket_content">
+					<p class="valueHide" hidden>@_commission</p>
+					<p class="showValue">R$ ******</p>
+				</div>
 			</div>
-			<span class="horizontal-line"></span>
-			<div class="ticket_content">
-				@{
+			<div class="tickets arrow2">
+				<span class="ticket_figure"><i class="fa-solid fa-socks"></i></span>
+				<div class="ticket_header">
+					<p>DSR</p>
+				</div>
+				<span class="horizontal-line"></span>
+				<div class="ticket_content">
+					<p class="valueHide" hidden>@_pwr</p>
+					<p class="showValue">R$ ******</p>
+				</div>
+			</div>
+			<div class="tickets dollar2">
+				<span class="ticket_figure"><i class="fa-regular fa-money-bill-1"></i></span>
+				<div class="ticket_header">
+					<p>Total de vencimentos</p>
+				</div>
+				<span class="horizontal-line"></span>
+				<div class="ticket_content">
+					<p class="valueHide" hidden>@_totalPayment</p>
+					<p class="showValue">R$ ******</p>
+				</div>
+			</div>
 
-				}
-				<p>@_commission</p>
-			</div>
-		</div>
-		<div class="tickets arrow2">
-			<span class="ticket_figure"><i class="fa-solid fa-socks"></i></span>
-			<div class="ticket_header">
-				<p>DSR</p>
-			</div>
-			<span class="horizontal-line"></span>
-			<div class="ticket_content">
-				<p>@_pwr</p>
-			</div>
-		</div>
-		<div class="tickets dollar2">
-			<span class="ticket_figure"><i class="fa-regular fa-money-bill-1"></i></span>
-			<div class="ticket_header">
-				<p>Total de vencimentos</p>
-			</div>
-			<span class="horizontal-line"></span>
-			<div class="ticket_content">
-				<p>@_totalPayment</p>
-			</div>
-		</div>
-
-	</section>
+		</section>
 	</div>
 
 	<!-- Graphics -->
@@ -305,12 +305,12 @@
 															categoryPercentage: 0.5,
 															scales: {
 																y: {
-																	
+
 																},
 																x: {
 																	grid: {
 																		display: false,
-																		
+
 																	},
 																	ticks: {
 																		display: true,
@@ -325,7 +325,7 @@
 																		},
 
 																	},
-																	
+
 
 																},
 															},
@@ -336,7 +336,7 @@
 																	borderWidth: 0,
 																	backgroundColor: 'rgba(0,0,0,.3)',
 																	intersect: true,
-																	
+
 
 																},
 																legend: {

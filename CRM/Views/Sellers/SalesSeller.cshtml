@@ -38,7 +38,7 @@
 			<div class="card_header">
 				<div class="table_float">
 					Clientes
-					<form class="table_float-dates" asp-action="SalesSeller" asp-controller="Seller" method="post">
+					<form class="table_float-dates" asp-action="SalesSeller" asp-controller="Sellers" method="post">
 						<span>Buscar proximos contatos entre:</span>
 						<input type="date" id="initialDate" name="initialDate" />
 						<input type="date" id="finalDate" name="finalDate" />
@@ -48,9 +48,7 @@
 			</div>
 			<div class="card_body">
 				<table id="myTable" class="myTable2 myTable display wrap">
-
 					<thead>
-
 						<tr>
 							<th>
 								Nº
@@ -70,8 +68,7 @@
 							<th>
 								Ações
 							</th>
-						</tr>
-						
+						</tr>						
 					</thead>
 
 					<tbody id="tbody">
@@ -127,7 +124,7 @@
 					<thead>
 
 						<tr>
-							<th colspan="5" style="text-align:center; font-weight:bold; color:#0e54c4;font-size:1.2rem;border:none;border-top:1px solid #ccc">
+							<th colspan="6" style="text-align:center; font-weight:bold; color:#0e54c4;font-size:1.2rem;border:none;border-top:1px solid #ccc">
 								Total de Vendas
 							</th>
 
@@ -135,7 +132,7 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td colspan="5" style="text-align:center; font-weight:bold; color:red;font-size:1.4rem">
+							<td colspan="6" style="text-align:center; font-weight:bold; color:red;font-size:1.4rem">
 								@totalSales.ToString("C2", new System.Globalization.CultureInfo("pt-BR"))
 							</td>
 						</tr>

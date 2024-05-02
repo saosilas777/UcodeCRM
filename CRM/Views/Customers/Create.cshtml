@@ -27,70 +27,86 @@
 	}
 	<div class="formCreateCustomer">
 		<h1>Cadastro de Cliente</h1>
+		<form class="customerCreateForm" asp-controller="Customers" asp-action="GetByZipCode" method="post">
+			<label for="cep" class="cep">
+				<p class="bgWhite">
+					Cep:
+				</p>
+				<input id="cep" value="" type="text" asp-for="Cep" required/>
+				<button><i class="fa-solid fa-magnifying-glass"></i></button>
+			</label>
+		</form>
 
-		<form class="customerCreateForm" asp-action="Create" asp-controller="Customer" method="post">
+		<form class="customerCreateForm" asp-action="Create" asp-controller="Customers" method="post">
 			<label for="codigo" class="">
 				<p>Código</p>
-				<input id="codigo" value="" type="text" asp-for="Codigo" maxlength="5" />
+				<input id="codigo" value="@Model.Codigo" type="text" asp-for="Codigo" maxlength="5" />
 			</label>
 			<label for="cnpj" class="span3">
 				<p class="bgWhite">
 					Cnpj
 				</p>
-				<input id="cnpj" value="" type="text" asp-for="Cnpj" />
+				<input id="cnpj" value="@Model.Cnpj" type="text" asp-for="Cnpj" />
 			</label>
 			<label for="razaoSocial" class="span3">
 				<p>
 					Razão Social
 				</p>
-				<input id="razaoSocial" value="" type="text" asp-for="RazaoSocial" />
+				<input id="razaoSocial" value="@Model.RazaoSocial" type="text" asp-for="RazaoSocial" />
 			</label>
 			<label for="contato" class=" ">
 				<p class="bgWhite">
 					Contato
 				</p>
-				<input id="contato" value="" type="text" asp-for="Contato" />
+				<input id="contato" value="@Model.Contato" type="text" asp-for="Contato" />
 			</label>
+
+
 			<label for="cidade" class="inputCountry">
 				<p class="bgWhite">
 					Cidade
 				</p>
-				<input id="cidade" value="" type="text" asp-for="Cidade" />
+			
+				<input id="cidade" value="@Model.Cidade" type="text" asp-for="Cidade" />
+
 			</label>
 			<label for="uf" class="select">
 				<p>
 					UF
 				</p>
-				<select id="uf" asp-for="Uf">
-					<option value="RO">RO</option>
-					<option value="AC">AC</option>
-					<option value="AM">AM</option>
-					<option value="RR">RR</option>
-					<option value="PA">PA</option>
-					<option value="AP">AP</option>
-					<option value="TO">TO</option>
-					<option value="MA">MA</option>
-					<option value="PI">PI</option>
-					<option value="CE">CE</option>
-					<option value="RN">RN</option>
-					<option value="PB">PB</option>
-					<option value="PE">PE</option>
-					<option value="AL">AL</option>
-					<option value="SE">SE</option>
-					<option value="BA">BA</option>
-					<option value="MG">MG</option>
-					<option value="ES">ES</option>
-					<option value="RJ">RJ</option>
-					<option value="SP" selected>SP</option>
-					<option value="PR">PR</option>
-					<option value="SC">SC</option>
-					<option value="RS">RS</option>
-					<option value="MS">MS</option>
-					<option value="MT">MT</option>
-					<option value="GO">GO</option>
-					<option value="DF">DF</option>
+					<select id="uf" asp-for="Uf">
+						<option value="@Model.Uf">@Model.Uf</option>
+						<option value="RO">RO</option>
+						<option value="AC">AC</option>
+						<option value="AM">AM</option>
+						<option value="RR">RR</option>
+						<option value="PA">PA</option>
+						<option value="AP">AP</option>
+						<option value="TO">TO</option>
+						<option value="MA">MA</option>
+						<option value="PI">PI</option>
+						<option value="CE">CE</option>
+						<option value="RN">RN</option>
+						<option value="PB">PB</option>
+						<option value="PE">PE</option>
+						<option value="AL">AL</option>
+						<option value="SE">SE</option>
+						<option value="BA">BA</option>
+						<option value="MG">MG</option>
+						<option value="ES">ES</option>
+						<option value="RJ">RJ</option>
+						<option value="SP">SP</option>
+						<option value="PR">PR</option>
+						<option value="SC">SC</option>
+						<option value="RS">RS</option>
+						<option value="MS">MS</option>
+						<option value="MT">MT</option>
+						<option value="GO">GO</option>
+						<option value="DF">DF</option>
 
-				</select>
+					</select>
+				
+
 			</label>
 			<div id="email" class="inputEmail">
 				<label for="email">
@@ -100,7 +116,7 @@
 							<i class="fa-solid fa-plus"></i>
 						</a>
 					</p>
-					<input id="email" value="" type="email" asp-for="Emails" name="Emails" />
+					<input id="email" value="@Model.Emails[0]" type="email" asp-for="Emails" name="Emails" />
 				</label>
 			</div>
 
@@ -112,13 +128,13 @@
 							<i class="fa-solid fa-plus"></i>
 						</a>
 					</p>
-					<input id="phone" type="text" asp-for="Phones" name="Phones" value="" />
+					<input id="phone" type="text" asp-for="Phones" name="Phones" value="@Model.Phones[0]" />
 				</label>
 
 			</div>
 
 			<div class="formCreateCustomer_buttons span6">
-				<Button class="backBtn" asp-action="Index" asp-controller="Customer">Voltar</Button>
+				<Button class="backBtn" asp-action="Index" asp-controller="Customers">Voltar</Button>
 				<Button class="cleanBtn" type="reset">Limpar campos</Button>
 				<Button class="saveBtn" type="submit">Salvar</Button>
 			</div>

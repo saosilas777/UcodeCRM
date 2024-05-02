@@ -61,7 +61,7 @@ namespace CRM.Controllers
 		public IActionResult PurchaseDelete(Guid id)
 		{
 			_purchase.DeletePurchase(id);
-			return RedirectToAction("SalesSeller","Seller");
+			return RedirectToAction("SalesSeller","Sellers");
 		}
 
 	}

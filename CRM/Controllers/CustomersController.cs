@@ -9,6 +9,7 @@ using OfficeOpenXml.FormulaParsing.LexicalAnalysis;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using RestSharp;
 
 namespace CRM.Controllers
 {
@@ -29,14 +30,25 @@ namespace CRM.Controllers
 		}
 		#endregion
 
-		public IActionResult Index()
+		public IActionResult Index(string initialDate, string finalDate)
 		{
+			var date = DateTime.Now;
 			var user = _session.GetUserSection();
 			if (user != null)
 			{
-				List<CustomerModel> customers = _customer.BuscarTodos(user.Id);
+				List<CustomerModel> customers = new();
+				if (initialDate == null || finalDate == null)
+				{
+					customers = _customer.BuscarTodos(user.Id);
+					return View(customers);
+				}
+				else
+				{
+					customers = _customer.BuscarTodos(user.Id).Where(x => x.NextContactDate >= DateTime.Parse(initialDate) && x.NextContactDate <= DateTime.Parse(finalDate)).ToList();
+					return View(customers);
 
-				return View(customers);
+				}
+
 			}
 			TempData["ErrorMessage"] = "É necessário efetuar seu login!";
 			return RedirectToAction("Login", "Login");
@@ -70,38 +82,14 @@ namespace CRM.Controllers
 		public IActionResult Create()
 		{
 			var user = _session.GetUserSection();
+			CustomerCreateViewModel customerCreate = new();
 			if (user != null)
 			{
-				return View();
+				return View(customerCreate);
 			}
 			TempData["ErrorMessage"] = "É necessário efetuar seu login!";
 			return RedirectToAction("Login", "Login");
 
-		}
-
-		[HttpPost]
-		public IActionResult FindCustomerByDate(string initialDate, string finalDate)
-		{
-			try
-			{
-				var user = _session.GetUserSection();
-				if (initialDate != null && finalDate != null && user != null)
-				{
-
-					var customers = _customer.BuscarTodos(user.Id).Where(x => x.NextContactDate >= DateTime.Parse(initialDate) && x.NextContactDate <= DateTime.Parse(finalDate)).ToList();
-					return View("Index", customers);
-				}
-				else
-				{
-					return RedirectToAction("Index", "Customer");
-				}
-
-			}
-			catch (Exception)
-			{
-
-				throw;
-			}
 		}
 
 		[HttpPost]
@@ -115,10 +103,10 @@ namespace CRM.Controllers
 					if (res == "Cadastro realizado com sucesso!")
 					{
 						TempData["SuccessMessage"] = res;
-						return View("Create");
+						return View(customer);
 					}
 					TempData["ErrorMessage"] = res;
-					return View("Create");
+					return View(customer);
 
 				}
 
@@ -140,26 +128,66 @@ namespace CRM.Controllers
 			if (update)
 			{
 				TempData["SuccessMessage"] = "Atualização feita com sucesso";
-				return RedirectToAction("Editar", "Customer", new { customer.Id });
+				return RedirectToAction("Editar", "Customers", new { customer.Id });
 			}
 			TempData["ErrorMessage"] = "Ocorreu um erro ao tentar atualizar o cadastro";
-			return RedirectToAction("Editar", "Customer", new { customer.Id });
+			return RedirectToAction("Editar", "Customers", new { customer.Id });
 		}
 		[HttpPost]
-		public IActionResult RegistrationContact(CustomerEditViewModel customer)
+		public IActionResult RegistrationContact(string anotation, string id, string date)
 		{
-			_customer.RegistrationContact(customer.ContactRecordsAnotation[0], customer.NextContactDate, customer.Id);
-			return RedirectToAction("Editar", "Customer", new { customer.Id });
+			_customer.RegistrationContact(anotation, date, Guid.Parse(id));
+			/*return RedirectToAction("Editar", "Customers", new { customer.Id });*/
+			Guid _id = Guid.Parse(id);
+			return RedirectToAction("Editar", "Customers", new { id = _id });
 		}
 
 		[HttpPost]
 		public IActionResult Delete(CustomerModel customer)
 		{
 			_customer.Deletar(customer);
-			return RedirectToAction("Index", "Customer");
+			return RedirectToAction("Index", "Customers");
 		}
 
-		
+		[HttpPost]
+		public IActionResult GetByZipCode(string cep)
+		{
+			var url = $"https://viacep.com.br/ws/{cep}/json";
+			var response = GET(url);
+
+			ZipCodeModel result = JsonConvert.DeserializeObject<ZipCodeModel>(response);
+
+
+			CustomerCreateViewModel customerCreate = new();
+			customerCreate.Cidade = result.localidade;
+			customerCreate.Uf = result.uf;
+
+
+
+			return View("Create", customerCreate);
+		}
+
+		[HttpPost]
+		public IActionResult ContactDateEdit(string nextContactDate, string id)
+		{
+			_customer.ContactDateEdit(DateTime.Parse(nextContactDate), Guid.Parse(id));
+			return RedirectToAction("Index","Customers");
+			
+		}
+
+
+		public static dynamic GET(string url)
+		{
+			var client = new RestClient(url);
+			client.Timeout = -1;
+			var request = new RestRequest(Method.GET);
+			IRestResponse response = client.Execute(request);
+			return response.Content;
+
+		}
+
+
+
 
 	}
 }

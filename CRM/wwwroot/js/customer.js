@@ -90,26 +90,6 @@
     const editableInsert = document.querySelectorAll('.editableInsert')
 
 
-/*    insertBtn.addEventListener('click', function () {
-        insertBtn.style.display = 'none'
-        cancelInsertBtn.style.display = 'flex'
-        saveInsertBtn.style.display = 'flex'
-        InsertRegistration();
-    })
-*/
-/*    cancelInsertBtn.addEventListener('click', function () {
-        insertBtn.style.display = 'flex'
-        cancelInsertBtn.style.display = 'none'
-        saveInsertBtn.style.display = 'none'
-        InsertRegistration()
-    })*/
-
-/*    saveInsertBtn.addEventListener('click', function () {
-        const submitInsertBtn = document.getElementById('submitInsertBtn')
-        submitInsertBtn.click();
-    })*/
-
-
     function InsertRegistration() {
         editableInsert.forEach(function (item) {
             item.disabled = !item.disabled
@@ -120,6 +100,20 @@
     ContactRecordsAnotation.addEventListener('focus', function () {
         const ContactRecordsDate = document.getElementById('ContactRecordsDate')
         ContactRecordsDate.value = '';
+    })
+
+
+    const lastPurchaseValue = document.getElementById('lastPurchaseValue')
+    const value = lastPurchaseValue.value
+    lastPurchaseValue.addEventListener('focus', () => {
+        
+        lastPurchaseValue.value = ''
+    })
+
+    lastPurchaseValue.addEventListener('blur',()=>{
+        if (lastPurchaseValue.value == '') {
+            lastPurchaseValue.value = value
+        }
     })
 })()
 

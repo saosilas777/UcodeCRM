@@ -74,10 +74,12 @@ function SortingDates() {
 
     datas.forEach(function (data) {
         let date = data.innerText
+        const p = data.querySelector('p')
+        const id = p.getAttribute('id')
         let _newdate = new Date(date).toLocaleDateString('pt-BR')
         const dateLong = new Date(date)
         if (today > dateLong) {
-            data.innerHTML = `<p class="lastPurchaseRed">${_newdate}</p>`
+            data.innerHTML = `<p id="${id}" class="lastPurchaseRed">${_newdate}</p>`
         }
         else {
             data.innerHTML = `<p class="lastPurchase">${_newdate}</p>`
