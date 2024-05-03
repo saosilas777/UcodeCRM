@@ -39,8 +39,8 @@ $(document).ready(function () {
 
             new DataTable(id, {
                 lengthMenu: [
-                    [-1, 5, 10, 15, 20],
-                    ['Todos', 5, 10, 15, 20]
+                    [50, 5, 10, 15, 20, -1],
+                    [50, 5, 10, 15, 20, 'Todos']
                 ],
 
                 language: {

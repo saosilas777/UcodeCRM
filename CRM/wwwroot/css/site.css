@@ -1944,4 +1944,8 @@ p.newField {
         grid-template-columns: repeat(2,1fr);
         grid-auto-rows: max-content;
     }
+    #nextContactDateView .dateInput{
+        width:20%;
+        height:20%;
+    }
 }

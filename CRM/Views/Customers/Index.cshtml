@@ -12,6 +12,7 @@
 			</div>
 		</div>
 	</form>
+	
 </div>
 <div class="main">
 	@await Component.InvokeAsync("Header")
@@ -49,6 +50,7 @@
 				<input id="btn-send-file" class="btn btn-success input-file col-md-2 text-center" name="uploadFile" type="file" multiple hidden />
 				<button id="sendFileBtn" class="col-md-2 input-file-btn" type="submit">Enviar</button>
 			</form>
+			<a asp-action="ExportXls" asp-controller="Customers">Exportar Clientes</a>
 			<div id="inputFileName"></div>
 		</div>
 		<div class="addCustomerBtn">

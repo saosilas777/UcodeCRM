@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using RestSharp;
+using ClosedXML.Excel;
 
 namespace CRM.Controllers
 {
@@ -52,6 +53,25 @@ namespace CRM.Controllers
 			}
 			TempData["ErrorMessage"] = "É necessário efetuar seu login!";
 			return RedirectToAction("Login", "Login");
+		}
+
+		[HttpGet]
+		public IActionResult ExportXls()
+		{
+			var user = _session.GetUserSection();
+			var customers = _customer.BuscarTodos(user.Id);
+			ExportXlsService.ExportXls(customers);
+
+			var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/files/clientes.xlsx");
+			var memory = new MemoryStream();
+			using(var stream = new FileStream(path, FileMode.Open))
+			{
+				stream.CopyTo(memory);
+			}
+			memory.Position = 0;
+			var contentType = "APPLICATION/octet-stream";
+			var fileName = Path.GetFileName(path);
+			return File(memory,contentType,fileName);
 		}
 		public IActionResult GetByStatus()
 		{
