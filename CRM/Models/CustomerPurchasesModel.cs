@@ -2,7 +2,7 @@
 
 namespace CRM.Models
 {
-	public class CustomerPurchases
+	public class CustomerPurchasesModel
 	{
 		[Key]
 		public Guid Id { get; set; }

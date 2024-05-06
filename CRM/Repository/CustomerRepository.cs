@@ -27,7 +27,7 @@ namespace CRM.Repository
 			{
 				Id = custumerDb.Id,
 				Codigo = custumerDb.Codigo,
-				Cnpj = custumerDb.Cnpj,
+				Cnpj = custumerDb.Cnpj.ToString(),
 				RazaoSocial = custumerDb.RazaoSocial,
 				Status = custumerDb.Status,
 				Cidade = custumerDb.Cidade,
@@ -55,7 +55,7 @@ namespace CRM.Repository
 		}
 		public List<CustomerModel> BuscarTodos(Guid id)
 		{
-			return _context.Customers.Include(x => x.Emails).Include(x => x.ContactRecords).Include(x => x.CustomerPurchases.OrderBy(x => x.PurchaseDate)).Include(x => x.Phones).Where(x => x.UserId == id).OrderBy(x => x.NextContactDate).AsNoTracking().ToList();
+			return _context.Customers.Include(x => x.Emails).Include(x => x.ContactRecords).Include(x => x.CustomerPurchases.OrderBy(x => x.PurchaseDate)).Include(x => x.Phones).Where(x => x.UserId == id).OrderByDescending(x => x.NextContactDate).AsNoTracking().ToList();
 		}
 		public List<CustomerModel> ListarTodos()
 		{
@@ -234,7 +234,7 @@ namespace CRM.Repository
 				var purchase = customerDb.CustomerPurchases.FirstOrDefault(x => x.PurchaseValue == _customer.LastPurchaseValue && x.PurchaseDate == _customer.LastPurchaseDate);
 				if (_customer.LastPurchaseValue > 0 && purchase != null || _customer.LastPurchaseValue != 0)
 				{
-					CustomerPurchases _purchase = new();
+					CustomerPurchasesModel _purchase = new();
 					_purchase.PurchaseValue = _customer.LastPurchaseValue;
 					_purchase.PurchaseDate = _customer.LastPurchaseDate;
 					_purchase.PurchaseValue = _customer.LastPurchaseValue;
@@ -295,7 +295,6 @@ namespace CRM.Repository
 
 
 		}
-
 		public List<CustomerModel> GetByStatus(string status)
 		{
 			bool _status;

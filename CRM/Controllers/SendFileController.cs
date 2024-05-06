@@ -41,19 +41,19 @@ namespace CRM.Controllers
 					{
 						var result = _sendFileService.ReadXls(uploadFile);
 						TempData["SuccessMessage"] = result;
-						return RedirectToAction("Index", "Customer");
+						return RedirectToAction("Index", "Customers");
 					}
 					TempData["ErrorMessage"] = "O formato do arquivo precisa ser \".xlsx\" !";
-					return RedirectToAction("Index", "Customer");
+					return RedirectToAction("Index", "Customers");
 				}
 				TempData["ErrorMessage"] = "Nenhum arquivo foi selecionado, tente novamente!";
-				return RedirectToAction("Index", "Customer");
+				return RedirectToAction("Index", "Customers");
 			}
 			catch (Exception e)
 			{
 
 				TempData["ErrorMessage"] = $"Não foi possível ler o arquivo inserido. Error({e.Message})" ;
-				return RedirectToAction("Index", "Customer");
+				return RedirectToAction("Index", "Customers");
 			}
 		}
 

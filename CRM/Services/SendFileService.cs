@@ -14,14 +14,14 @@ namespace CRM.Services
 		#region Dependencies
 		private readonly IUserSession _session;
 		private readonly ICustomerRepository _customerRepository;
-		private readonly ICustomerPurchasesRepository _puchasesRepository;
+		private readonly ICustomerPurchasesRepository _purchasesRepository;
 		public SendFileService(IUserSession section,
 							   ICustomerRepository customerRepository,
 							   ICustomerPurchasesRepository puchasesRepository)
 		{
 			_session = section;
 			_customerRepository = customerRepository;
-			_puchasesRepository = puchasesRepository;
+			_purchasesRepository = puchasesRepository;
 		}
 		#endregion
 		public string ReadXls(IFormFile uploadFile)
@@ -30,7 +30,7 @@ namespace CRM.Services
 
 			var user = _session.GetUserSection();
 			List<CustomerModel> customers = _customerRepository.BuscarTodos(user.Id);
-			List<CustomerPurchases> purchases = new();
+			List<CustomerPurchasesModel> purchases = new();
 			string result = string.Empty;
 			ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
 
@@ -45,19 +45,13 @@ namespace CRM.Services
 				{
 					for (int row = 2; row <= rowCount; row++)
 					{
-						CustomerPurchases purchase = new CustomerPurchases();
+						CustomerPurchasesModel purchase = new CustomerPurchasesModel();
 
-						for (int i = 0; i < customers.Count(); i++)
-						{
-							if (worksheet.Cells[row, 1].Value.ToString() == customers[i].Codigo)
-							{
-								purchase.Customer = customers[i];
-								break;
-							}
-						}
+						var _customer = customers.Find(x => x.Codigo == worksheet.Cells[row, 1].Value.ToString());
 						purchase.CustomerCode = int.Parse(worksheet.Cells[row, 1].Value.ToString());
 						purchase.PurchaseDate = DateTime.Parse(worksheet.Cells[row, 3].Value.ToString());
 						purchase.PurchaseValue = double.Parse(worksheet.Cells[row, 4].Value.ToString());
+						purchase.Customer = _customer;
 						purchase.UserId = user.Id;
 
 
@@ -96,11 +90,13 @@ namespace CRM.Services
 						List<PhoneModel> phones = new();
 						phones.Add(_phoneModel);
 
+						string cnpj = worksheet.Cells[row, 2].Value.ToString();
+
 						CustomerModel customer = new CustomerModel()
 						{
 
 							Codigo = worksheet.Cells[row, 1].Value.ToString(),
-							Cnpj = worksheet.Cells[row, 2].Value.ToString(),
+							Cnpj = cnpj.PadLeft(13, '0'),
 							RazaoSocial = worksheet.Cells[row, 3].Value.ToString(),
 							Status = status,
 							Emails = emails,
@@ -117,9 +113,29 @@ namespace CRM.Services
 					}
 
 				}
+
+				/*UpdateCustomers(customers);*/
 				result = VerifyDuplicatedCustomers(customers);
 				return result;
 			}
+		}
+
+		public void UpdateCustomers(List<CustomerModel> customers)
+		{
+			var user = _session.GetUserSection();
+			var customersDb = _customerRepository.BuscarTodos(user.Id);
+
+			List<CustomerModel> _customers = new();
+
+			foreach (var item in customersDb)
+			{
+				var customer = customers.Find(x => x.Codigo == item.Codigo);
+				customer.Codigo = item.Codigo;
+				customer.Cnpj = item.Cnpj;
+				customer.RazaoSocial = item.RazaoSocial;
+				_customers.Add(item);
+			}
+			_customerRepository.AtualizarTodos(_customers);
 		}
 
 		public string VerifyDuplicatedCustomers(List<CustomerModel> customer)
@@ -156,9 +172,9 @@ namespace CRM.Services
 
 		//TODO
 		//implementar e verificar se não há duplicidade no envio das compras por cliente ()
-		public string VerifyDuplicatedPurchases(List<CustomerPurchases> purchases)
+		public string VerifyDuplicatedPurchases(List<CustomerPurchasesModel> purchases)
 		{
-			List<CustomerPurchases> purchasesDb = _puchasesRepository.GetPurchases();
+			List<CustomerPurchasesModel> purchasesDb = _purchasesRepository.GetPurchases();
 
 			Guid id = Guid.NewGuid();
 			if (purchasesDb.Count() > 0)
@@ -177,23 +193,20 @@ namespace CRM.Services
 
 					}
 				}
-			}
-
-
-			for (int i = 0; i < purchases.Count(); i++)
-			{
-				if (purchases[i].Id == id || purchases[i].Customer == null)
+				for (int i = 0; i < purchases.Count(); i++)
 				{
-					purchases.Remove(purchases[i]);
-					i = -1;
+					if (purchases[i].Id == id || purchases[i].Customer == null)
+					{
+						purchases.Remove(purchases[i]);
+						i = -1;
+					}
 				}
 			}
 
 
-
 			if (purchases.Count() > 0)
 			{
-				_puchasesRepository.SavePurchases(purchases);
+				_purchasesRepository.SavePurchases(purchases);
 				return "Valores atualizados com sucesso";
 			}
 			return "Nenhum valor a ser atualizado";

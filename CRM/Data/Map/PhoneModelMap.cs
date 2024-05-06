@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CRM.Data.Map
 {
-    public class _PhoneModelMap : IEntityTypeConfiguration<PhoneModel>
+    public class PhoneModelMap : IEntityTypeConfiguration<PhoneModel>
     {
         public void Configure(EntityTypeBuilder<PhoneModel> builder)
         {

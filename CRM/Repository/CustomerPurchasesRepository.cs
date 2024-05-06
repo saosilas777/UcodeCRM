@@ -14,12 +14,18 @@ namespace CRM.Repository
 			_context = context;
 		}
 
-		public List<CustomerPurchases> GetPurchases()
+		public List<CustomerPurchasesModel> GetPurchases()
 		{
 			return _context.CustomerPurchases.ToList();
 		}
 
-		public bool SavePurchases(List<CustomerPurchases> purchases)
+
+		public void AddPurchase(CustomerPurchasesModel purchase)
+		{
+			_context.CustomerPurchases.Update(purchase);
+			_context.SaveChanges();
+		}
+		public bool SavePurchases(List<CustomerPurchasesModel> purchases)
 		{
 			_context.CustomerPurchases.AddRange(purchases);
 			_context.SaveChanges();

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CRM.Data.Map
 {
-    public class _EmailModelMap : IEntityTypeConfiguration<EmailModel>
+    public class EmailModelMap : IEntityTypeConfiguration<EmailModel>
     {
         public void Configure(EntityTypeBuilder<EmailModel> builder)
         {

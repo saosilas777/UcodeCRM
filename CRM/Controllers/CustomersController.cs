@@ -62,16 +62,7 @@ namespace CRM.Controllers
 			var customers = _customer.BuscarTodos(user.Id);
 			ExportXlsService.ExportXls(customers);
 
-			var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/files/clientes.xlsx");
-			var memory = new MemoryStream();
-			using(var stream = new FileStream(path, FileMode.Open))
-			{
-				stream.CopyTo(memory);
-			}
-			memory.Position = 0;
-			var contentType = "APPLICATION/octet-stream";
-			var fileName = Path.GetFileName(path);
-			return File(memory,contentType,fileName);
+			return ExportFile();
 		}
 		public IActionResult GetByStatus()
 		{
@@ -205,9 +196,20 @@ namespace CRM.Controllers
 			return response.Content;
 
 		}
-
-
-
+		public FileStreamResult ExportFile()
+		{
+			var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/files/clientes.xlsx");
+			var memory = new MemoryStream();
+			using (var stream = new FileStream(path, FileMode.Open))
+			{
+				stream.CopyTo(memory);
+			}
+			memory.Position = 0;
+			var contentType = "APPLICATION/octet-stream";
+			var fileName = Path.GetFileName(path);
+			
+			return File(memory, contentType, fileName);
+		}
 
 	}
 }

@@ -135,11 +135,11 @@ namespace CRM.Services
 
 				TotalAnnualSales totalAnnualSales = new TotalAnnualSales();
 
-				List<CustomerPurchases> purchases = new();
+				List<CustomerPurchasesModel> purchases = new();
 
-				for(int i =0;i < customer.Count(); i++)
+				for (int i = 0; i < customer.Count(); i++)
 				{
-					for (int j = 0; j < customer[i].CustomerPurchases.Count() ; j++)
+					for (int j = 0; j < customer[i].CustomerPurchases.Count(); j++)
 					{
 						purchases.Add(customer[i].CustomerPurchases[j]);
 					}
@@ -156,9 +156,11 @@ namespace CRM.Services
 					&& item.PurchaseDate <= DateTime.Parse($"{year}-01-20"))
 					{
 						totalAnnualSales.January += item.PurchaseValue;
-						if (!_customers.Contains(item.Customer))
+
+						var _customer = customer.Find(x => x.Id == item.Id);
+						if (!_customers.Contains(_customer))
 						{
-							_customers.Add(item.Customer);
+							_customers.Add(_customer);
 							customersServed.January = _customers.Count();
 						}
 					}

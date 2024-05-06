@@ -14,8 +14,8 @@ namespace CRM.Models
 		public string Uf { get; set; } = string.Empty;
 		public List<EmailModel>? Emails { get; set; }
 		public List<PhoneModel>? Phones { get; set; }
-		public string Contact { get; set; }
-		public List<CustomerPurchases>? CustomerPurchases { get; set; }
+		public string Contact { get; set; } = string.Empty;
+		public List<CustomerPurchasesModel>? CustomerPurchases { get; set; }
 		public List<ContactRecords>? ContactRecords { get; set; }
 		public DateTime NextContactDate { get; set; }
 		public Guid UserId { get; set; }

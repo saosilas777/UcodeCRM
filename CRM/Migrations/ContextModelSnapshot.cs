@@ -89,7 +89,7 @@ namespace CRM.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("CRM.Models.CustomerPurchases", b =>
+            modelBuilder.Entity("CRM.Models.CustomerPurchasesModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -243,7 +243,7 @@ namespace CRM.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("CRM.Models.CustomerPurchases", b =>
+            modelBuilder.Entity("CRM.Models.CustomerPurchasesModel", b =>
                 {
                     b.HasOne("CRM.Models.CustomerModel", "Customer")
                         .WithMany("CustomerPurchases")

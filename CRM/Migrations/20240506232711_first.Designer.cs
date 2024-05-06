@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRM.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20240226140703_first")]
+    [Migration("20240506232711_first")]
     partial class first
     {
         /// <inheritdoc />
@@ -92,7 +92,7 @@ namespace CRM.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("CRM.Models.CustomerPurchases", b =>
+            modelBuilder.Entity("CRM.Models.CustomerPurchasesModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -246,7 +246,7 @@ namespace CRM.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("CRM.Models.CustomerPurchases", b =>
+            modelBuilder.Entity("CRM.Models.CustomerPurchasesModel", b =>
                 {
                     b.HasOne("CRM.Models.CustomerModel", "Customer")
                         .WithMany("CustomerPurchases")

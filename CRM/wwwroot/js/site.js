@@ -39,8 +39,8 @@ $(document).ready(function () {
 
             new DataTable(id, {
                 lengthMenu: [
-                    [50, 5, 10, 15, 20, -1],
-                    [50, 5, 10, 15, 20, 'Todos']
+                    [-1, 5, 10, 15, 20, ],
+                    ['Todos', 5, 10, 15, 20, ]
                 ],
 
                 language: {
@@ -57,7 +57,7 @@ $(document).ready(function () {
                 },
                 columnDefs: [
 
-                    { orderable: false, targets: [2] }
+                    { orderable: false, targets: [1] }
 
 
                 ]

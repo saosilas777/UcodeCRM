@@ -26,16 +26,28 @@ namespace CRM.Services
 				ExportXlsModel export = new()
 				{
 					Codigo = item.Codigo,
+					Cnpj = item.Cnpj.ToString(),
 					RazaoSocial = item.RazaoSocial,
-					Cnpj = item.Cnpj,
 					Status = status,
+					Email = item.Emails[0].Email,
+					Telefone = item.Phones[0].Phone,
+					Compradores = item.Contact,
 					Cidade = item.Cidade,
 					Uf = item.Uf,
-					Email = item.Emails[0].Email,
-					Phone = item.Phones[0].Phone,
-					Contact = item.Contact
+					DataProximoContato = item.NextContactDate.ToString("dd/MM/yyyy")
 
 				};
+				if (item.ContactRecords.Count() > 0)
+				{
+					export.DataUltimoContato = item.ContactRecords[0].RegistrationDate.ToString("dd/MM/yyyy");
+				}
+				if (item.CustomerPurchases.Count() > 0)
+				{
+					export.DataUltimaCompra = item.CustomerPurchases[0].PurchaseDate.ToString("dd/MM/yyyy");
+					export.ValorUltimaCompra = item.CustomerPurchases[0].PurchaseValue.ToString();
+				}
+				
+
 				xlsModels.Add(export);
 			}
 			IXLWorkbook workbook = new XLWorkbook();

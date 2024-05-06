@@ -21,7 +21,7 @@ namespace CRM.Controllers
 			var user = _session.GetUserSection();
 			if (user != null)
 			{
-				List<CustomerPurchases> purchases = new();
+				List<CustomerPurchasesModel> purchases = new();
 
 				return View(purchases);
 			}
