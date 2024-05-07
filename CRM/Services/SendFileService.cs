@@ -19,7 +19,7 @@ namespace CRM.Services
 		private readonly Context _context;
 		public SendFileService(IUserSession section,
 							   ICustomerRepository customerRepository,
-							   ICustomerPurchasesRepository puchasesRepository,Context context)
+							   ICustomerPurchasesRepository puchasesRepository, Context context)
 		{
 			_session = section;
 			_customerRepository = customerRepository;
@@ -33,7 +33,7 @@ namespace CRM.Services
 
 			var user = _session.GetUserSection();
 			List<CustomerModel> customers = _customerRepository.BuscarTodos(user.Id);
-			List<CustomerPurchasesModel> purchases = new();
+			List<PurchaseModel> purchases = new();
 			string result = string.Empty;
 			ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
 
@@ -48,21 +48,21 @@ namespace CRM.Services
 				{
 					for (int row = 2; row <= rowCount; row++)
 					{
-						CustomerPurchasesModel purchase = new CustomerPurchasesModel();
-
-						var _customer = customers.Find(x => x.Codigo == worksheet.Cells[row, 1].Value.ToString());
-						purchase.CustomerCode = int.Parse(worksheet.Cells[row, 1].Value.ToString());
+						PurchaseModel purchase = new PurchaseModel();
+						var cnpj = worksheet.Cells[row, 1].Value.ToString();
+						var customer = customers.Find(x => x.Cnpj == cnpj);
+						purchase.CustomerCode = int.Parse(customer.Codigo);
 						purchase.PurchaseDate = DateTime.Parse(worksheet.Cells[row, 3].Value.ToString());
 						purchase.PurchaseValue = double.Parse(worksheet.Cells[row, 4].Value.ToString());
-						purchase.Customer = _customer;
 						purchase.UserId = user.Id;
-
+						purchase.CustomerId = customer.Id;
 						purchases.Add(purchase);
+
 					};
 
-					_context.CustomerPurchases.AddRange(purchases);
-					_context.SaveChanges();
-					return result;
+					_purchasesRepository.SavePurchases(purchases);
+
+
 				}
 				else
 				{
@@ -113,31 +113,11 @@ namespace CRM.Services
 
 						customers.Add(customer);
 					}
-
+					_customerRepository.AdicionarTodos(customers);
 				}
 
-				/*UpdateCustomers(customers);*/
-				result = VerifyDuplicatedCustomers(customers);
-				return result;
 			}
-		}
-
-		public void UpdateCustomers(List<CustomerModel> customers)
-		{
-			var user = _session.GetUserSection();
-			var customersDb = _customerRepository.BuscarTodos(user.Id);
-
-			List<CustomerModel> _customers = new();
-
-			foreach (var item in customersDb)
-			{
-				var customer = customers.Find(x => x.Codigo == item.Codigo);
-				customer.Codigo = item.Codigo;
-				customer.Cnpj = item.Cnpj;
-				customer.RazaoSocial = item.RazaoSocial;
-				_customers.Add(item);
-			}
-			_customerRepository.AtualizarTodos(_customers);
+			return "Valores atualizados com sucesso!";
 		}
 
 		public string VerifyDuplicatedCustomers(List<CustomerModel> customer)
@@ -174,7 +154,7 @@ namespace CRM.Services
 
 		//TODO
 		//implementar e verificar se não há duplicidade no envio das compras por cliente ()
-	
+
 		public MemoryStream ReadStrem(IFormFile file)
 		{
 			using var stream = new MemoryStream();

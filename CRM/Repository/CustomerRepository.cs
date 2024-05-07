@@ -234,14 +234,14 @@ namespace CRM.Repository
 				var purchase = customerDb.CustomerPurchases.FirstOrDefault(x => x.PurchaseValue == _customer.LastPurchaseValue && x.PurchaseDate == _customer.LastPurchaseDate);
 				if (_customer.LastPurchaseValue > 0 && purchase != null || _customer.LastPurchaseValue != 0)
 				{
-					CustomerPurchasesModel _purchase = new();
+					PurchaseModel _purchase = new();
 					_purchase.PurchaseValue = _customer.LastPurchaseValue;
 					_purchase.PurchaseDate = _customer.LastPurchaseDate;
 					_purchase.PurchaseValue = _customer.LastPurchaseValue;
 					_purchase.CustomerCode = int.Parse(_customer.Codigo);
 					_purchase.Customer = customerDb;
 					_purchase.UserId = user.Id;
-					_context.CustomerPurchases.Add(_purchase);
+					_context.Purchases.Add(_purchase);
 				}
 				customerDb.NextContactDate = DateTime.Parse(_customer.NextContactDate);
 

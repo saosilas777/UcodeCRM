@@ -13,7 +13,7 @@ namespace CRM.Data
 		public DbSet<CustomerModel> Customers { get; set; }
 		public DbSet<EmailModel> Emails { get; set; }
 		public DbSet<PhoneModel> Phones { get; set; }
-		public DbSet<CustomerPurchasesModel> CustomerPurchases { get; set; }
+		public DbSet<PurchaseModel> Purchases { get; set; }
 		public DbSet<ContactRecords> ContactRecords { get; set; }
 		public DbSet<SendFileImageModel> ImageUrl { get; set; }
 		

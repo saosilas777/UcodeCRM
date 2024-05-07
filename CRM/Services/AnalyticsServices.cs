@@ -135,7 +135,7 @@ namespace CRM.Services
 
 				TotalAnnualSales totalAnnualSales = new TotalAnnualSales();
 
-				List<CustomerPurchasesModel> purchases = new();
+				List<PurchaseModel> purchases = new();
 
 				for (int i = 0; i < customer.Count(); i++)
 				{
@@ -158,9 +158,9 @@ namespace CRM.Services
 						totalAnnualSales.January += item.PurchaseValue;
 
 						var _customer = customer.Find(x => x.Id == item.Id);
-						if (!_customers.Contains(_customer))
+						if (!_customers.Contains(item.Customer))
 						{
-							_customers.Add(_customer);
+							_customers.Add(item.Customer);
 							customersServed.January = _customers.Count();
 						}
 					}

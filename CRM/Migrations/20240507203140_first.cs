@@ -82,28 +82,6 @@ namespace CRM.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CustomerPurchases",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CustomerCode = table.Column<int>(type: "int", nullable: false),
-                    PurchaseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PurchaseValue = table.Column<double>(type: "float", nullable: false),
-                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CustomerPurchases", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CustomerPurchases_Customers_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Emails",
                 columns: table => new
                 {
@@ -144,6 +122,28 @@ namespace CRM.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Purchases",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CustomerCode = table.Column<int>(type: "int", nullable: false),
+                    PurchaseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PurchaseValue = table.Column<double>(type: "float", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Purchases", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Purchases_Customers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Customers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Login",
                 columns: table => new
                 {
@@ -169,11 +169,6 @@ namespace CRM.Migrations
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CustomerPurchases_CustomerId",
-                table: "CustomerPurchases",
-                column: "CustomerId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Emails_CustomerId",
                 table: "Emails",
                 column: "CustomerId");
@@ -187,6 +182,11 @@ namespace CRM.Migrations
                 name: "IX_Phones_CustomerId",
                 table: "Phones",
                 column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Purchases_CustomerId",
+                table: "Purchases",
+                column: "CustomerId");
         }
 
         /// <inheritdoc />
@@ -194,9 +194,6 @@ namespace CRM.Migrations
         {
             migrationBuilder.DropTable(
                 name: "ContactRecords");
-
-            migrationBuilder.DropTable(
-                name: "CustomerPurchases");
 
             migrationBuilder.DropTable(
                 name: "Emails");
@@ -209,6 +206,9 @@ namespace CRM.Migrations
 
             migrationBuilder.DropTable(
                 name: "Phones");
+
+            migrationBuilder.DropTable(
+                name: "Purchases");
 
             migrationBuilder.DropTable(
                 name: "Users");

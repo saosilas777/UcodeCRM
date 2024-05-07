@@ -89,34 +89,6 @@ namespace CRM.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("CRM.Models.CustomerPurchasesModel", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("CustomerCode")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("CustomerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("PurchaseDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("PurchaseValue")
-                        .HasColumnType("float");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CustomerId");
-
-                    b.ToTable("CustomerPurchases");
-                });
-
             modelBuilder.Entity("CRM.Models.EmailModel", b =>
                 {
                     b.Property<Guid>("Id")
@@ -185,6 +157,34 @@ namespace CRM.Migrations
                     b.ToTable("Phones");
                 });
 
+            modelBuilder.Entity("CRM.Models.PurchaseModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("CustomerCode")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("PurchaseDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("PurchaseValue")
+                        .HasColumnType("float");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("Purchases");
+                });
+
             modelBuilder.Entity("CRM.Models.SendFileImageModel", b =>
                 {
                     b.Property<Guid>("Id")
@@ -243,17 +243,6 @@ namespace CRM.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("CRM.Models.CustomerPurchasesModel", b =>
-                {
-                    b.HasOne("CRM.Models.CustomerModel", "Customer")
-                        .WithMany("CustomerPurchases")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customer");
-                });
-
             modelBuilder.Entity("CRM.Models.EmailModel", b =>
                 {
                     b.HasOne("CRM.Models.CustomerModel", "Customer")
@@ -280,6 +269,17 @@ namespace CRM.Migrations
                 {
                     b.HasOne("CRM.Models.CustomerModel", "Customer")
                         .WithMany("Phones")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("CRM.Models.PurchaseModel", b =>
+                {
+                    b.HasOne("CRM.Models.CustomerModel", "Customer")
+                        .WithMany("CustomerPurchases")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

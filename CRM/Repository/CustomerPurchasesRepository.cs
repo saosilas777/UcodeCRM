@@ -14,20 +14,21 @@ namespace CRM.Repository
 			_context = context;
 		}
 
-		public List<CustomerPurchasesModel> GetPurchases()
+		public List<PurchaseModel> GetPurchases()
 		{
-			return _context.CustomerPurchases.ToList();
+			/*return _context.Purchases.ToList();*/
+			throw new NotImplementedException();
 		}
 
 
-		public void AddPurchase(CustomerPurchasesModel purchase)
+		public void Add(PurchaseModel purchase)
 		{
-			_context.Update(purchase);
+			_context.Add(purchase);
 			_context.SaveChanges();
 		}
-		public bool SavePurchases(List<CustomerPurchasesModel> purchases)
+		public bool SavePurchases(List<PurchaseModel> purchases)
 		{
-			_context.AddRange(purchases);
+			_context.Purchases.AddRange(purchases);
 			_context.SaveChanges();
 			return true;
 			
@@ -35,8 +36,8 @@ namespace CRM.Repository
 		
 		public bool DeletePurchase(Guid id)
 		{
-			var purchases = _context.CustomerPurchases.FirstOrDefault(x => x.Id == id);
-			_context.CustomerPurchases.Remove(purchases);
+			var purchases = _context.Purchases.FirstOrDefault(x => x.Id == id);
+			_context.Purchases.Remove(purchases);
 			_context.SaveChanges();
 			return true;
 			
