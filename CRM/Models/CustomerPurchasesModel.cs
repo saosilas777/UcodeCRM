@@ -9,7 +9,7 @@ namespace CRM.Models
 		public int CustomerCode { get; set; }
 		public DateTime PurchaseDate { get; set; }
 		public double PurchaseValue { get; set; }
-		public CustomerModel Customer { get; set; }
+		public CustomerModel Customer { get; set; } = new();
 		public Guid UserId { get; set; }
 	}
 }

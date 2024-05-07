@@ -6,6 +6,7 @@ using LicenseContext = System.ComponentModel.LicenseContext;
 using System.Collections.Generic;
 using CRM.Models.ViewModels;
 using CRM.Repository;
+using CRM.Data;
 
 namespace CRM.Services
 {
@@ -15,13 +16,15 @@ namespace CRM.Services
 		private readonly IUserSession _session;
 		private readonly ICustomerRepository _customerRepository;
 		private readonly ICustomerPurchasesRepository _purchasesRepository;
+		private readonly Context _context;
 		public SendFileService(IUserSession section,
 							   ICustomerRepository customerRepository,
-							   ICustomerPurchasesRepository puchasesRepository)
+							   ICustomerPurchasesRepository puchasesRepository,Context context)
 		{
 			_session = section;
 			_customerRepository = customerRepository;
 			_purchasesRepository = puchasesRepository;
+			_context = context;
 		}
 		#endregion
 		public string ReadXls(IFormFile uploadFile)
@@ -54,12 +57,11 @@ namespace CRM.Services
 						purchase.Customer = _customer;
 						purchase.UserId = user.Id;
 
-
-
 						purchases.Add(purchase);
 					};
-					result = VerifyDuplicatedPurchases(purchases);
 
+					_context.CustomerPurchases.AddRange(purchases);
+					_context.SaveChanges();
 					return result;
 				}
 				else
@@ -172,47 +174,7 @@ namespace CRM.Services
 
 		//TODO
 		//implementar e verificar se não há duplicidade no envio das compras por cliente ()
-		public string VerifyDuplicatedPurchases(List<CustomerPurchasesModel> purchases)
-		{
-			List<CustomerPurchasesModel> purchasesDb = _purchasesRepository.GetPurchases();
-
-			Guid id = Guid.NewGuid();
-			if (purchasesDb.Count() > 0)
-			{
-				for (int i = 0; i < purchases.Count(); i++)
-				{
-					for (int j = 0; j < purchasesDb.Count(); j++)
-					{
-						if (purchases[i].CustomerCode == purchasesDb[j].CustomerCode
-							&& purchases[i].PurchaseDate == purchasesDb[j].PurchaseDate
-							&& purchases[i].PurchaseValue == purchasesDb[j].PurchaseValue)
-
-						{
-							purchases[i].Id = id;
-						}
-
-					}
-				}
-				for (int i = 0; i < purchases.Count(); i++)
-				{
-					if (purchases[i].Id == id || purchases[i].Customer == null)
-					{
-						purchases.Remove(purchases[i]);
-						i = -1;
-					}
-				}
-			}
-
-
-			if (purchases.Count() > 0)
-			{
-				_purchasesRepository.SavePurchases(purchases);
-				return "Valores atualizados com sucesso";
-			}
-			return "Nenhum valor a ser atualizado";
-
-
-		}
+	
 		public MemoryStream ReadStrem(IFormFile file)
 		{
 			using var stream = new MemoryStream();

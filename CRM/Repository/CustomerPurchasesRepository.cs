@@ -22,12 +22,12 @@ namespace CRM.Repository
 
 		public void AddPurchase(CustomerPurchasesModel purchase)
 		{
-			_context.CustomerPurchases.Update(purchase);
+			_context.Update(purchase);
 			_context.SaveChanges();
 		}
 		public bool SavePurchases(List<CustomerPurchasesModel> purchases)
 		{
-			_context.CustomerPurchases.AddRange(purchases);
+			_context.AddRange(purchases);
 			_context.SaveChanges();
 			return true;
 			
