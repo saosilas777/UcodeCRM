@@ -5,6 +5,12 @@
 		<div class="dateInput">
 			<input type="date" name="nextContactDate">
 			<input id="customerId" value="" name="id" hidden />
+			<div class="checkBoxCalendary">
+				<label for="chkCalendaryBtn">
+					<input type="checkbox" id="chkCalendaryBtn" name="checkCalendary"> Agendar todos os contatos atrasados para esta data?
+				</label>
+			</div>
+
 			<div class="dateInputBtn">
 				<button id="nextContactDateCancel" type="button">Cancelar</button>
 				<button id="nextContactDateSend" type="button">Enviar</button>
@@ -12,7 +18,7 @@
 			</div>
 		</div>
 	</form>
-	
+
 </div>
 <div class="main">
 	@await Component.InvokeAsync("Header")

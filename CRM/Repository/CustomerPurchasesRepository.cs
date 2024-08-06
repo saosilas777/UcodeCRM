@@ -1,6 +1,7 @@
 ﻿using CRM.Data;
 using CRM.Interfaces;
 using CRM.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CRM.Repository
 {
@@ -16,8 +17,7 @@ namespace CRM.Repository
 
 		public List<PurchaseModel> GetPurchases()
 		{
-			/*return _context.Purchases.ToList();*/
-			throw new NotImplementedException();
+			return _context.Purchases.AsNoTracking().ToList();
 		}
 
 
@@ -26,21 +26,23 @@ namespace CRM.Repository
 			_context.Add(purchase);
 			_context.SaveChanges();
 		}
-		public bool SavePurchases(List<PurchaseModel> purchases)
+		public bool SavePurchases(List<PurchaseModel> _purchases)
 		{
-			_context.Purchases.AddRange(purchases);
+			_context.UpdateRange(_purchases);
 			_context.SaveChanges();
+
+
 			return true;
-			
+
 		}
-		
+
 		public bool DeletePurchase(Guid id)
 		{
 			var purchases = _context.Purchases.FirstOrDefault(x => x.Id == id);
 			_context.Purchases.Remove(purchases);
 			_context.SaveChanges();
 			return true;
-			
+
 		}
 
 

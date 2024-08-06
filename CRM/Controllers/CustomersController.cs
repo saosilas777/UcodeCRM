@@ -179,11 +179,17 @@ namespace CRM.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult ContactDateEdit(string nextContactDate, string id)
+		public IActionResult ContactDateEdit(string nextContactDate, string id, string checkCalendary)
 		{
-			_customer.ContactDateEdit(DateTime.Parse(nextContactDate), Guid.Parse(id));
-			return RedirectToAction("Index","Customers");
-			
+			if (checkCalendary != "on")
+			{
+				_customer.ContactDateEdit(DateTime.Parse(nextContactDate), Guid.Parse(id));
+				return RedirectToAction("Index", "Customers");
+
+			}
+			_customer.ChangeAllNextContactsDates(nextContactDate);
+			return RedirectToAction("Index", "Customers");
+
 		}
 
 
@@ -207,7 +213,7 @@ namespace CRM.Controllers
 			memory.Position = 0;
 			var contentType = "APPLICATION/octet-stream";
 			var fileName = Path.GetFileName(path);
-			
+
 			return File(memory, contentType, fileName);
 		}
 

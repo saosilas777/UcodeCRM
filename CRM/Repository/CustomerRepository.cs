@@ -262,7 +262,21 @@ namespace CRM.Repository
 			_context.SaveChanges();
 			return customers;
 		}
+		public void ChangeAllNextContactsDates(string nextContactDate)
+		{
+			var user = _session.GetUserSection();
+			var customers = _context.Customers.Where(x => x.UserId == user.Id).ToList();
+			for(int i = 0; i < customers.Count();i++)
+			{
+				if (customers[i].NextContactDate < DateTime.Parse(nextContactDate))
+				{
+					customers[i].NextContactDate = DateTime.Parse(nextContactDate);	
+				}
+			}
+			_context.UpdateRange(customers);
+			_context.SaveChanges();
 
+		}
 		public CustomerModel BuscarCustomerPorId(Guid id)
 		{
 			var customer = _context.Customers.FirstOrDefault(x => x.Id == id);

@@ -16,15 +16,15 @@ namespace CRM.Services
 		private readonly IUserSession _session;
 		private readonly ICustomerRepository _customerRepository;
 		private readonly ICustomerPurchasesRepository _purchasesRepository;
-		private readonly Context _context;
+		
 		public SendFileService(IUserSession section,
 							   ICustomerRepository customerRepository,
-							   ICustomerPurchasesRepository puchasesRepository, Context context)
+							   ICustomerPurchasesRepository puchasesRepository)
 		{
 			_session = section;
 			_customerRepository = customerRepository;
 			_purchasesRepository = puchasesRepository;
-			_context = context;
+			
 		}
 		#endregion
 		public string ReadXls(IFormFile uploadFile)
@@ -33,7 +33,7 @@ namespace CRM.Services
 
 			var user = _session.GetUserSection();
 			List<CustomerModel> customers = _customerRepository.BuscarTodos(user.Id);
-			List<PurchaseModel> purchases = new();
+			List<PurchaseModel> purchases = new List<PurchaseModel>();
 			string result = string.Empty;
 			ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
 
@@ -49,18 +49,35 @@ namespace CRM.Services
 					for (int row = 2; row <= rowCount; row++)
 					{
 						PurchaseModel purchase = new PurchaseModel();
-						var cnpj = worksheet.Cells[row, 1].Value.ToString();
-						var customer = customers.Find(x => x.Cnpj == cnpj);
-						purchase.CustomerCode = int.Parse(customer.Codigo);
-						purchase.PurchaseDate = DateTime.Parse(worksheet.Cells[row, 3].Value.ToString());
-						purchase.PurchaseValue = double.Parse(worksheet.Cells[row, 4].Value.ToString());
-						purchase.UserId = user.Id;
-						purchase.CustomerId = customer.Id;
-						purchases.Add(purchase);
+						if (worksheet.Cells[row, 1].Value.ToString() != "")
+						{
+							var cnpj = worksheet.Cells[row, 1].Value.ToString();
+							var customer = customers.Find(x => x.Cnpj == cnpj);
+							purchase.Customer = customer;
+							if (purchase.Customer != null)
+							{
+								purchase.CustomerCode = int.Parse(customer.Codigo);
+								purchase.PurchaseDate = DateTime.Parse(worksheet.Cells[row, 3].Value.ToString());
+								purchase.PurchaseValue = double.Parse(worksheet.Cells[row, 4].Value.ToString());
+								purchase.UserId = user.Id;
+								purchase.CustomerId = customer.Id;
+
+								purchases.Add(purchase);
+							}
+							continue;
+						}
+						else
+						{
+							return "Documento contém células vazias";
+						}
 
 					};
 
-					_purchasesRepository.SavePurchases(purchases);
+					if (VerifyDuplicatedPurchases(purchases))
+					{
+						return "Valores atualizados com sucesso!";
+					}
+					return "Valores não foram atualizados, tente novamente!";
 
 
 				}
@@ -114,11 +131,43 @@ namespace CRM.Services
 						customers.Add(customer);
 					}
 					_customerRepository.AdicionarTodos(customers);
+					return "Valores atualizados com sucesso!";
 				}
 
 			}
-			return "Valores atualizados com sucesso!";
 		}
+
+		public bool VerifyDuplicatedPurchases(List<PurchaseModel> purchases)
+		{
+			var purchasesDb = _purchasesRepository.GetPurchases();
+
+			for (int i = 0; i < purchasesDb.Count(); i++)
+			{
+				for (int j = 0; j < purchases.Count(); j++)
+				{
+					if (purchasesDb[i].PurchaseDate == purchases[j].PurchaseDate
+						&& purchasesDb[i].PurchaseValue == purchases[j].PurchaseValue)
+					{
+						purchases.Remove(purchases[j]);
+					}
+				}
+
+			}
+			
+			if (purchases.Count() != 0)
+			{
+				_purchasesRepository.SavePurchases(purchases);
+				return true;
+			}
+			return false;
+
+
+
+
+
+		}
+
+
 
 		public string VerifyDuplicatedCustomers(List<CustomerModel> customer)
 		{

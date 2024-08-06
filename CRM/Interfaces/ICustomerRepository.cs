@@ -18,7 +18,10 @@ namespace CRM.Interfaces
 		CustomerModel BuscarPorCodigo(int codigo);
 		List<CustomerModel> AtualizarTodos(List<CustomerModel> customers);
 		bool RegistrationContact(string anotation,string date, Guid id);
-		
+
+		void ChangeAllNextContactsDates(string nextContactDate);
+
+
 
 
 

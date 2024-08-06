@@ -1533,8 +1533,8 @@ p.newField {
     }
 
     #nextContactDateView .dateInput {
-        width: 10%;
-        height: 10%;
+        width: 25%;
+        height: 25%;
         display: flex;
         border-radius: 8px;
         flex-direction: column;
@@ -1572,6 +1572,18 @@ p.newField {
     display: none;
 }
 
+#addPhoneNumber, #addEmailBtn {
+    background-color: transparent;
+    border: none;
+    font-size: 1rem;
+    color: #d37f00;
+    cursor: pointer;
+}
+.checkBoxCalendary{
+    color:white;
+    margin-top:1rem;
+
+}
 /*////////////////////////////////////////////////////////////////////////////////////////////*/
 /*SendFile*/
 .envio-arquivos {
@@ -1945,7 +1957,10 @@ p.newField {
         grid-auto-rows: max-content;
     }
     #nextContactDateView .dateInput{
-        width:20%;
-        height:20%;
+        width:25%;
+        height:25%;
+    }
+    #nextContactDateView label{
+        font-size:.8rem;
     }
 }
