@@ -1,5 +1,6 @@
 ﻿using CRM.Models.ViewModels;
 using CRM.Models;
+using CRM.Enums;
 
 namespace CRM.Interfaces
 {
@@ -20,6 +21,7 @@ namespace CRM.Interfaces
 		bool RegistrationContact(string anotation,string date, Guid id);
 
 		void ChangeAllNextContactsDates(string nextContactDate);
+		void ChangePriority(string priority, string priorityId);
 
 
 

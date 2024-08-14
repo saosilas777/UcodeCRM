@@ -343,5 +343,23 @@ namespace CRM.Repository
 				.Include(x => x.CustomerPurchases).Include(x => x.Phones)
 				.Where(x => x.UserId == id && x.NextContactDate <= date).OrderBy(x => x.NextContactDate).AsNoTracking().ToList();
 		}
+
+		public void ChangePriority(string priority, string priorityId)
+		{
+			var customer = BuscarCustomerPorId(Guid.Parse(priorityId));
+
+			switch (priority)
+			{
+				case "green": customer.Priority = Enums.Priority.green;
+					break;
+				case "yellow": customer.Priority = Enums.Priority.yellow;
+					break;
+				case "red": customer.Priority = Enums.Priority.red;
+					break;
+			}
+			_context.Update(customer);
+			_context.SaveChanges();
+		}
+
 	}
 }

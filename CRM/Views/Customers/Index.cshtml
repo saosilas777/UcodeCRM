@@ -3,7 +3,7 @@
 <div id="nextContactDateView">
 	<form asp-controller="Customers" asp-action="ContactDateEdit" method="post">
 		<div class="dateInput">
-			<input type="date" name="nextContactDate">
+			<input type="date" name="nextContactDate" required>
 			<input id="customerId" value="" name="id" hidden />
 			<div class="checkBoxCalendary">
 				<label for="chkCalendaryBtn">
@@ -227,13 +227,41 @@
 									<p id="@item.Id">@item.NextContactDate.ToString("yyyy/MM/dd")</p>
 								</td>
 								<td class="priority">
-									<input type="checkbox"/>
+									@if(item.Priority.ToString() == "green"){
+										<label>
+											<input id="green" class="priorityRadio priorityRadioGreen" name="@item.Id" type="radio" checked />
+										</label>
+									}
+									else
+									{
+										<label>
+											<input id="green" class="priorityRadio priorityRadioGreen" name="@item.Id" type="radio" />
+										</label>
+									}
+									@if (item.Priority.ToString() == "yellow")
+									{
+										<label>
+											<input id="yellow" class="priorityRadio priorityRadioYellow" name="@item.Id" type="radio" checked />
+										</label>
+									}
+									else
+									{
+										<label>
+											<input id="yellow" class="priorityRadio priorityRadioYellow" name="@item.Id" type="radio" />
+										</label>
+									}
+									@if (item.Priority.ToString() == "red")
+									{
+										<label>
+											<input id="red" class="priorityRadio priorityRadioRed" name="@item.Id" type="radio" checked />
+									</label>
+									}
+									else{
+										<label>
+											<input id="red" class="priorityRadio priorityRadioRed" name="@item.Id" type="radio" />
+										</label>
 
-									@*<select id="prioritySelection">
-										<option value="Normal">Normal</option>
-										<option value="Moderado">Moderado</option>
-										<option value="Urgente">Urgente</option>
-									</select>*@
+									}
 								</td>
 								<td>
 									<a asp-action="Editar" asp-controller="Customers" asp-route-id="@item.Id" class="table_actions">
@@ -254,6 +282,11 @@
 			</div>
 		</div>
 	</section>
+	<form asp-action="ChangePriority" asp-controller="Customers" hidden>
+		<input type="text" name="priority" id="priorityStatusChange" value="" />
+		<input type="text" name="priorityId" id="priorityId" value="" />
+		<button type="submit" id="prioritySubmit"></button>
+	</form>
 
 
 </div>
@@ -263,10 +296,26 @@
 </footer>
 
 <script>
+	tbody.addEventListener('change',(e)=>{
+
+		document.getElementById("priorityId").value = e.target.getAttribute('name')
+		document.getElementById("priorityStatusChange").value = e.target.getAttribute("id")
+		document.getElementById("prioritySubmit").click()
+
+
+	})
+</script>
+
+
+
+
+
+<script>
 	const tbody = document.getElementById('tbody')
 	tbody.addEventListener('click', (e) => {
-		console.log(e.target.previousElementSibling)
-		e.target.previousElementSibling.classList.toggle("show")
+		if (e.target.nodeName === 'BUTTON') {
+			e.target.parentNode.querySelector(".ortherData").classList.toggle("show")
+		}
 
 	})
 </script>
@@ -286,7 +335,6 @@
 </script>
 
 <script>
-	const tbody = document.getElementById('tbody')
 	const customerId = document.getElementById('customerId')
 	const nextContactDateView = document.getElementById('nextContactDateView')
 	const nextContactDateSend = document.getElementById('nextContactDateSend')

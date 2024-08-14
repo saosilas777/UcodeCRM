@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CRM.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace CRM.Models
 {
@@ -15,6 +16,7 @@ namespace CRM.Models
 		public List<EmailModel>? Emails { get; set; }
 		public List<PhoneModel>? Phones { get; set; }
 		public string Contact { get; set; } = string.Empty;
+		public Priority Priority { get; set; }
 		public List<PurchaseModel>? CustomerPurchases { get; set; }
 		public List<ContactRecords>? ContactRecords { get; set; }
 		public DateTime NextContactDate { get; set; }

@@ -17,7 +17,7 @@ namespace CRM.Controllers
 	public class CustomersController : Controller
 	{
 		#region Dependencies
-		private readonly ICustomerRepository _customer;
+		private readonly ICustomerRepository _customerRepository;
 		private readonly ICustomerPurchasesRepository _purchases;
 
 		private readonly IUserSession _session;
@@ -25,7 +25,7 @@ namespace CRM.Controllers
 								   IUserSession session, ICustomerPurchasesRepository purchasesRepository
 									)
 		{
-			_customer = customer;
+			_customerRepository = customer;
 			_session = session;
 			_purchases = purchasesRepository;
 		}
@@ -40,12 +40,12 @@ namespace CRM.Controllers
 				List<CustomerModel> customers = new();
 				if (initialDate == null || finalDate == null)
 				{
-					customers = _customer.BuscarTodos(user.Id);
+					customers = _customerRepository.BuscarTodos(user.Id);
 					return View(customers);
 				}
 				else
 				{
-					customers = _customer.BuscarTodos(user.Id).Where(x => x.NextContactDate >= DateTime.Parse(initialDate) && x.NextContactDate <= DateTime.Parse(finalDate)).ToList();
+					customers = _customerRepository.BuscarTodos(user.Id).Where(x => x.NextContactDate >= DateTime.Parse(initialDate) && x.NextContactDate <= DateTime.Parse(finalDate)).ToList();
 					return View(customers);
 
 				}
@@ -59,7 +59,7 @@ namespace CRM.Controllers
 		public IActionResult ExportXls()
 		{
 			var user = _session.GetUserSection();
-			var customers = _customer.BuscarTodos(user.Id);
+			var customers = _customerRepository.BuscarTodos(user.Id);
 			ExportXlsService.ExportXls(customers);
 
 			return ExportFile();
@@ -73,7 +73,7 @@ namespace CRM.Controllers
 		{
 			if (status == null) return View("Index");
 			var user = _session.GetUserSection();
-			List<CustomerModel> customers = _customer.GetByStatus(status);
+			List<CustomerModel> customers = _customerRepository.GetByStatus(status);
 			return View(customers);
 		}
 
@@ -82,7 +82,7 @@ namespace CRM.Controllers
 			var user = _session.GetUserSection();
 			if (user != null)
 			{
-				CustomerEditViewModel customerDb = _customer.BuscarPorId(id);
+				CustomerEditViewModel customerDb = _customerRepository.BuscarPorId(id);
 				return View(customerDb);
 			}
 			TempData["ErrorMessage"] = "É necessário efetuar seu login!";
@@ -110,7 +110,7 @@ namespace CRM.Controllers
 			{
 				if (ModelState.IsValid)
 				{
-					string res = _customer.Create(customer);
+					string res = _customerRepository.Create(customer);
 					if (res == "Cadastro realizado com sucesso!")
 					{
 						TempData["SuccessMessage"] = res;
@@ -135,7 +135,7 @@ namespace CRM.Controllers
 		[HttpPost]
 		public IActionResult Edit(CustomerEditViewModel customer)
 		{
-			var update = _customer.Atualizar(customer);
+			var update = _customerRepository.Atualizar(customer);
 			if (update)
 			{
 				TempData["SuccessMessage"] = "Atualização feita com sucesso";
@@ -147,7 +147,7 @@ namespace CRM.Controllers
 		[HttpPost]
 		public IActionResult RegistrationContact(string anotation, string id, string date)
 		{
-			_customer.RegistrationContact(anotation, date, Guid.Parse(id));
+			_customerRepository.RegistrationContact(anotation, date, Guid.Parse(id));
 			/*return RedirectToAction("Editar", "Customers", new { customer.Id });*/
 			Guid _id = Guid.Parse(id);
 			return RedirectToAction("Editar", "Customers", new { id = _id });
@@ -156,7 +156,7 @@ namespace CRM.Controllers
 		[HttpPost]
 		public IActionResult Delete(CustomerModel customer)
 		{
-			_customer.Deletar(customer);
+			_customerRepository.Deletar(customer);
 			return RedirectToAction("Index", "Customers");
 		}
 
@@ -183,11 +183,11 @@ namespace CRM.Controllers
 		{
 			if (checkCalendary != "on")
 			{
-				_customer.ContactDateEdit(DateTime.Parse(nextContactDate), Guid.Parse(id));
+				_customerRepository.ContactDateEdit(DateTime.Parse(nextContactDate), Guid.Parse(id));
 				return RedirectToAction("Index", "Customers");
 
 			}
-			_customer.ChangeAllNextContactsDates(nextContactDate);
+			_customerRepository.ChangeAllNextContactsDates(nextContactDate);
 			return RedirectToAction("Index", "Customers");
 
 		}
@@ -215,6 +215,13 @@ namespace CRM.Controllers
 			var fileName = Path.GetFileName(path);
 
 			return File(memory, contentType, fileName);
+		}
+
+
+		public IActionResult ChangePriority(string priority, string priorityId)
+		{
+			_customerRepository.ChangePriority(priority, priorityId);
+			return RedirectToAction("Index");
 		}
 
 	}

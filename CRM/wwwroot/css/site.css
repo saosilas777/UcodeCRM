@@ -977,17 +977,18 @@ table.myTable {
 .tbody, .tbody tr th {
     text-align: center;
 }
+
 #tbody .show {
     display: none;
 }
 
-#moreInformations{
-    border:none;
+#moreInformations {
+    border: none;
     color: #3b55be;
-    background-color:transparent;
-    font-size:.9rem;
-    padding-left:.2rem;
-    cursor:pointer;
+    background-color: transparent;
+    font-size: .9rem;
+    padding-left: .2rem;
+    cursor: pointer;
 }
 /*Customer*/
 .customerBody {
@@ -1061,8 +1062,8 @@ table.myTable {
 
     .contentBody-inputs div {
         grid-column: span 3;
-       
     }
+
     .contentBody-inputs .span6 {
         grid-column: span 6;
     }
@@ -1106,7 +1107,7 @@ table.myTable {
     border: .6rem solid white;
     min-height: 42.1875rem;
     max-height: 42.1875rem;
-    max-width:23.625rem;
+    max-width: 23.625rem;
     box-shadow: 2px 0 10px 2px black;
     border-radius: 8px;
     background-color: white;
@@ -1249,8 +1250,7 @@ table.myTable {
     top: 50vh;
     right: 0;
     background-color: transparent;
-    z-index:1;
-
+    z-index: 1;
 }
 
 #spanAlert {
@@ -1313,19 +1313,20 @@ table.myTable {
     padding: .2rem 0;
     align-items: flex-end;
 }
-.priority{
-    text-align:center;
+
+.priority {
+    text-align: center;
 }
 
 #selection option {
     background-color: var(--table-bg);
 }
 
-    #selection:focus {
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        outline: none;
-    }
+#selection:focus {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+}
 
 .formCreateCustomer {
     width: 40%;
@@ -1591,10 +1592,48 @@ p.newField {
     color: #d37f00;
     cursor: pointer;
 }
-.checkBoxCalendary{
-    color:white;
-    margin-top:1rem;
 
+.checkBoxCalendary {
+    color: white;
+    margin-top: 1rem;
+}
+
+.priorityRadio {
+    position: relative;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border: none;
+    outline: 2px solid #ccc;
+    border-radius: 50%;
+    background-color: white;
+}
+
+    .priorityRadio:before {
+        content: '';
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        outline: 2px solid #ccc;
+        border-radius: 50%;
+        background-color: green;
+        opacity: 0;
+    }
+
+.priorityRadioGreen:before {
+    background-color: green
+}
+
+.priorityRadioYellow:before {
+    background-color: #ffcb00;
+}
+
+.priorityRadioRed:before {
+    background-color: red;
+}
+
+.priorityRadio:checked:before {
+    opacity: 1;
 }
 /*////////////////////////////////////////////////////////////////////////////////////////////*/
 /*SendFile*/
@@ -1968,11 +2007,13 @@ p.newField {
         grid-template-columns: repeat(2,1fr);
         grid-auto-rows: max-content;
     }
-    #nextContactDateView .dateInput{
-        width:25%;
-        height:25%;
+
+    #nextContactDateView .dateInput {
+        width: 25%;
+        height: 25%;
     }
-    #nextContactDateView label{
-        font-size:.8rem;
+
+    #nextContactDateView label {
+        font-size: .8rem;
     }
 }
