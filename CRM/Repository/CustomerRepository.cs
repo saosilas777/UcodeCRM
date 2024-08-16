@@ -352,8 +352,6 @@ namespace CRM.Repository
 			{
 				case "green": customer.Priority = Enums.Priority.green;
 					break;
-				case "yellow": customer.Priority = Enums.Priority.yellow;
-					break;
 				case "red": customer.Priority = Enums.Priority.red;
 					break;
 			}

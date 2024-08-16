@@ -37,7 +37,9 @@ $(document).ready(function () {
 
     function getTable(id) {
 
-            new DataTable(id, {
+        new DataTable(id, {
+
+                order:[[7,'asc']],
                 lengthMenu: [
                     [-1, 5, 10, 15, 20, ],
                     ['Todos', 5, 10, 15, 20, ]

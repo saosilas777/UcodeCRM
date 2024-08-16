@@ -148,7 +148,7 @@
 										}
 									</p>
 
-									<p><b>Contato: </b>@item.Contact</p>
+									<p><b>Contato: </b>@item.Contact</p> 
 
 									<div class="ortherData show">
 										<p><b>Email: </b>@item.Emails[0].Email</p>
@@ -236,18 +236,6 @@
 									{
 										<label>
 											<input id="green" class="priorityRadio priorityRadioGreen" name="@item.Id" type="radio" />
-										</label>
-									}
-									@if (item.Priority.ToString() == "yellow")
-									{
-										<label>
-											<input id="yellow" class="priorityRadio priorityRadioYellow" name="@item.Id" type="radio" checked />
-										</label>
-									}
-									else
-									{
-										<label>
-											<input id="yellow" class="priorityRadio priorityRadioYellow" name="@item.Id" type="radio" />
 										</label>
 									}
 									@if (item.Priority.ToString() == "red")
@@ -373,13 +361,7 @@
 	})
 </script>
 
-<script>
-	setTimeout(function () {
-		document.getElementById("prioritySorting").click()
-	}, 1000)
-	
-</script>
-@*<script src="/js/SelectTableItems.js"></script>*@
+<script src="/js/SelectTableItems.js"></script>
 <script src="/js/Alerts.js"></script>
 
 
