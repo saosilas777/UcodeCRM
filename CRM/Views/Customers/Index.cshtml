@@ -116,7 +116,7 @@
 								Próximo Contato em:
 							</th>
 
-							<th>
+							<th id="prioritySorting">
 								Prioridade
 							</th>
 							<th>
@@ -372,7 +372,14 @@
 
 	})
 </script>
-<script src="/js/SelectTableItems.js"></script>
+
+<script>
+	setTimeout(function () {
+		document.getElementById("prioritySorting").click()
+	}, 1000)
+	
+</script>
+@*<script src="/js/SelectTableItems.js"></script>*@
 <script src="/js/Alerts.js"></script>
 
 
