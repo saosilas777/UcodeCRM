@@ -3,6 +3,8 @@
 let _alert = document.getElementById('alert');
 
 
+const body = document.querySelector('body')
+
 const customer = document.getElementById('customers')
 const analytics = document.getElementById('analytics')
 const home = document.getElementById('home')
@@ -28,43 +30,44 @@ if (url.includes('Seller')) {
 }
 
 $(document).ready(function () {
-    const myTable = "#myTable"
-    const myTable2 = "#myTable2"
-    getTable(myTable)
-    getTable(myTable2)
+    const myTable = document.getElementById("myTable")
+
+    let _order = [[8, 'asc']]
+    let _orderable = 1
+    if (myTable.className.endsWith('sales')) {
+        _order = []
+        _orderable = 5
+    }
+    getTable(myTable, _order)
     SortingDates()
     ConvertDates()
 
-    function getTable(id) {
-
+    function getTable(id, _order) {
         new DataTable(id, {
 
-                order:[[7,'asc']],
-                lengthMenu: [
-                    [-1, 5, 10, 15, 20, ],
-                    ['Todos', 5, 10, 15, 20, ]
-                ],
+            order: _order,
+            lengthMenu: [
+                [-1, 5, 10, 15, 20,],
+                ['Todos', 5, 10, 15, 20,]
+            ],
 
-                language: {
-                    lengthMenu: "Listar _MENU_ clientes",
-                    search: "Procurar ",
-                    processing: "Processando...",
-                    emptyTable: "Nenhum registro encontrado",
-                    paginate: {
-                        first: "Primeira página",
-                        previous: "Anterior",
-                        next: "Próximo",
-                        last: "Última página"
-                    }
-                },
-                columnDefs: [
+            language: {
+                lengthMenu: "Listar _MENU_ clientes",
+                search: "Procurar ",
+                processing: "Processando...",
+                emptyTable: "Nenhum registro encontrado",
+                paginate: {
+                    first: "Primeira página",
+                    previous: "Anterior",
+                    next: "Próximo",
+                    last: "Última página"
+                }
+            },
+            columnDefs: [
+                { orderable: false, targets: [_orderable] }
+            ]
+        });
 
-                    { orderable: false, targets: [1] }
-
-
-                ]
-            });
-        
     }
 });
 
@@ -88,16 +91,6 @@ function SortingDates() {
         }
     })
 }
-function ConvertDates() {
-    let datas = document.querySelectorAll('.dateConvert')
-    datas.forEach(function (data) {
-        let date = data.innerText
-        let _newdate = new Date(date).toLocaleDateString('pt-BR')
-        const dateLong = new Date(date)
-        data.innerHTML = `<p>${_newdate}</p>`
-        
-    })
-}
 
 customer.addEventListener('click', () => {
     const token = localStorage.getItem("Token")
@@ -112,3 +105,4 @@ const btnSendFile = document.getElementById('btn-send-file')
 btnSendFile.addEventListener('change', () => {
     document.getElementById('inputFileName').innerText = btnSendFile.files[0].name
 })
+

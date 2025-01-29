@@ -6,6 +6,8 @@ using CRM.Models.ViewModels;
 using CRM.Repository;
 using CRM.Services;
 using Newtonsoft.Json;
+using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace CRM.Controllers
 {
@@ -20,7 +22,7 @@ namespace CRM.Controllers
 			_session = section;
 		}
 
-		public IActionResult Index()
+		public IActionResult Index(int month)
 		{
 			try
 			{
@@ -28,7 +30,9 @@ namespace CRM.Controllers
 				
 				if (user != null)
 				{
-					var analytics = _analyticsServices.AnalyticsBuilder();
+					
+
+					var analytics = _analyticsServices.AnalyticsBuilder(month);
 					return View(analytics);
 				}
 				return RedirectToAction("Login", "Login");
@@ -42,6 +46,7 @@ namespace CRM.Controllers
 			}
 
 		}
+		
 
 	}
 }

@@ -1,25 +1,6 @@
 ﻿@model List<CustomerModel>
 
-<div id="nextContactDateView">
-	<form asp-controller="Customers" asp-action="ContactDateEdit" method="post">
-		<div class="dateInput">
-			<input type="date" name="nextContactDate" required>
-			<input id="customerId" value="" name="id" hidden />
-			<div class="checkBoxCalendary">
-				<label for="chkCalendaryBtn">
-					<input type="checkbox" id="chkCalendaryBtn" name="checkCalendary"> Agendar todos os contatos atrasados para esta data?
-				</label>
-			</div>
 
-			<div class="dateInputBtn">
-				<button id="nextContactDateCancel" type="button">Cancelar</button>
-				<button id="nextContactDateSend" type="button">Enviar</button>
-				<button id="nextContactDateSubmit" type="submit" hidden></button>
-			</div>
-		</div>
-	</form>
-
-</div>
 <div class="main">
 	@await Component.InvokeAsync("Header")
 
@@ -56,15 +37,15 @@
 				<input id="btn-send-file" class="btn btn-success input-file col-md-2 text-center" name="uploadFile" type="file" multiple hidden />
 				<button id="sendFileBtn" class="col-md-2 input-file-btn" type="submit">Enviar</button>
 			</form>
-			<a asp-action="ExportXls" asp-controller="Customers">Exportar Clientes</a>
+			<a class="exportXlsFile" asp-action="ExportXls" asp-controller="Customers">Exportar Clientes</a>
 			<div id="inputFileName"></div>
 		</div>
 		<div class="addCustomerBtn">
 			<a asp-action="Create" asp-controller="Customers">Novo Cliente <i class="fa-solid fa-hand-pointer"></i></a>
 		</div>
 	</div>
-	<form asp-controller="Customers" asp-action="GetByStatus" method="post" hidden>
-		<input id="statusValue" value="" name="status" />
+	<form asp-controller="Customers" asp-action="Index" method="post" hidden>
+		<input id="statusValue" value="" name="statusValue" />
 		<button id="statusSend" type="submit"></button>
 	</form>
 	<section id="table_row">
@@ -83,20 +64,20 @@
 				</div>
 			</div>
 			<div class="card_body">
+
 				<table id="myTable" class="myTable myTable1 display wrap">
 
 					<thead>
 
 						<tr>
-
 							<th>
 								Dados Principais
 							</th>
 							<th class="th_status">
 								<select id="selection">
-									<option value="Todos">Todos</option>
-									<option value="Inativo">Inativo</option>
-									<option value="Ativo">Ativo</option>
+									<option id="all" value="Todos">Todos</option>
+									<option id="ativo" value="Ativo">Ativo</option>
+									<option id="inativo" value="Inativo">Inativo</option>
 								</select>
 							</th>
 							<th>
@@ -127,32 +108,62 @@
 
 					<tbody id="tbody">
 
+
 						@foreach (var item in Model)
 						{
 							<tr>
 
 								<td id="Data">
 
-									<p><b>Código:</b><span class="customerCode"> @item.Codigo</span></p>
+									<p class="customerId" hidden>@item.Id</p>
+									<p>
+										<b>Código:</b><span class="customerCode"> @item.Codigo</span>
+									</p>
+
 									<p>
 										@if (item.RazaoSocial.Length < 20)
 										{
 											<b>Razão Social: </b>
 
-											@item.RazaoSocial
+											<span class="customerName">
+												@item.RazaoSocial.ToString()
+											</span>
 										}
 										else
 										{
 											<b>Razão Social: </b>
-											@item.RazaoSocial.ToString().Substring(0, 20)
+											<span class="customerName">
+												@item.RazaoSocial.ToString().Substring(0, 20)
+											</span>
 										}
 									</p>
 
-									<p><b>Contato: </b>@item.Contact</p> 
+									<p><b>Contato: </b>@item.Contact</p>
 
 									<div class="ortherData show">
-										<p><b>Email: </b>@item.Emails[0].Email</p>
-										<p><b>Telefone: </b>@item.Phones[0].Phone</p>
+
+										@{
+											var phone = "";
+											var email = "";
+											for (int i = 0; i < item.Phones.Count(); i++)
+											{
+												if (item.Phones[i].Phone != "" && item.Phones[i].Phone != null)
+												{
+
+													phone = item.Phones[i].Phone;
+												}
+												if (item.Emails[i].Email != "" && item.Emails[i].Email != null)
+												{
+
+													email = item.Emails[i].Email;
+												}
+
+											}
+
+
+										}
+										<p><b>Telefone: </b>@phone</p>
+										<p><b>Email: </b>@email</p>
 										<p>
 											<b>CNPJ: </b>@item.Cnpj
 										</p>
@@ -178,23 +189,29 @@
 										</p>
 									}
 
-									@{
-										double purchaseValue = 0;
-										string purchaseDate = "01/01/1999";
-										foreach (var purchase in item.CustomerPurchases)
-										{
-											purchaseValue = purchase.PurchaseValue;
-											if (purchase.PurchaseDate != null && purchase.PurchaseDate > DateTime.Parse(purchaseDate))
-											{
-												purchaseDate = purchase.PurchaseDate.ToString("yyyy/MM/dd");
 
-											}
+								</td>
+								@{
+									double purchaseValue = 0;
+									DateTime purchaseDate = new DateTime(1999, 01, 01);
+									DateTime today = DateTime.Now;
+
+									foreach (var purchase in item.CustomerPurchases)
+									{
+										purchaseValue = purchase.PurchaseValue;
+										if (purchase.PurchaseDate != null)
+										{
+											purchaseDate = DateTime.Parse(purchase.PurchaseDate.ToString("yyyy-MM-dd"));
+
 										}
 									}
-								</td>
-								<td class="dateConvert">
-									@purchaseDate
-								</td>
+									var daysInactive = today - purchaseDate;
+									<td class="dateConvert">
+												<span hidden>@purchaseDate.ToString("yyyy-MM-dd")</span>
+												<p>@purchaseDate.ToString("dd/MM/yyyy")</p>
+												<p>Dias inativo: <b style="color:red">@daysInactive.Days </b></p>
+											</td>
+								}
 								<td>
 									<p>
 										@purchaseValue.ToString("F2")
@@ -223,36 +240,43 @@
 										<p>@item.ContactRecords[count-1].Anotation</p>
 									}
 								</td>
-								<td class="lastPurchase">
-									<p id="@item.Id">@item.NextContactDate.ToString("yyyy/MM/dd")</p>
+								<td class="">
+									<span hidden>@item.NextContactDate.ToString("yyyy-MM-dd")</span>
+									<input class="nextContactDate data_de_contato" id="@item.Id" type="date" value="@item.NextContactDate.ToString("yyyy-MM-dd")" />
 								</td>
 								<td class="priority">
-									@if(item.Priority.ToString() == "green"){
+									@if (item.Priority.ToString() == "green")
+									{
 										<label>
+											<span hidden>1</span>
 											<input id="green" class="priorityRadio priorityRadioGreen" name="@item.Id" type="radio" checked />
 										</label>
 									}
 									else
 									{
 										<label>
+
 											<input id="green" class="priorityRadio priorityRadioGreen" name="@item.Id" type="radio" />
 										</label>
 									}
 									@if (item.Priority.ToString() == "red")
 									{
 										<label>
+											<span hidden>2</span>
 											<input id="red" class="priorityRadio priorityRadioRed" name="@item.Id" type="radio" checked />
-									</label>
+										</label>
 									}
-									else{
+									else
+									{
 										<label>
+
 											<input id="red" class="priorityRadio priorityRadioRed" name="@item.Id" type="radio" />
 										</label>
 
 									}
 								</td>
 								<td>
-									<a asp-action="Editar" asp-controller="Customers" asp-route-id="@item.Id" class="table_actions">
+									<a asp-action="Editar" asp-controller="Customers" asp-route-id="@item.Id" class="table_actions link">
 										<div class="contact_cta">
 											<i class="fa-solid fa-pen-to-square"></i>
 											<i class="fa-regular fa-trash-can"></i>
@@ -264,18 +288,24 @@
 
 
 							</tr>
+
 						}
+
 					</tbody>
 				</table>
+				<button id="UpdateSendBtn" style="display:none;position:fixed;bottom:1rem;right:1rem" type="button">ENVIAR ALTERAÇÕES</button>
 			</div>
 		</div>
 	</section>
+	<form asp-action="UpdateNextContactDate" asp-controller="Customers" method="post" hidden>
+		<input type="text" name="reciverStringfy" id="reciverStringfy" value="" />
+		<button type="submit" id="StringfySendBtn"></button>
+	</form>
 	<form asp-action="ChangePriority" asp-controller="Customers" hidden>
 		<input type="text" name="priority" id="priorityStatusChange" value="" />
 		<input type="text" name="priorityId" id="priorityId" value="" />
 		<button type="submit" id="prioritySubmit"></button>
 	</form>
-
 
 </div>
 <footer class="footer">
@@ -284,69 +314,24 @@
 </footer>
 
 <script>
-	tbody.addEventListener('change',(e)=>{
-
-		document.getElementById("priorityId").value = e.target.getAttribute('name')
-		document.getElementById("priorityStatusChange").value = e.target.getAttribute("id")
-		document.getElementById("prioritySubmit").click()
-
-
-	})
-</script>
-
-
-
-
-
-<script>
-	const tbody = document.getElementById('tbody')
 	tbody.addEventListener('click', (e) => {
-		if (e.target.nodeName === 'BUTTON') {
-			e.target.parentNode.querySelector(".ortherData").classList.toggle("show")
-		}
-
-	})
-</script>
-
-
-
-
-<script>
-	const selection = document.getElementById('selection')
-	const statusValue = document.getElementById('statusValue')
-	const statusSend = document.getElementById('statusSend')
-
-	selection.addEventListener('change', () => {
-		statusValue.value = selection.value
-		statusSend.click()
-	})
-</script>
-
-<script>
-	const customerId = document.getElementById('customerId')
-	const nextContactDateView = document.getElementById('nextContactDateView')
-	const nextContactDateSend = document.getElementById('nextContactDateSend')
-	const nextContactDateSubmit = document.getElementById('nextContactDateSubmit')
-	const nextContactDateCancel = document.getElementById('nextContactDateCancel')
-
-
-
-
-	tbody.addEventListener('click', (e) => {
-		const id = e.target.getAttribute('id')
-		if (id != null && e.target.closest(".lastPurchase ")) {
-			nextContactDateView.style.display = 'flex'
-			customerId.value = id
+		if (e.target.classList.contains('priorityRadio')) {
+			document.getElementById("priorityId").value = e.target.getAttribute('name')
+			document.getElementById("priorityStatusChange").value = e.target.getAttribute("id")
+			document.getElementById("prioritySubmit").click()
 		}
 	})
-	nextContactDateSend.addEventListener('click', () => {
-		nextContactDateSubmit.click()
-	})
-	nextContactDateCancel.addEventListener('click', () => {
-		nextContactDateView.style.display = 'none'
-	})
-
+	setTimeout(() => {
+		document.querySelector('#prioritySorting').click()
+		setTimeout(() => {
+			document.querySelector('#prioritySorting').click()
+		}, 200)
+	}, 200)
 </script>
+
+<script src="/js/statusSelection.js"></script>
+
+@*
 <script>
 	const tableFloatDates = document.querySelector('.table_float-dates')
 	const findByDateText = document.querySelector('.findByDateText')
@@ -359,9 +344,81 @@
 		}
 
 	})
-</script>
+</script>*@
 
-<script src="/js/SelectTableItems.js"></script>
+
 <script src="/js/Alerts.js"></script>
 
+<script src="/js/getCustomersDb.js"></script>
 
+<script>
+	const myTable = document.getElementById('myTable')
+	const UpdateSendBtn = document.getElementById('UpdateSendBtn')
+	let currentDateValue = ''
+	let newDateValue = ''
+	let _customersData = JSON.parse(localStorage.getItem('Customers'))
+
+
+	myTable.addEventListener('click', (e) => {
+		currentDateValue = e.target.value
+
+		if (e.target.nodeName === "INPUT") {
+			e.target.addEventListener('change', () => {
+				var customer = _customersData.filter((item) => item.customerId.toLowerCase().includes(e.target.parentNode.parentNode.querySelector('.customerId').textContent))
+				var customerIndex = _customersData.findIndex((obj) => obj.customerCode === customer[0].customerCode)
+				_customersData[parseInt(customerIndex)].nextContactDate = e.target.value
+				UpdateSendBtn.style.display = 'flex'
+				if (e.target.value > currentDateValue) {
+					e.target.classList.remove('nextContactDateRed')
+				}
+				localStorage.setItem('Customers', JSON.stringify(_customersData))
+
+			})
+		}
+	})
+
+	UpdateSendBtn.addEventListener('click', function () {
+		document.querySelector('#reciverStringfy').value = JSON.stringify(_customersData)
+		document.querySelector('#StringfySendBtn').click()
+	})
+
+
+
+</script>
+<script>
+	const tbody = document.getElementById('tbody')
+	const moreInformationText = document.getElementById('moreInformations')
+	tbody.addEventListener('click', (e) => {
+		if (e.target.nodeName === 'BUTTON') {
+			e.target.parentNode.querySelector(".ortherData").classList.toggle("show")
+			if (e.target.innerText != "Menos...") {
+				e.target.innerText = "Menos..."
+			}
+			else {
+				e.target.innerText = "Mais..."
+			}
+
+		}
+
+	})
+</script>
+<script>
+	const date = new Date()
+	const nextContactDateInput = document.querySelectorAll('.nextContactDate')
+	nextContactDateInput.forEach(function (e) {
+		let _date = new Date(e.value.replace("-", "/"))
+		if (_date <= date) {
+			e.classList.toggle('nextContactDateRed')
+
+		}
+	})
+</script>
+<script>
+	const exportXlsFile = document.querySelector('.exportXlsFile')
+	exportXlsFile.addEventListener('click', () => {
+		setTimeout(() => {
+			let spiner = document.querySelector('.spinner-show')
+			spiner.style.display = 'none'
+		}, 3000)
+	})
+</script>

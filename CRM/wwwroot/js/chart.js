@@ -33,7 +33,7 @@ new Chart(ctx1, {
             borderWidth: 0,
 
             backgroundColor: color => {
-                // console.log(color)
+               
                 let colors = []
                 for (let i = 0; i < _data.length; i++) {
                     if (_data[i] > 100.000) {
@@ -47,7 +47,7 @@ new Chart(ctx1, {
                 return colors
             },
             borderColor: color => {
-                // console.log(color)
+                
                 let colors = []
                 for (let i = 0; i < _data.length; i++) {
                     if (_data[i] > 10) {
@@ -118,7 +118,7 @@ new Chart(ctx2, {
             borderWidth: 0,
 
             backgroundColor: color => {
-                // console.log(color)
+                
                 let colors = []
                 for (let i = 0; i < _data.length; i++) {
                     if (_data[i] > 10) {
@@ -132,7 +132,7 @@ new Chart(ctx2, {
                 return colors
             },
             borderColor: color => {
-                // console.log(color)
+                
                 let colors = []
                 for (let i = 0; i < _data.length; i++) {
                     if (_data[i] > 10) {
@@ -205,7 +205,7 @@ new Chart(ctx3, {
             borderWidth: 0,
             data: _data12,
             backgroundColor: color => {
-                // console.log(color)
+                
                 let colors = []
                 for (let i = 0; i < _data12.length; i++) {
                     if (_data12[i] > 10) {
@@ -219,7 +219,7 @@ new Chart(ctx3, {
                 return colors
             },
             borderColor: color => {
-                // console.log(color)
+                
                 let colors = []
                 for (let i = 0; i < _data12.length; i++) {
                     if (_data12[i] > 10) {
@@ -289,7 +289,7 @@ new Chart(ctx4, {
             borderWidth: 0,
             data: _data12,
             backgroundColor: color => {
-                // console.log(color)
+                
                 let colors = []
                 for (let i = 0; i < _data12.length; i++) {
                     if (_data12[i] > 10) {
@@ -303,7 +303,7 @@ new Chart(ctx4, {
                 return colors
             },
             borderColor: color => {
-                // console.log(color)
+                
                 let colors = []
                 for (let i = 0; i < _data12.length; i++) {
                     if (_data12[i] > 10) {

@@ -23,13 +23,22 @@ namespace CRM.Services
 				{
 					status = "INATIVO";
 				}
+				string _mail = "";
+				for (int i = 0; i <= 2; i++)
+				{
+					if(item.Emails[i].Email != null && item.Emails[i].Email != "")
+					{
+						_mail = item.Emails[i].Email;
+
+					}
+				}
 				ExportXlsModel export = new()
 				{
 					Codigo = item.Codigo,
 					Cnpj = item.Cnpj.ToString(),
 					RazaoSocial = item.RazaoSocial,
 					Status = status,
-					Email = item.Emails[0].Email,
+					Email = _mail,
 					Telefone = item.Phones[0].Phone,
 					Compradores = item.Contact,
 					Cidade = item.Cidade,

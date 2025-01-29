@@ -10,11 +10,35 @@
 	string _totalPayment = totalPayment.ToString("C2", new System.Globalization.CultureInfo("pt-BR"));
 	double _baseSalary = double.Parse(Model.BaseSalary.ToString());
 	string baseSalary = _baseSalary.ToString("C2", new System.Globalization.CultureInfo("pt-BR"));
+
 }
 
 <div class="main">
 	@await Component.InvokeAsync("Header")
 	<div class="positionRelative">
+		<form asp-action="Index" asp-controller="Analytics" hidden>
+			<input name="month" id="monthSelected" />
+			<button id="monthSelectedBtn" type="submit"></button>
+		</form>
+		<div id="monthSelector">
+			<label for="monthSelect">
+				<span>Mês Base:  </span>
+				<select id="monthSelect" asp-for="@Model.CurrentMonth">
+					<option id="jan" value="1">Janeiro</option>
+					<option id="fev" value="2">Fevereiro</option>
+					<option id="mar" value="3">Março</option>
+					<option id="apr" value="4">Abril</option>
+					<option id="mai" value="5">Maio</option>
+					<option id="jun" value="6">Junho</option>
+					<option id="jul" value="7">Julho</option>
+					<option id="ago" value="8">Agosto</option>
+					<option id="set" value="9">Setembro</option>
+					<option id="out" value="10">Outubro</option>
+					<option id="nov" value="11">Novembro</option>
+					<option id="dez" value="12">Dezembro</option>
+				</select>
+			</label>
+		</div>
 		<section id="firstSection" class="content-cards display analytics">
 			<div class="tickets people ">
 				<span class="ticket_figure"><i class="fa-solid fa-people-group"></i></span>
@@ -54,9 +78,11 @@
 					<p>Venda Mensal Total</p>
 				</div>
 				<span class="horizontal-line"></span>
-				<div class="ticket_content">
+				<div class="ticket_content paddingBottomNone">
 					<p>@_totalSales</p>
+					<p id="totalSales" hidden>@totalSales</p>
 				</div>
+				<div style="display:flex;width:100%;justify-content:space-between;font-size:.8rem;"><p id="salesToday"></p><p id="salesPrevision"></p></div>
 			</div>
 
 		</section>
@@ -170,7 +196,7 @@
 																borderWidth: 0,
 
 																backgroundColor: color => {
-																	// console.log(color)
+
 																	let colors = []
 																	for (let i = 0; i < _data.length; i++) {
 																		if (_data[i] >= '100000') {
@@ -184,7 +210,7 @@
 																	return colors
 																},
 																borderColor: color => {
-																	// console.log(color)
+
 																	let colors = []
 																	for (let i = 0; i < _data.length; i++) {
 																		if (_data[i] >= '100000') {
@@ -348,6 +374,18 @@
 													});
 </script>
 <script src="/js/Analytics.js"></script>
+<script src="/js/averageSales.js"></script>
+
+<script>
+	const monthSelect = document.querySelector('#monthSelect')
+	const monthSelected = document.querySelector('#monthSelected')
+	const monthSelectedBtn = document.querySelector('#monthSelectedBtn')
+
+	monthSelect.addEventListener('change',()=>{
+		monthSelected.value = monthSelect.value
+		monthSelectedBtn.click()
+	})
+</script>
 
 
 

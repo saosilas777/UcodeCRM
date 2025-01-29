@@ -1,28 +1,36 @@
 ﻿@model UserViewModel
 <nav class="main_hero-nav">
 	<div class="main_hero-navContent">
-		<input class="main_hero-navContent-inputSearch" type="text" placeholder="Search" id="input_search">
-		<span class="material-symbols-outlined">
-			home
-		</span>
-		<span class="material-symbols-outlined">
-			<a id="keyBtn" class="keyBtn" asp-controller="Users" asp-action="ChangePassword" asp-route-id="@Model.User.Id">key</a>
-		</span>
-		<span class="material-symbols-outlined">
-			logout
-		</span>
-		
-			@if (@Model.Image.Url != ""){
-			<div class="avatar">
-				<a asp-controller="SendFile" asp-action="sendFileImage"><img src="@Model.Image.Url" alt="Avatar"></a>
+		<div class="main_hero-navContent_form">
+			<input name="headerSearch" autocomplete="off" class="main_hero-navContent-inputSearch" type="text" placeholder="Search" id="input_search">
+			<div id="reciverCustomer">
 			</div>
+		</div>
+		<div class="main_hero-navContent_items">
+			<span class="material-symbols-outlined">
+				home
+			</span>
+			<span class="material-symbols-outlined">
+				<a id="keyBtn" class="keyBtn" asp-controller="Users" asp-action="ChangePassword" asp-route-id="@Model.User.Id">key</a>
+			</span>
+			<span class="material-symbols-outlined">
+				logout
+			</span>
+
+			@if (@Model.Image.Url != "")
+			{
+				<div class="avatar">
+					<a asp-controller="SendFile" asp-action="sendFileImage"><img src="@Model.Image.Url" alt="Avatar"></a>
+				</div>
 			}
-			else{
-			<div class="avatar">
-				<a asp-controller="SendFile" asp-action="sendFileImage"><img src="/lib/Images/Avatar.png" style="background-color:white"></a>
-			</div>
+			else
+			{
+				<div class="avatar">
+					<a asp-controller="SendFile" asp-action="sendFileImage"><img src="/lib/Images/Avatar.png" style="background-color:white"></a>
+				</div>
 			}
-		
-		
+		</div>
+
 	</div>
 </nav>
+

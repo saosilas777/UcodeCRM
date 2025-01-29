@@ -51,13 +51,13 @@ namespace CRM.Services
 						PurchaseModel purchase = new PurchaseModel();
 						if (worksheet.Cells[row, 1].Value.ToString() != "")
 						{
-							var cnpj = worksheet.Cells[row, 1].Value.ToString();
+							var cnpj = worksheet.Cells[row, 3].Value.ToString();
 							var customer = customers.Find(x => x.Cnpj == cnpj);
 							purchase.Customer = customer;
 							if (purchase.Customer != null)
 							{
 								purchase.CustomerCode = int.Parse(customer.Codigo);
-								purchase.PurchaseDate = DateTime.Parse(worksheet.Cells[row, 3].Value.ToString());
+								purchase.PurchaseDate = DateTime.Parse(worksheet.Cells[row, 1].Value.ToString());
 								purchase.PurchaseValue = double.Parse(worksheet.Cells[row, 4].Value.ToString());
 								purchase.UserId = user.Id;
 								purchase.CustomerId = customer.Id;

@@ -20,7 +20,8 @@
 		<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
 	</head>
-	<body>
+	<body id="body-hero">
+		<div class="spinner-show"><div class="spiner"></div><span>Loading...</span></div>
 		<div class="aside">
 			<header class="header_hero">
 				@*<button type="button" class="menuHideBtn"><i class="fa-solid fa-bars" id="menuHideBtn"></i></button>*@
@@ -30,25 +31,27 @@
 							<span class="material-symbols-outlined">
 								account_tree
 							</span>
-							<h1>U.code</h1>
+							@*<h1>U.code</h1>*@
 						</div>
 						<span class="horizontal-line"></span>
 						<ul class="header_nav-links">
-							<li class="home"><a id="home" asp-controller="Home" asp-action="Index">Página Inicial</a></li>
-							<li class="customers"><a id="customers" asp-action="Index" asp-controller="Customers">Clientes</a></li>
-							<li class="analytics"><a id="analytics" asp-action="Index" asp-controller="Analytics">Analíticos</a></li>
-							<li class="sales"><a id="sales" asp-action="SalesSeller" asp-controller="Sellers">Vendas</a></li>
+
+							<li class="home link"><a id="home" asp-controller="Home" asp-action="Index"><i class="fa-solid fa-house"></i></a><span class="homeTooltip">Página Inicial</span></li>
+							<li class="customers link"><a id="customers" asp-action="Index" asp-controller="Customers"><i class="fa-solid fa-people-group"></i></a><span class="customersTooltip">Clientes</span></li>
+							<li class="analytics link"><a id="analytics" asp-action="Index" asp-controller="Analytics"><i class="fa-solid fa-chart-line"></i></a><span class="analyticsTooltip">Analíticos</span></li>
+							<li class="sales link"><a id="sales" asp-action="SalesSeller" asp-controller="Sellers"><i class="fa-solid fa-handshake"></i></a><span class="salesTooltip">Vendas</span></li>
 						</ul>
 					</div>
 					<ul class="logout-btn">
-						<a asp-controller="Login" asp-action="Logout">
 						<li>
-							<span class="material-symbols-outlined">
-								logout
-							</span>
-							Encerrar
+							<a id="logout-btn" class="logout_cta" asp-controller="Login" asp-action="Logout">
+								<span class="material-symbols-outlined">
+									logout
+								</span>
+
+							</a>
+							<span class="logoutTooltip">Sair</span>
 						</li>
-						</a>
 
 					</ul>
 				</nav>
@@ -59,15 +62,42 @@
 			@RenderBody()
 		</main>
 
-
 		@*<script src="https://code.jquery.com/jquery-3.7.1.js"
 		integrity="sha256-UgvvN8vBkgO0luPSUl2s8TIlOSYRoGFAX4jlCIm9Adc=" crossorigin="anonymous"></script>*@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
 		<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
 		<script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.dataTables.min.js"></script>
+		<script src="/js/SearchCustomer.js"></script>
 
-		<script src="/js/site.js" asp-append-version="true"></script>
+		<script src="~/js/site.js" asp-append-version="true"></script>
 		@await RenderSectionAsync("Scripts", required: false)
+
+		<script>
+			//window.addEventListener('click', function (e) {
+
+			//	let link = e.target.closest('.link')
+			//	let href = link.querySelector("[href]")
+			//	if (href != null) {
+			//		alert()W
+			//		spinner()
+			//	}
+			//})
+
+			
+			
+			
+			window.addEventListener('beforeunload', (e) => {
+				spinner()
+			})
+
+			function spinner() {
+				let spiner = document.querySelector('.spinner-show')
+				spiner.style.display = 'flex'
+
+			}
+
+		</script>
+
 	</body>
 </html>

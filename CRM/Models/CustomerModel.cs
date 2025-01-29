@@ -13,8 +13,8 @@ namespace CRM.Models
 		public bool Status { get; set; }
 		public string Cidade { get; set; } = string.Empty;
 		public string Uf { get; set; } = string.Empty;
-		public List<EmailModel>? Emails { get; set; }
-		public List<PhoneModel>? Phones { get; set; }
+		public List<EmailModel> Emails { get; set; }
+		public List<PhoneModel> Phones { get; set; }
 		public string Contact { get; set; } = string.Empty;
 		public Priority Priority { get; set; }
 		public List<PurchaseModel>? CustomerPurchases { get; set; }

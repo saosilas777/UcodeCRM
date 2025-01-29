@@ -6,6 +6,7 @@ namespace CRM.Interfaces
 {
 	public interface ICustomerRepository
 	{
+		public void AddNewContact(List<CustomerModel> customers);
 		string Create(CustomerCreateViewModel customer);
 		CustomerEditViewModel BuscarPorId(Guid id);
 		List<CustomerModel> BuscarTodos(Guid id);
@@ -22,6 +23,8 @@ namespace CRM.Interfaces
 
 		void ChangeAllNextContactsDates(string nextContactDate);
 		void ChangePriority(string priority, string priorityId);
+
+		void UpdateNextContactDates(List<UpdateNextContactDateViewModel> updates);
 
 
 

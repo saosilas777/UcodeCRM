@@ -15,6 +15,8 @@
 		public double? TotalPayment { get; set; }
 		public TotalAnnualSales? TotalAnnualSales { get; set; }
 		public CustomersServedPerMonth? CustomersServedPerMonth { get; set; }
+		public int CurrentMonth { get; set; }
+
 
 	}
 }

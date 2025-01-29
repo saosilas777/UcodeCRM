@@ -53,20 +53,20 @@
 							@{
 								if (Model.ContactRecords.Count() <= 0)
 								{
-										<div>
-											<p>Ainda não há registros de contatos recentes</p>
-										</div>
+									<div>
+										<p>Ainda não há registros de contatos recentes</p>
+									</div>
 								}
 								else
 								{
-									for (int i = 0; i <= Model.ContactRecords.Count() - 1; i++)
+									for (int i = Model.ContactRecords.Count(); i >= 1; i--)
 									{
-											<div class="registrationsCard">
-												<span>@Model.ContactRecords[i].RegistrationDate - @Model.RazaoSocial</span>
-												<div class="contentRegistration">
-													@Model.ContactRecords[i].Anotation
-												</div>
+										<div class="registrationsCard">
+											<span>@Model.ContactRecords[i-1].RegistrationDate - @Model.RazaoSocial</span>
+											<div class="contentRegistration">
+												@Model.ContactRecords[i-1].Anotation
 											</div>
+										</div>
 									}
 								}
 
@@ -79,8 +79,8 @@
 							<div class="registrationInputCta">
 								@{
 
-										<input id="ContactRecordsDate" type="date" name="date" required />
-										<input type="text" value="@Model.Id" asp-for="@Model.Id" hidden />
+									<input id="ContactRecordsDate" type="date" name="date" required />
+									<input type="text" value="@Model.Id" asp-for="@Model.Id" hidden />
 								}
 
 								<button type="submit" class="card_cta-saveChanges btnInsertContact">Enviar</button>
@@ -131,33 +131,32 @@
 										</select>
 									</label>
 								</div>
-								@foreach (var item in Model.Phones)
+								@{
+									var count = 1;
+								}
+								@for (int i = 2; i >= 0; i--)
 								{
+
 									<div id="phoneNumber">
-										<label >
-											Telefone <button type="button" id="addPhoneNumber"><i class="fa-solid fa-plus"></i></button>
-											<input class="editable" value="@item.Phone" asp-for="@Model.Phones" name="Phones" disabled />
+										<label>
+											Telefone @count
+											<input class="editable" value="@Model.Phones[i].Phone" asp-for="@Model.Phones[i].Phone" disabled />
+											<input class="editable" value="@Model.Phones[i].Id" asp-for="@Model.Phones[i].Id" disabled hidden />
+
 										</label>
-										
-										
 									</div>
-									if (Model.Phones.Count() < 3)
-									{
-
-									}
-								}
-
-								@foreach (var item in Model.Emails)
-								{
 									<div id="addEmail">
-										<label class="">
-											Email @*@_length*@<button type="button" id="addEmailBtn"><i class="fa-solid fa-plus"></i></button>
-											<input class="editable" value="@item.Email" asp-for="@Model.Emails" name="Emails" disabled />
+										<label class="mailInput">
+											Email @count
+											<input class="editable " value="@Model.Emails[i].Email" asp-for="@Model.Emails[i].Email" disabled />
+											<input class="editable " value="@Model.Emails[i].Id" asp-for="@Model.Emails[i].Id" disabled hidden />
+											@*<i type="reset" class="fa-trash-can-edit fa-solid fa-trash-can" data="@Model.Emails[i].Id"></i>*@
+
 										</label>
-										
-									
 									</div>
+									count++;
 								}
+
 								<div>
 									<label>
 										Cidade:
@@ -184,12 +183,12 @@
 								</div>
 								@{
 
-										<div>
-											<label>
-												Próximo contato:
-												<input class="editable" id="reciver" type="date" value="@date" asp-for="@Model.NextContactDate" disabled />
-											</label>
-										</div>
+									<div>
+										<label>
+											Próximo contato:
+											<input class="editable" id="reciver" type="date" value="@date" asp-for="@Model.NextContactDate" disabled />
+										</label>
+									</div>
 
 								}
 
@@ -230,4 +229,18 @@
 <script src="~/js/InsertNewFieldEditView.js"></script>
 <script src="/js/customer.js"></script>
 <script src="/js/Alerts.js"></script>
+
+<script>
+
+	let EditForm = document.querySelector('#EditForm')
+	EditForm.addEventListener('click', (e) => {
+
+
+		if (e.target.className == 'fa-trash-can-edit fa-solid fa-trash-can') {
+
+			alert(e.target.getAttribute('data'))
+		}
+
+	})
+</script>
 

@@ -11,7 +11,10 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using RestSharp;
 using ClosedXML.Excel;
-
+using DocumentFormat.OpenXml.Spreadsheet;
+using System.Text.Json.Serialization;
+using DocumentFormat.OpenXml.Presentation;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CRM.Controllers
 {
@@ -32,6 +35,7 @@ namespace CRM.Controllers
 		}
 		#endregion
 
+
 		public IActionResult Index(string initialDate, string finalDate)
 		{
 			var date = DateTime.Now;
@@ -41,14 +45,14 @@ namespace CRM.Controllers
 				List<CustomerModel> customers = new();
 				if (initialDate == null || finalDate == null)
 				{
-					customers = _customerRepository.BuscarTodos(user.Id);
-					return View(customers);
+					customers = _customerRepository.BuscarTodos(user.Id)/*.Where(x => x.NextContactDate <= date).OrderBy(x => x.NextContactDate).ToList()*/;
+					var _customers = StatusVerifyer(customers);
+					return View(_customers);
 				}
 				else
 				{
 					customers = _customerRepository.BuscarTodos(user.Id).Where(x => x.NextContactDate >= DateTime.Parse(initialDate) && x.NextContactDate <= DateTime.Parse(finalDate)).ToList();
 					return View(customers);
-
 				}
 
 			}
@@ -90,7 +94,6 @@ namespace CRM.Controllers
 			return RedirectToAction("Login", "Login");
 
 		}
-
 		public IActionResult Create()
 		{
 			var user = _session.GetUserSection();
@@ -114,8 +117,9 @@ namespace CRM.Controllers
 					string res = _customerRepository.Create(customer);
 					if (res == "Cadastro realizado com sucesso!")
 					{
+						CustomerCreateViewModel _customer = new();
 						TempData["SuccessMessage"] = res;
-						return View(customer);
+						return View(_customer);
 					}
 					TempData["ErrorMessage"] = res;
 					return View(customer);
@@ -192,7 +196,13 @@ namespace CRM.Controllers
 			return RedirectToAction("Index", "Customers");
 
 		}
-
+		[HttpPost]
+		public IActionResult UpdateNextContactDate(string reciverStringfy)
+		{
+			UpdateCustomerContacts(reciverStringfy);
+			TempData["SuccessMessage"] = "Atualização feita com sucesso";
+			return RedirectToAction("Index");
+		}
 
 		public static dynamic GET(string url)
 		{
@@ -224,6 +234,46 @@ namespace CRM.Controllers
 			_customerRepository.ChangePriority(priority, priorityId);
 			return RedirectToAction("Index");
 		}
+		public IActionResult FindCustumer(string headerSearch)
+		{
+			var code = headerSearch.Split(" - ");
+			var customerCode = code[0];
+			var cus = _customerRepository.BuscarPorCodigo(int.Parse(customerCode));
+			var i = 0;
+			return RedirectToAction("Index");
+		}
 
+		public void UpdateCustomerContacts(string reciverStringfy)
+		{
+			var updates = JsonConvert.DeserializeObject<List<UpdateNextContactDateViewModel>>(reciverStringfy);
+			
+			_customerRepository.UpdateNextContactDates(updates);
+		}
+
+		public List<CustomerModel> StatusVerifyer(List<CustomerModel> customers)
+		{
+			DateTime date = DateTime.Now;
+			foreach (var item in customers)
+			{
+				if(item.CustomerPurchases.Count() > 0)
+				{
+					PurchaseModel lastPurchase = item.CustomerPurchases.Last();
+					var temp = lastPurchase.PurchaseDate - date;
+					if (temp.Days < -90 || temp.Days == 0)
+					{
+						item.Status = false;
+					}
+
+				}
+				else
+				{
+					item.Status = false;
+				}
+				
+
+			}
+
+			return customers;
+		}
 	}
 }
