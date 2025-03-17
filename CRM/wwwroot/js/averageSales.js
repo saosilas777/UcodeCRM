@@ -8,7 +8,6 @@ let workedDays = 0
 let remainingDays = 0
 
 const totalSales = parseFloat(document.getElementById('totalSales').innerText)
-console.log(totalSales)
 let salesToday = document.getElementById('salesToday')
 let salesPrevision = document.getElementById('salesPrevision')
 
@@ -39,8 +38,6 @@ function AddDays() {
         initialDate.setDate(initialDate.getDate() + 1)
     }
     remainingDays = workDays - workedDays
-    console.log(remainingDays)
-
     salesToday.innerText = `Média dia: ${(parseFloat(totalSales) / workedDays).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}`
     salesPrevision.innerText = `Prev. mensal: ${(parseFloat(totalSales) / workedDays * workDays).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}`
 

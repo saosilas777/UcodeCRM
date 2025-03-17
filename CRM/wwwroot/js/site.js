@@ -6,6 +6,7 @@ let _alert = document.getElementById('alert');
 const body = document.querySelector('body')
 
 const customer = document.getElementById('customers')
+const customerAdd = document.getElementById('customersAdd')
 const analytics = document.getElementById('analytics')
 const home = document.getElementById('home')
 const sales = document.getElementById('sales')
@@ -19,8 +20,11 @@ if (url.includes('Home')) {
 if (url.includes('Analytics')) {
     analytics.classList.add('bgImageLink')
 }
-if (url.includes('Customer')) {
+if (url.includes('Customers/Index')) {
     customer.classList.add('bgImageLink')
+}
+if(url.includes('Customers/Create')) {
+    customerAdd.classList.add('bgImageLink')
 }
 if (url.includes('ChangePassword')) {
     keyBtn.classList.add('keyBtnColor')
@@ -32,7 +36,7 @@ if (url.includes('Seller')) {
 $(document).ready(function () {
     const myTable = document.getElementById("myTable")
 
-    let _order = [[8, 'asc']]
+    let _order = [[7, 'asc']]
     let _orderable = 1
     if (myTable.className.endsWith('sales')) {
         _order = []
@@ -40,7 +44,6 @@ $(document).ready(function () {
     }
     getTable(myTable, _order)
     SortingDates()
-    ConvertDates()
 
     function getTable(id, _order) {
         new DataTable(id, {

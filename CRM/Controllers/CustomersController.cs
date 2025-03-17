@@ -69,19 +69,6 @@ namespace CRM.Controllers
 
 			return ExportFile();
 		}
-		public IActionResult GetByStatus()
-		{
-			return View();
-		}
-		[HttpPost]
-		public IActionResult GetByStatus(string status)
-		{
-			if (status == null) return View("Index");
-			var user = _session.GetUserSection();
-			List<CustomerModel> customers = _customerRepository.GetByStatus(status);
-			return View(customers);
-		}
-
 		public IActionResult Editar(Guid id)
 		{
 			var user = _session.GetUserSection();
@@ -114,14 +101,13 @@ namespace CRM.Controllers
 			{
 				if (ModelState.IsValid)
 				{
-					string res = _customerRepository.Create(customer);
-					if (res == "Cadastro realizado com sucesso!")
+					var _customer = _customerRepository.Create(customer);
+					if (_customer != null)
 					{
-						CustomerCreateViewModel _customer = new();
-						TempData["SuccessMessage"] = res;
-						return View(_customer);
+						//TempData["SuccessMessage"] = "";
+						return RedirectToAction("Editar", new { id = _customer.Id} );
 					}
-					TempData["ErrorMessage"] = res;
+					TempData["ErrorMessage"] = "Não foi possível efeturar o cadastro";
 					return View(customer);
 
 				}
@@ -166,24 +152,6 @@ namespace CRM.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult GetByZipCode(string cep)
-		{
-			var url = $"https://viacep.com.br/ws/{cep}/json";
-			var response = GET(url);
-
-			ZipCodeModel result = JsonConvert.DeserializeObject<ZipCodeModel>(response);
-
-
-			CustomerCreateViewModel customerCreate = new();
-			customerCreate.Cidade = result.localidade;
-			customerCreate.Uf = result.uf;
-
-
-
-			return View("Create", customerCreate);
-		}
-
-		[HttpPost]
 		public IActionResult ContactDateEdit(string nextContactDate, string id, string checkCalendary)
 		{
 			if (checkCalendary != "on")
@@ -202,16 +170,6 @@ namespace CRM.Controllers
 			UpdateCustomerContacts(reciverStringfy);
 			TempData["SuccessMessage"] = "Atualização feita com sucesso";
 			return RedirectToAction("Index");
-		}
-
-		public static dynamic GET(string url)
-		{
-			var client = new RestClient(url);
-			client.Timeout = -1;
-			var request = new RestRequest(Method.GET);
-			IRestResponse response = client.Execute(request);
-			return response.Content;
-
 		}
 		public FileStreamResult ExportFile()
 		{

@@ -19,6 +19,10 @@ namespace CRM.Repository
 		{
 			return _context.Purchases.AsNoTracking().ToList();
 		}
+		public PurchaseModel GetPurchaseById(Guid id)
+		{
+			return _context.Purchases.Where(p => p.Id == id).FirstOrDefault();
+		}
 
 
 		public void Add(PurchaseModel purchase)
@@ -38,7 +42,31 @@ namespace CRM.Repository
 
 		public bool DeletePurchase(Guid id)
 		{
+			DateTime date = DateTime.Now;
 			var purchases = _context.Purchases.FirstOrDefault(x => x.Id == id);
+			var customer = _context.Customers.Where(c => c.Id == purchases.CustomerId).FirstOrDefault();
+			var lastPurchase = _context.Purchases.Where(x => x.CustomerId == customer.Id).OrderByDescending(p => p.PurchaseDate).Where(p => p.PurchaseDate < purchases.PurchaseDate).FirstOrDefault();
+
+			if(lastPurchase != null)
+			{
+				var differenceDays = lastPurchase.PurchaseDate - date;
+				if (differenceDays.Days < -90)
+				{
+					customer.Status = false;
+					_context.Customers.Update(customer);
+					_context.SaveChanges();
+				}
+
+			}
+			else
+			{
+				customer.Status = false;
+				_context.Customers.Update(customer);
+				_context.SaveChanges();
+			}
+			
+
+			
 			_context.Purchases.Remove(purchases);
 			_context.SaveChanges();
 			return true;

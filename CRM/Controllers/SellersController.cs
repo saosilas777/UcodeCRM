@@ -57,11 +57,12 @@ namespace CRM.Controllers
 
 			return View(purchases);
 		}
-
-		public IActionResult PurchaseDelete(Guid id)
+		public PurchaseModel PurchaseDelete(string id)
 		{
-			_purchase.DeletePurchase(id);
-			return RedirectToAction("SalesSeller","Sellers");
+			var purchase = _purchase.GetPurchaseById(Guid.Parse(id));
+			Guid _id = Guid.Parse(id);
+			_purchase.DeletePurchase(_id);
+			return new PurchaseModel();
 		}
 
 	}

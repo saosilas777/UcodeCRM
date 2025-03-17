@@ -7,12 +7,10 @@ namespace CRM.Interfaces
 	public interface ICustomerRepository
 	{
 		public void AddNewContact(List<CustomerModel> customers);
-		string Create(CustomerCreateViewModel customer);
+		CustomerModel Create(CustomerCreateViewModel customer);
 		CustomerEditViewModel BuscarPorId(Guid id);
 		List<CustomerModel> BuscarTodos(Guid id);
 		List<CustomerModel> BuscarClientesDaAgendaAtual(Guid id);
-
-		List<CustomerModel> GetByStatus(string status);
 		bool Deletar(CustomerModel customer);
 		void ContactDateEdit(DateTime date, Guid id);
 		List<CustomerModel> AdicionarTodos(List<CustomerModel> customers);

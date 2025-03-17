@@ -82,7 +82,7 @@
 					<p>@_totalSales</p>
 					<p id="totalSales" hidden>@totalSales</p>
 				</div>
-				<div style="display:flex;width:100%;justify-content:space-between;font-size:.8rem;"><p id="salesToday"></p><p id="salesPrevision"></p></div>
+				<div style="display:flex;width:100%;justify-content:space-between;font-size:.7rem;"><p id="salesToday"></p><p id="salesPrevision"></p></div>
 			</div>
 
 		</section>
@@ -109,7 +109,7 @@
 				</div>
 				<span class="horizontal-line"></span>
 				<div class="ticket_content">
-					<p class="valueHide" hidden>@_commission</p>
+					<p id="comission" class="valueHide" hidden>@_commission</p>
 					<p class="showValue">R$ ******</p>
 				</div>
 			</div>
@@ -120,7 +120,7 @@
 				</div>
 				<span class="horizontal-line"></span>
 				<div class="ticket_content">
-					<p class="valueHide" hidden>@_pwr</p>
+					<p id="dsr" class="valueHide" hidden>@_pwr</p>
 					<p class="showValue">R$ ******</p>
 				</div>
 			</div>
@@ -167,6 +167,7 @@
 	<p class="footer_link">Visite nosso site <a href="#">U.code</a> </p>
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="/js/averageSales.js"></script>
 
 <script>
 	let backgroundColor = ""
@@ -374,7 +375,6 @@
 													});
 </script>
 <script src="/js/Analytics.js"></script>
-<script src="/js/averageSales.js"></script>
 
 <script>
 	const monthSelect = document.querySelector('#monthSelect')

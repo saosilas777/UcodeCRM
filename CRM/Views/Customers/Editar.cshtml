@@ -4,7 +4,6 @@
 	date = DateTime.Parse(@Model.NextContactDate).ToString("yyyy-MM-dd");
 	var lastPurchaseValue = double.Parse(Model.LastPurchaseValue.ToString());
 	string lastPurchase = lastPurchaseValue.ToString("C2", new System.Globalization.CultureInfo("pt-BR"));
-	int _length = 1;
 }
 
 <div class="main">
@@ -150,8 +149,6 @@
 											Email @count
 											<input class="editable " value="@Model.Emails[i].Email" asp-for="@Model.Emails[i].Email" disabled />
 											<input class="editable " value="@Model.Emails[i].Id" asp-for="@Model.Emails[i].Id" disabled hidden />
-											@*<i type="reset" class="fa-trash-can-edit fa-solid fa-trash-can" data="@Model.Emails[i].Id"></i>*@
-
 										</label>
 									</div>
 									count++;
@@ -226,11 +223,11 @@
 	<p class="footer_link">Visite nosso site <a href="#">U.code</a> </p>
 </footer>
 
-<script src="~/js/InsertNewFieldEditView.js"></script>
+
 <script src="/js/customer.js"></script>
 <script src="/js/Alerts.js"></script>
 
-<script>
+@*<script>
 
 	let EditForm = document.querySelector('#EditForm')
 	EditForm.addEventListener('click', (e) => {
@@ -243,4 +240,4 @@
 
 	})
 </script>
-
+*@

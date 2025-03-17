@@ -99,11 +99,11 @@ namespace CRM.Repository
 			return _context.Customers.ToList();
 		}
 
-		public string Create(CustomerCreateViewModel customer)
+		public CustomerModel Create(CustomerCreateViewModel customer)
 		{
 			var hasCustomerDb = _context.Customers.FirstOrDefault(x => x.Codigo == customer.Codigo || x.Cnpj == customer.Cnpj);
 
-			if (hasCustomerDb != null) return "Código ou CNPJ já existente!";
+			if (hasCustomerDb != null) return null;
 
 			var user = _session.GetUserSection();
 
@@ -159,7 +159,7 @@ namespace CRM.Repository
 
 			_context.Add(customerModel);
 			_context.SaveChanges();
-			return "Cadastro realizado com sucesso!";
+			return customerModel;
 		}
 		public bool CreateAll(List<CustomerModel> customers)
 		{
@@ -250,6 +250,7 @@ namespace CRM.Repository
 				if (_customer.LastPurchaseValue > 0 && purchase != null || _customer.LastPurchaseValue != 0)
 				{
 					PurchaseModel _purchase = new();
+					customerDb.Status = true;
 					_purchase.PurchaseValue = _customer.LastPurchaseValue;
 					_purchase.PurchaseDate = _customer.LastPurchaseDate;
 					_purchase.PurchaseValue = _customer.LastPurchaseValue;
@@ -323,21 +324,6 @@ namespace CRM.Repository
 			_context.SaveChanges();
 
 
-		}
-		public List<CustomerModel> GetByStatus(string status)
-		{
-			bool _status;
-
-			if (status.ToUpper() == "ATIVO")
-			{
-				_status = true;
-			}
-			else
-			{
-				_status = false;
-			}
-			var customers = _context.Customers.Include(x => x.CustomerPurchases).Include(x => x.Emails).Include(x => x.Phones).Include(x => x.ContactRecords).Where(x => x.Status == _status).ToList();
-			return customers;
 		}
 
 		public void ContactDateEdit(DateTime date, Guid id)

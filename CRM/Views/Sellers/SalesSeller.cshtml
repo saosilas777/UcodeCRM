@@ -7,6 +7,7 @@
 
 
 <div class="main">
+	<div class="deletAlert"></div>
 	@await Component.InvokeAsync("Header")
 
 	@if (TempData["ErrorMessage"] != null)
@@ -25,7 +26,7 @@
 		<div class="alertSendFile">
 			<div id="spanAlert" class="spanAlertSuccess">
 				<span>
-					<b>@TempData["SuccessMessage"]</b>
+					<b class="statusOk">@TempData["SuccessMessage"]</b>
 				</span>
 			</div>
 		</div>
@@ -50,6 +51,7 @@
 				<table id="myTable" class="myTable2 myTable display wrap sales">
 					<thead>
 						<tr>
+							<th hidden>Id</th>
 							<th>
 								Nº
 							</th>
@@ -81,6 +83,7 @@
 								totalSales += @item.PurchaseValue;
 
 								<tr>
+									<td hidden class="purchaseId">@item.Id</td>
 									<td>@x.ToString()</td>
 									<td>
 										<p class="thead_id ">@item.CustomerCode</p>
@@ -99,8 +102,8 @@
 										</p>
 
 									</td>
-									<td><a asp-controller="Sellers" asp-action="PurchaseDelete" asp-route-id="@item.Id">Excluir</a></td>
-
+									@*<td><a asp-controller="Sellers" asp-action="PurchaseDelete" asp-route-id="@item.Id">Excluir</a></td>*@
+									<td><button type="button" id="purchaseDeleteBtn">Deletar</button></td>
 								</tr>
 								
 								x++;
@@ -148,10 +151,58 @@
 	<p class="footer_link">Visite nosso site <a href="#">U.code</a> </p>
 </footer>
 
-@*<script src="/js/SelectTableItems.js"></script>*@
-@*<script src="/js/Alerts.js"></script>*@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="~/js/persistentDate.js"></script>
+<script src="/js/persistentDate.js"></script>
+<script>
+	const tbody = document.querySelector('tbody')
+	let id
+	let tr
+	tbody.addEventListener('click',function(e){
+		if(e.target.nodeName === 'BUTTON'){
+			tr = e.target.parentElement.parentElement
+			id = tr.querySelector('.purchaseId').textContent
+			let _result = sendToDelete(id)
+			
+		}
+	})
+
+	async function sendToDelete(id){
+		const url = `http://192.168.15.100:83/Sellers/PurchaseDelete/${id}`
+		
+		let result = await fetch(url)
+		if (result.ok) {
+			showAlert('Deleção feita com sucesso', 'Success')
+			tr.style.display = 'none'
+			return true
+		}
+		else{
+			showAlert('Deleção não pode ser concluida','')
+
+			return false
+		}
+		
+
+
+	}
+
+	function showAlert(alert,success){
+		const alertElement = `<div class="alertSendFile">
+								<div id="spanAlert" class="spanAlert${success}">
+								<span>
+										<b class="statusOk">${alert}</b>
+								</span>
+							</div>
+						</div>`
+		const deletAlert = document.querySelector('.deletAlert')
+		deletAlert.innerHTML = alertElement
+
+		setInterval(() => {
+			deletAlert.innerHTML = ''
+		}, 5000)
+	}
+	
+
+</script>
 
 
 

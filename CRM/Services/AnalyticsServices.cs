@@ -22,12 +22,12 @@ namespace CRM.Services
 		{
 			var user = _session.GetUserSection();
 			if (user == null) return new AnalyticsModel();
-			
+
 			DateTime date = DateTime.Now;
 			string initialDate = "";
 			string finalDate = "";
 
-			if(month == 0)
+			if (month == 0)
 			{
 				if (date.Month == 12 && date.Day > 20)
 				{
@@ -47,7 +47,13 @@ namespace CRM.Services
 					finalDate = $"{date.Year}/01/20";
 
 				}
-				else 
+				else if (date.Day < 21)
+				{
+					initialDate = $"{date.Year}/{date.Month - 1}/21";
+					finalDate = $"{date.Year}/{date.Month}/20";
+
+				}
+				else
 				{
 					initialDate = $"{date.Year}/{date.Month}/21";
 					finalDate = $"{date.Year}/{date.Month + 1}/20";
@@ -70,8 +76,8 @@ namespace CRM.Services
 				}
 				else
 				{
-					initialDate = $"{date.Year}/{month}/21";
-					finalDate = $"{date.Year}/{month + 1}/20";
+					initialDate = $"{date.Year}/{month - 1}/21";
+					finalDate = $"{date.Year}/{month}/20";
 
 				}
 			}
@@ -149,7 +155,31 @@ namespace CRM.Services
 					break;
 			}
 
-			double pwr = commission * 0.15;
+			DateTime currentDate = new DateTime(date.Year, date.Month, 1);
+
+			int currentMonth = currentDate.Month;
+			int workDays = 0;
+			int sundaysOrHollyday = 0;
+			
+
+			while (currentDate.Month == currentMonth)
+			{
+				if (IsHollyday(currentDate))
+				{
+					sundaysOrHollyday++;
+				}
+				if (currentDate.DayOfWeek.ToString() == "Sunday")
+				{
+					sundaysOrHollyday++;
+				}
+				else
+				{
+					workDays++;
+				}
+				currentDate = currentDate.AddDays(1);
+			}
+			
+			double pwr = (commission / workDays) * sundaysOrHollyday;
 			AnalyticsModel analytics = new();
 
 			analytics.TotalSalesMonth = total;
@@ -158,13 +188,13 @@ namespace CRM.Services
 			analytics.InactiveCustomers = inactive;
 
 			analytics.BaseSalary = 2155;
-			analytics.Commission = commission;
-			analytics.PaidWeeklyRest = pwr;
+			analytics.Commission = double.Parse(commission.ToString("F2"));
+			analytics.PaidWeeklyRest = double.Parse(pwr.ToString("F2"));
 			analytics.TotalPayment = 2155 + commission + pwr;
-			if(month == 0)
+			if (month == 0)
 			{
 				if (date.Day < 21) month = date.Month;
-				if (date.Day > 20) month = date.Month+1;
+				if (date.Day > 20) month = date.Month + 1;
 			}
 			analytics.CurrentMonth = month;
 
@@ -384,7 +414,39 @@ namespace CRM.Services
 			return analytics;
 		}
 
+		public bool IsHollyday(DateTime day)
+		{
+			day = DateTime.Parse(day.ToShortDateString());
+			#region dateArray
+			string[] hollydays = new string[11];
+			hollydays[0] = "01/01/2025";
+			hollydays[1] = "18/04/2025";
+			hollydays[2] = "21/04/2025";
+			hollydays[3] = "01/05/2025";
+			hollydays[4] = "09/07/2025";
+			hollydays[5] = "07/09/2025";
+			hollydays[6] = "12/10/2025";
+			hollydays[7] = "02/11/2025";
+			hollydays[8] = "15/11/2025";
+			hollydays[9] = "20/11/2025";
+			hollydays[10] = "25/12/2025";
 
+
+			#endregion
+
+			for (int i = 0; i < hollydays.Length;i++)
+			{
+				if (DateTime.Parse(hollydays[i]) == day)
+				{
+					return true;
+				}
+
+			}
+			return false;
+		}
 
 	}
+
+	
+	
 }

@@ -1,4 +1,6 @@
-﻿@model List<CustomerModel>
+﻿@using System.Text
+@using System.Globalization
+@model List<CustomerModel>
 
 
 <div class="main">
@@ -40,20 +42,14 @@
 			<a class="exportXlsFile" asp-action="ExportXls" asp-controller="Customers">Exportar Clientes</a>
 			<div id="inputFileName"></div>
 		</div>
-		<div class="addCustomerBtn">
-			<a asp-action="Create" asp-controller="Customers">Novo Cliente <i class="fa-solid fa-hand-pointer"></i></a>
-		</div>
 	</div>
-	<form asp-controller="Customers" asp-action="Index" method="post" hidden>
-		<input id="statusValue" value="" name="statusValue" />
-		<button id="statusSend" type="submit"></button>
-	</form>
+	
 	<section id="table_row">
-		<!-- <table id="myTable2" class="table_Securytis"> -->
 		<div class="card">
 			<div class="card_header">
 				<div class="table_float">
 					Clientes
+					@*<select id="citySelection"></select>*@
 					<form class="table_float-dates" asp-action="Index" asp-controller="Customers" method="get">
 						<span>Buscar proximos contatos entre:</span>
 						<input type="date" id="initialDate" name="initialDate" />
@@ -86,12 +82,8 @@
 							<th id="lastPurchase">
 								R$
 							</th>
-
-							<th id="ultimoContato">
-								Data Último Contato
-							</th>
 							<th class="maxWidth">
-								Último Registro de Contato
+								Último Contato
 							</th>
 							<th id="proximoContato">
 								Próximo Contato em:
@@ -113,7 +105,7 @@
 						{
 							<tr>
 
-								<td id="Data">
+								<td class="maxWidth" id="Data">
 
 									<p class="customerId" hidden>@item.Id</p>
 									<p>
@@ -167,8 +159,18 @@
 										<p>
 											<b>CNPJ: </b>@item.Cnpj
 										</p>
-										<p><b>Cidade: </b>@item.Cidade</p>
-										<p><b>Uf: </b>@item.Uf</p>
+										@{
+											string city = item.Cidade.ToUpper();
+											StringBuilder _city = new StringBuilder();
+											var arrayText = city.Normalize(NormalizationForm.FormD).ToCharArray();
+											foreach (char letter in arrayText)
+											{
+												if (CharUnicodeInfo.GetUnicodeCategory(letter) != UnicodeCategory.NonSpacingMark)
+													_city.Append(letter);
+											}
+										}
+										<p><b>Cidade: </b><span data="@_city">@_city</span></p>
+										<p><b>Uf: </b><span data="uf">@item.Uf</span></p>
 									</div>
 									<button id="moreInformations">Mais... </button>
 
@@ -206,7 +208,7 @@
 										}
 									}
 									var daysInactive = today - purchaseDate;
-									<td class="dateConvert">
+											<td class="dateConvert">
 												<span hidden>@purchaseDate.ToString("yyyy-MM-dd")</span>
 												<p>@purchaseDate.ToString("dd/MM/yyyy")</p>
 												<p>Dias inativo: <b style="color:red">@daysInactive.Days </b></p>
@@ -218,29 +220,26 @@
 									</p>
 								</td>
 
+
 								<td>
-									@if (@item.ContactRecords.Count() == 0)
-									{
-										<p>01/01/1999</p>
-									}
-									else
-									{
-										var count = @item.ContactRecords.Count();
-										<p>@item.ContactRecords[count-1].RegistrationDate.ToShortDateString()</p>
-									}
-								</td>
-								<td class="minWidth">
-									@if (@item.ContactRecords.Count() == 0)
-									{
-										<p>Nenhum registro de contato</p>
-									}
-									else
-									{
-										var count = @item.ContactRecords.Count();
-										<p>@item.ContactRecords[count-1].Anotation</p>
+									@{
+										var count = item.ContactRecords.Count();
+										DateTime firstDate = new DateTime(1999, 1, 1);
+												@if (@item.ContactRecords.Count() == 0)
+										{
+													<p hidden>@firstDate</p>
+													<p>Contato em: 01/01/1999</p>
+													<p>Nenhum registro de contato</p>
+										}
+										else
+										{
+													<p hidden>@item.ContactRecords[count-1].RegistrationDate.ToString("yyyy-MM-dd")</p>
+													<p>Contato em: <b>@item.ContactRecords[count-1].RegistrationDate.ToShortDateString()</b></p>
+													<p class="lastContactBox">@item.ContactRecords[count-1].Anotation</p>
+										}
 									}
 								</td>
-								<td class="">
+								<td>
 									<span hidden>@item.NextContactDate.ToString("yyyy-MM-dd")</span>
 									<input class="nextContactDate data_de_contato" id="@item.Id" type="date" value="@item.NextContactDate.ToString("yyyy-MM-dd")" />
 								</td>
@@ -331,22 +330,6 @@
 
 <script src="/js/statusSelection.js"></script>
 
-@*
-<script>
-	const tableFloatDates = document.querySelector('.table_float-dates')
-	const findByDateText = document.querySelector('.findByDateText')
-	tableFloatDates.addEventListener('mouseover', (e) => {
-		if (e.target.nodeName == 'BUTTON' || e.target.nodeName == 'I') {
-			findByDateText.style.display = 'flex'
-			setTimeout(function () {
-				findByDateText.style.display = 'none'
-			}, 5000)
-		}
-
-	})
-</script>*@
-
-
 <script src="/js/Alerts.js"></script>
 
 <script src="/js/getCustomersDb.js"></script>
@@ -421,4 +404,21 @@
 			spiner.style.display = 'none'
 		}, 3000)
 	})
+</script>
+<script>
+	@*let citySelection = document.querySelector('#citySelection')
+	let citys = document.querySelectorAll('[data]')
+	let arr = []
+	citys.forEach(city => arr.push(city.innerText.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "")))
+	arr = arr.filter((item, i) => arr.indexOf(item) === i).sort()
+	arr.forEach((item) => {
+
+		citySelection.innerHTML += `<option value="${item}">${item}</option>`
+	})
+	const _trs = myTable.querySelectorAll('tr')
+	citySelection.addEventListener('change', () => {
+		_trs.forEach(function(item){
+			
+		})
+	})*@
 </script>
