@@ -7,7 +7,7 @@ using CRM.Models;
 
 namespace CRM.Services
 {
-	public static  class ExportXlsService
+	public static class ExportXlsService
 	{
 		public static void ExportXls(List<CustomerModel> customers)
 		{
@@ -52,8 +52,8 @@ namespace CRM.Services
 				}
 				if (item.CustomerPurchases.Count() > 0)
 				{
-					export.DataUltimaCompra = item.CustomerPurchases[0].PurchaseDate.ToString("dd/MM/yyyy");
-					export.ValorUltimaCompra = item.CustomerPurchases[0].PurchaseValue.ToString();
+					export.DataUltimaCompra = item.CustomerPurchases.LastOrDefault().PurchaseDate.ToString();
+					export.ValorUltimaCompra = item.CustomerPurchases.LastOrDefault().PurchaseValue.ToString();
 				}
 				
 

@@ -31,6 +31,7 @@ builder.Services.AddScoped<SendFileImageRepository, SendFileImageRepository>();
 builder.Services.AddScoped<SendFileService, SendFileService>();
 builder.Services.AddScoped<ICustomerPurchasesRepository, CustomerPurchasesRepository>();
 builder.Services.AddScoped<AnalyticsServices, AnalyticsServices>();
+builder.Services.AddScoped<CustomerStatusVerify, CustomerStatusVerify>();
 
 
 builder.Services.AddHttpContextAccessor();

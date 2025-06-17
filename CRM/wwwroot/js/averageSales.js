@@ -1,11 +1,12 @@
 ﻿let currentDate = new Date()
 
 
-let initialDate = new Date()
-let finalDate = new Date()
+let initialDate
+let finalDate
 let workDays = 0
 let workedDays = 0
 let remainingDays = 0
+let hollydays = ['01/01/2025','18/04/2025','21/04/25','01/05/25','19/06/2025','09/07/2025','07/09/2025','12/10/2025','02/11/2025','15/11/2025','20/11/2025','25/12/2025']
 
 const totalSales = parseFloat(document.getElementById('totalSales').innerText)
 let salesToday = document.getElementById('salesToday')

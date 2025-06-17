@@ -23,15 +23,21 @@ namespace CRM.Controllers
 		#region Dependencies
 		private readonly ICustomerRepository _customerRepository;
 		private readonly ICustomerPurchasesRepository _purchases;
+		private readonly CustomerStatusVerify _statusVerify;
 
 		private readonly IUserSession _session;
+		private object customerStatusVerify;
+
 		public CustomersController(ICustomerRepository customer,
-								   IUserSession session, ICustomerPurchasesRepository purchasesRepository
+								   IUserSession session,
+								   ICustomerPurchasesRepository purchasesRepository,
+								   CustomerStatusVerify statusVerify
 									)
 		{
 			_customerRepository = customer;
 			_session = session;
 			_purchases = purchasesRepository;
+			_statusVerify = statusVerify;
 		}
 		#endregion
 
@@ -45,9 +51,13 @@ namespace CRM.Controllers
 				List<CustomerModel> customers = new();
 				if (initialDate == null || finalDate == null)
 				{
-					customers = _customerRepository.BuscarTodos(user.Id)/*.Where(x => x.NextContactDate <= date).OrderBy(x => x.NextContactDate).ToList()*/;
-					var _customers = StatusVerifyer(customers);
-					return View(_customers);
+					customers = _customerRepository.BuscarTodos(user.Id);
+					if (customers[0].LastUpdated.Date < date.Date)
+					{
+						_statusVerify.StatusVerify(customers);
+					}
+
+					return View(customers);
 				}
 				else
 				{
@@ -56,7 +66,7 @@ namespace CRM.Controllers
 				}
 
 			}
-			TempData["ErrorMessage"] = "É necessário efetuar seu login!";
+			/*TempData["ErrorMessage"] = "É necessário efetuar seu login!";*/
 			return RedirectToAction("Login", "Login");
 		}
 
@@ -72,13 +82,20 @@ namespace CRM.Controllers
 		public IActionResult Editar(Guid id)
 		{
 			var user = _session.GetUserSection();
-			if (user != null)
+			CustomerEditViewModel customerDb = _customerRepository.BuscarPorId(id);
+			if(user == null)
 			{
-				CustomerEditViewModel customerDb = _customerRepository.BuscarPorId(id);
-				return View(customerDb);
+				/*TempData["ErrorMessage"] = "É necessário efetuar seu login!";*/
+				return RedirectToAction("Login", "Login");
+
 			}
-			TempData["ErrorMessage"] = "É necessário efetuar seu login!";
-			return RedirectToAction("Login", "Login");
+			if (customerDb.UserId != user.Id)
+			{
+				TempData["ErrorMessage"] = "Cadastro não encontrado!";
+				return RedirectToAction("Index", "Customers");
+				
+			}
+			return View(customerDb);
 
 		}
 		public IActionResult Create()
@@ -89,7 +106,7 @@ namespace CRM.Controllers
 			{
 				return View(customerCreate);
 			}
-			TempData["ErrorMessage"] = "É necessário efetuar seu login!";
+			/*TempData["ErrorMessage"] = "É necessário efetuar seu login!";*/
 			return RedirectToAction("Login", "Login");
 
 		}
@@ -105,7 +122,7 @@ namespace CRM.Controllers
 					if (_customer != null)
 					{
 						//TempData["SuccessMessage"] = "";
-						return RedirectToAction("Editar", new { id = _customer.Id} );
+						return RedirectToAction("Editar", new { id = _customer.Id });
 					}
 					TempData["ErrorMessage"] = "Não foi possível efeturar o cadastro";
 					return View(customer);
@@ -204,34 +221,9 @@ namespace CRM.Controllers
 		public void UpdateCustomerContacts(string reciverStringfy)
 		{
 			var updates = JsonConvert.DeserializeObject<List<UpdateNextContactDateViewModel>>(reciverStringfy);
-			
+
 			_customerRepository.UpdateNextContactDates(updates);
 		}
 
-		public List<CustomerModel> StatusVerifyer(List<CustomerModel> customers)
-		{
-			DateTime date = DateTime.Now;
-			foreach (var item in customers)
-			{
-				if(item.CustomerPurchases.Count() > 0)
-				{
-					PurchaseModel lastPurchase = item.CustomerPurchases.Last();
-					var temp = lastPurchase.PurchaseDate - date;
-					if (temp.Days < -90 || temp.Days == 0)
-					{
-						item.Status = false;
-					}
-
-				}
-				else
-				{
-					item.Status = false;
-				}
-				
-
-			}
-
-			return customers;
-		}
 	}
 }

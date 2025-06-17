@@ -43,7 +43,7 @@
 			<div id="inputFileName"></div>
 		</div>
 	</div>
-	
+
 	<section id="table_row">
 		<div class="card">
 			<div class="card_header">
@@ -194,25 +194,29 @@
 
 								</td>
 								@{
-									double purchaseValue = 0;
-									DateTime purchaseDate = new DateTime(1999, 01, 01);
 									DateTime today = DateTime.Now;
+									DateTime purchaseDate = new DateTime(1999, 01, 01);
+									double purchaseValue = 0;
+									int counter = item.CustomerPurchases.Count();
 
-									foreach (var purchase in item.CustomerPurchases)
+									if (item.CustomerPurchases.Count() > 1)
 									{
-										purchaseValue = purchase.PurchaseValue;
-										if (purchase.PurchaseDate != null)
+										for (int i = 0; i < counter; i++)
 										{
-											purchaseDate = DateTime.Parse(purchase.PurchaseDate.ToString("yyyy-MM-dd"));
-
+											if (item.CustomerPurchases[i].PurchaseValue > 0)
+											{
+												purchaseValue = item.CustomerPurchases[i].PurchaseValue;
+												purchaseDate = item.CustomerPurchases[i].PurchaseDate;
+											}
 										}
 									}
+
 									var daysInactive = today - purchaseDate;
-											<td class="dateConvert">
-												<span hidden>@purchaseDate.ToString("yyyy-MM-dd")</span>
-												<p>@purchaseDate.ToString("dd/MM/yyyy")</p>
-												<p>Dias inativo: <b style="color:red">@daysInactive.Days </b></p>
-											</td>
+										<td class="dateConvert">
+											<span hidden>@purchaseDate.ToString("yyyy-MM-dd")</span>
+											<p>@purchaseDate.ToString("dd/MM/yyyy")</p>
+											<p>Dias inativo: <b style="color:red">@daysInactive.Days </b></p>
+										</td>
 								}
 								<td>
 									<p>
@@ -225,23 +229,35 @@
 									@{
 										var count = item.ContactRecords.Count();
 										DateTime firstDate = new DateTime(1999, 1, 1);
-												@if (@item.ContactRecords.Count() == 0)
+											@if (@item.ContactRecords.Count() == 0)
 										{
-													<p hidden>@firstDate</p>
-													<p>Contato em: 01/01/1999</p>
-													<p>Nenhum registro de contato</p>
+												<p hidden>@firstDate</p>
+												<p>Contato em: 01/01/1999</p>
+												<p>Nenhum registro de contato</p>
 										}
 										else
 										{
-													<p hidden>@item.ContactRecords[count-1].RegistrationDate.ToString("yyyy-MM-dd")</p>
-													<p>Contato em: <b>@item.ContactRecords[count-1].RegistrationDate.ToShortDateString()</b></p>
-													<p class="lastContactBox">@item.ContactRecords[count-1].Anotation</p>
+												<p hidden>@item.ContactRecords[count-1].RegistrationDate.ToString("yyyy-MM-dd")</p>
+												<p>Contato em: <b>@item.ContactRecords[count-1].RegistrationDate.ToShortDateString()</b></p>
+												<p class="lastContactBox">@item.ContactRecords[count-1].Anotation</p>
 										}
 									}
 								</td>
 								<td>
-									<span hidden>@item.NextContactDate.ToString("yyyy-MM-dd")</span>
-									<input class="nextContactDate data_de_contato" id="@item.Id" type="date" value="@item.NextContactDate.ToString("yyyy-MM-dd")" />
+
+									@{
+										<span hidden>@item.NextContactDate.ToString("yyyy-MM-dd")</span>
+										<input class="nextContactDate data_de_contato" id="@item.Id" type="date" value="@item.NextContactDate.ToString("yyyy-MM-dd")" />
+										if (today < item.NextContactDate)
+										{
+												<input class="nextContactDate hora_de_contato" id="@item.Id" type="time" value="@item.NextContactDate.ToString("HH:mm")" />
+										}
+										else
+										{
+												<input class="nextContactDate nextContactDateRed hora_de_contato" id="@item.Id" type="time" value="@item.NextContactDate.ToString("HH:mm")" />
+										}
+
+									}
 								</td>
 								<td class="priority">
 									@if (item.Priority.ToString() == "green")
@@ -292,7 +308,7 @@
 
 					</tbody>
 				</table>
-				<button id="UpdateSendBtn" style="display:none;position:fixed;bottom:1rem;right:1rem" type="button">ENVIAR ALTERAÇÕES</button>
+				<button id="UpdateSendBtn" class="updateSendBtn updateSendBtnAlert" type="button">Salvar Alterações</button>
 			</div>
 		</div>
 	</section>
@@ -346,11 +362,21 @@
 		currentDateValue = e.target.value
 
 		if (e.target.nodeName === "INPUT") {
+
 			e.target.addEventListener('change', () => {
 				var customer = _customersData.filter((item) => item.customerId.toLowerCase().includes(e.target.parentNode.parentNode.querySelector('.customerId').textContent))
 				var customerIndex = _customersData.findIndex((obj) => obj.customerCode === customer[0].customerCode)
-				_customersData[parseInt(customerIndex)].nextContactDate = e.target.value
+
+
+
+				var nextContact = e.target.parentNode
+				var date = nextContact.querySelector('.data_de_contato').value
+				var hour = nextContact.querySelector('.hora_de_contato').value
+				
+				_customersData[parseInt(customerIndex)].nextContactDate = `${date} ${hour}:00`
 				UpdateSendBtn.style.display = 'flex'
+
+
 				if (e.target.value > currentDateValue) {
 					e.target.classList.remove('nextContactDateRed')
 				}
@@ -364,6 +390,20 @@
 		document.querySelector('#reciverStringfy').value = JSON.stringify(_customersData)
 		document.querySelector('#StringfySendBtn').click()
 	})
+	UpdateAlert()
+	function UpdateAlert() {
+		setInterval(() => {
+			UpdateSendBtn.classList.add('updateSendBtnAlert')
+			setTimeout(() => {
+				UpdateSendBtn.classList.remove('updateSendBtnAlert')
+			}, 300)
+
+		}, 15000)
+
+		setTimeout(() => {
+			UpdateSendBtn.classList.remove('updateSendBtnAlert')
+		}, 300)
+	}
 
 
 
@@ -407,18 +447,18 @@
 </script>
 <script>
 	@*let citySelection = document.querySelector('#citySelection')
-	let citys = document.querySelectorAll('[data]')
-	let arr = []
-	citys.forEach(city => arr.push(city.innerText.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "")))
-	arr = arr.filter((item, i) => arr.indexOf(item) === i).sort()
-	arr.forEach((item) => {
+		let citys = document.querySelectorAll('[data]')
+		let arr = []
+		citys.forEach(city => arr.push(city.innerText.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "")))
+		arr = arr.filter((item, i) => arr.indexOf(item) === i).sort()
+		arr.forEach((item) => {
 
 		citySelection.innerHTML += `<option value="${item}">${item}</option>`
-	})
-	const _trs = myTable.querySelectorAll('tr')
-	citySelection.addEventListener('change', () => {
-		_trs.forEach(function(item){
-			
 		})
-	})*@
+		const _trs = myTable.querySelectorAll('tr')
+		citySelection.addEventListener('change', () => {
+		_trs.forEach(function(item){
+
+		})
+		})*@
 </script>

@@ -21,6 +21,7 @@ namespace CRM.Models
 		public List<ContactRecords>? ContactRecords { get; set; }
 		public DateTime NextContactDate { get; set; }
 		public Guid UserId { get; set; }
+		public DateTime LastUpdated { get; set; }
 
 	}
 }

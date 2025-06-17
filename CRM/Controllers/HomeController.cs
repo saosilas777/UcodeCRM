@@ -31,7 +31,7 @@ namespace CRM.Controllers
 			homeModels.User = user;
 
 			if (_session.GetUserSection() == null){
-				TempData["ErrorMessage"] = "É necessário efetuar seu login!";
+				/*TempData["ErrorMessage"] = "É necessário efetuar seu login!";*/
 				return RedirectToAction("Login", "Login");
 
 			}

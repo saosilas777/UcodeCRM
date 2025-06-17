@@ -25,7 +25,7 @@ namespace CRM.Controllers
 
 				return View(purchases);
 			}
-			TempData["ErrorMessage"] = "É necessário efetuar seu login!";
+			/*TempData["ErrorMessage"] = "É necessário efetuar seu login!";*/
 			return RedirectToAction("Login", "Login");
 		}
 

@@ -18,126 +18,146 @@
 		<b>Cep informado não corresponde, verifique o cep digitado.</b>
 	</div>
 	<div>
-        <h1>Cadastro de Cliente</h1>
+		<h1 class="customerCreateTitle">Cadastro de Cliente</h1>
 
-        <form id="formCustomerCreate" class="formCreateCustomer" method="post" asp-action="Create" asp-controller="Customers">
-            <label for="codigo" class="span2">
-                <p>Código</p>
-                <input id="codigo" value="" type="text" maxlength="5" data-val="true"
-                    data-val-required="The Codigo field is required." name="Codigo">
-            </label>
-            <label for="cnpj" class="span4">
-                <p class="bgWhite">
-                    Cnpj
-                </p>
-                <input id="cnpj" value="" type="text" data-val="true" data-val-required="The Cnpj field is required."
-                    name="Cnpj">
-            </label>
-            <label for="razaoSocial" class="">
-                <p>
-                    Razão Social
-                </p>
-                <input id="razaoSocial" value="" type="text" data-val="true"
-                    data-val-required="The RazaoSocial field is required." name="RazaoSocial">
-            </label>
-            <label for="contato" class="span2">
-                <p class="bgWhite">
-                    Contato / Comprador
-                </p>
-                <input id="contato" value="" type="text" data-val="true"
-                    data-val-required="The Contato field is required." name="Contato">
-            </label>
-            <label class="zipCode ">
-                <p>
-                    Pesquisar CEP
-                </p>
-                <input id="zipCodeInput" type="text" placeholder="CEP:" required maxlength="8">
-                <button id="zipCodeBtn"><i class="fa-solid fa-magnifying-glass"></i></button>
-            </label>
+		<form id="formCustomerCreate" class="formCreateCustomer" method="post" asp-action="Create" asp-controller="Customers">
+			<label for="codigo" class="span2">
+				<p>Código</p>
+				<input id="codigo" value="" type="text" maxlength="5" data-val="true"
+					   data-val-required="The Codigo field is required." name="Codigo">
+			</label>
+			<label for="cnpj" class="span4">
+				<p class="bgWhite">
+					Cnpj
+				</p>
+				<input id="cnpj" value="" type="text" data-val="true" data-val-required="The Cnpj field is required."
+					   name="Cnpj">
+			</label>
+			<label for="razaoSocial" class="">
+				<p>
+					Razão Social
+				</p>
+				<input id="razaoSocial" value="" type="text" data-val="true"
+					   data-val-required="The RazaoSocial field is required." name="RazaoSocial">
+			</label>
+			<label for="contato" class="span2">
+				<p class="bgWhite">
+					Contato / Comprador
+				</p>
+				<input id="contato" value="" type="text" data-val="true"
+					   data-val-required="The Contato field is required." name="Contato">
+			</label>
+			<label class="zipCode ">
+				<p>
+					CEP
+				</p>
+				<input id="zipCodeInput" type="text" required maxlength="8">
+				<button id="zipCodeBtn"><i class="fa-solid fa-magnifying-glass"></i></button>
+			</label>
 
-            <label for="cidade" class=" inputCountry ">
-                <p class="bgWhite">
-                    Cidade
-                </p>
+			<label for="cidade" class=" inputCountry ">
+				<p class="bgWhite">
+					Cidade
+				</p>
 
-                <input id="city" value="" type="text" data-val="true" data-val-required="The Cidade field is required."
-                    name="Cidade">
+				<input id="city" value="" type="text" data-val="true" data-val-required="The Cidade field is required."
+					   name="Cidade">
 
-            </label>
-            <label for="uf" class="select span2">
-                <p>
-                    UF
-                </p>
-                <select id="uf">
-                    <option value=""></option>
-                    <option value="RO">RO</option>
-                    <option value="AC">AC</option>
-                    <option value="AM">AM</option>
-                    <option value="RR">RR</option>
-                    <option value="PA">PA</option>
-                    <option value="AP">AP</option>
-                    <option value="TO">TO</option>
-                    <option value="MA">MA</option>
-                    <option value="PI">PI</option>
-                    <option value="CE">CE</option>
-                    <option value="RN">RN</option>
-                    <option value="PB">PB</option>
-                    <option value="PE">PE</option>
-                    <option value="AL">AL</option>
-                    <option value="SE">SE</option>
-                    <option value="BA">BA</option>
-                    <option value="MG">MG</option>
-                    <option value="ES">ES</option>
-                    <option value="RJ">RJ</option>
-                    <option value="SP">SP</option>
-                    <option value="PR">PR</option>
-                    <option value="SC">SC</option>
-                    <option value="RS">RS</option>
-                    <option value="MS">MS</option>
-                    <option value="MT">MT</option>
-                    <option value="GO">GO</option>
-                    <option value="DF">DF</option>
+			</label>
+			<label for="uf" class="select span2">
+				<p>
+					UF
+				</p>
+				<select id="uf" name="Uf">
+					<option value=""></option>
+					<option value="RO">RO</option>
+					<option value="AC">AC</option>
+					<option value="AM">AM</option>
+					<option value="RR">RR</option>
+					<option value="PA">PA</option>
+					<option value="AP">AP</option>
+					<option value="TO">TO</option>
+					<option value="MA">MA</option>
+					<option value="PI">PI</option>
+					<option value="CE">CE</option>
+					<option value="RN">RN</option>
+					<option value="PB">PB</option>
+					<option value="PE">PE</option>
+					<option value="AL">AL</option>
+					<option value="SE">SE</option>
+					<option value="BA">BA</option>
+					<option value="MG">MG</option>
+					<option value="ES">ES</option>
+					<option value="RJ">RJ</option>
+					<option value="SP">SP</option>
+					<option value="PR">PR</option>
+					<option value="SC">SC</option>
+					<option value="RS">RS</option>
+					<option value="MS">MS</option>
+					<option value="MT">MT</option>
+					<option value="GO">GO</option>
+					<option value="DF">DF</option>
 
-                </select>
+				</select>
 
 
-            </label>
-            <div id="email" class="inputEmail">
-                <label for="email" class="">
-                    <p>
-                        <a id="InsertEmailField" class="InsertField">
-                            Email
-                            <i class="fa-solid fa-plus"></i>
-                        </a>
-                    </p>
-                    <input id="email" value="" type="email" name="Emails" data-val="true"
-                        data-val-required="The Emails field is required.">
-                </label>
-            </div>
-            <div id="phone" class=" inputPhone">
-                <label for="phone" class="">
-                    <p>
-                        <a id="InsertPhoneField" class="InsertField">
-                            Telefone
-                            <i class="fa-solid fa-plus"></i>
-                        </a>
-                    </p>
-                    <input id="phone" type="text" name="Phones" value="" data-val="true"
-                        data-val-required="The Phones field is required.">
-                </label>
+			</label>
+			<div id="email" class="inputEmail">
+				<label for="email1" class="">
+					<p>
+						Email
+					</p>
+					<input id="email1" value="" type="email" name="Emails" required>
+				</label>
+				<label for="email2" class="">
+					<p>
+						Email
+					</p>
+					<input id="email2" value="" type="email" name="Emails">
+				</label>
+				<label for="email3" class="">
+					<p>
+						Email
+					</p>
+					<input id="email13" value="" type="email" name="Emails">
+				</label>
+			</div>
+			<div id="phone" class=" inputPhone">
+				<label for="phone1" class="">
+					<p>
+						Telefone
+					</p>
+					<input id="phone1" type="text" name="Phones" value="" required>
+				</label>
+				<label for="phone2" class="">
+					<p>
+						Telefone
+					</p>
+					<input id="phone2" type="text" name="Phones" value="">
+				</label>
+				<label for="phone3" class="">
+					<p>
+						Telefone
+					</p>
+					<input id="phone3" type="text" name="Phones" value="">
+				</label>
 
-            </div>
-            <div class="formCreateCustomer_buttons">
-                <button class="backBtn" formaction="/Customers/Index">Voltar</button>
-                <button class="cleanBtn" type="reset">Limpar campos</button>
-                <button class="saveBtn" type="submit">Salvar</button>
-            </div>
-        </form>
-    </div>
+			</div>
+			<div class="formCreateCustomer_buttons">
+				<button class="backBtn" formaction="/Customers/Index">Voltar</button>
+				<button class="cleanBtn" type="reset">Limpar campos</button>
+				<button class="saveBtn" type="submit">Salvar</button>
+			</div>
+		</form>
+	</div>
 </div>
+<footer class="footer">
+	<p> &copy; <a href="#">U.Code</a> development</p>
+	<p class="footer_link">Visite nosso site <a href="#">U.code</a> </p>
+</footer>
 <script src="/js/InsertNewField.js"></script>
 <script src="/js/Alerts.js"></script>
 <script src="/js/GetZipCode.js"></script>
 <script>
-   
+
 </script>

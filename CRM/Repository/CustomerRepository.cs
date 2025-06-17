@@ -34,7 +34,7 @@ namespace CRM.Repository
 
 					};
 					item.Phones.Add(phone);
-					
+
 				}
 				for (int i = 0; i < 2; i++)
 				{
@@ -46,7 +46,7 @@ namespace CRM.Repository
 
 					};
 					item.Emails.Add(mail);
-					
+
 				}
 				_context.Customers.Update(item);
 				_context.SaveChanges();
@@ -54,11 +54,11 @@ namespace CRM.Repository
 
 			}
 		}
-		
+
 		public CustomerEditViewModel BuscarPorId(Guid id)
 		{
-			var custumerDb = _context.Customers.Include(x => x.ContactRecords).Include(x => x.CustomerPurchases.OrderByDescending(x => x.PurchaseDate)).Include(x => x.Emails).Include(x => x.Phones).FirstOrDefault(x => x.Id == id);
-			
+			var custumerDb = _context.Customers.Include(x => x.ContactRecords).Include(x => x.Emails).Include(x => x.Phones).Include(x => x.CustomerPurchases).FirstOrDefault(x => x.Id == id);
+
 
 			CustomerEditViewModel _CustomerEditView = new()
 			{
@@ -73,13 +73,14 @@ namespace CRM.Repository
 				Phones = custumerDb.Phones,
 				Contact = custumerDb.Contact,
 				ContactRecords = custumerDb.ContactRecords,
-				NextContactDate = custumerDb.NextContactDate.ToShortDateString()
+				NextContactDate = custumerDb.NextContactDate.ToShortDateString(),
+				UserId = custumerDb.UserId
 
 			};
 			if (custumerDb.CustomerPurchases.Count() > 0)
 			{
-				_CustomerEditView.LastPurchaseDate = custumerDb.CustomerPurchases[0].PurchaseDate;
-				_CustomerEditView.LastPurchaseValue = custumerDb.CustomerPurchases[0].PurchaseValue;
+				_CustomerEditView.LastPurchaseDate = custumerDb.CustomerPurchases.OrderBy(p => p.PurchaseDate).LastOrDefault().PurchaseDate;
+				_CustomerEditView.LastPurchaseValue = custumerDb.CustomerPurchases.OrderBy(p => p.PurchaseDate).LastOrDefault().PurchaseValue;
 
 			}
 
@@ -122,7 +123,7 @@ namespace CRM.Repository
 				Cidade = customer.Cidade,
 				Uf = customer.Uf,
 				Priority = Enums.Priority.green
-				
+
 
 
 			};
@@ -171,9 +172,16 @@ namespace CRM.Repository
 
 		public bool Deletar(CustomerModel customer)
 		{
-			_context.Remove(customer);
-			_context.SaveChanges();
-			return true;
+			var dbCustomer = _context.Customers.Find(customer.Id);
+			if (dbCustomer != null)
+			{
+				dbCustomer.UserId = new Guid("00000000-0000-0000-0000-000000000000");
+				_context.Customers.Update(dbCustomer);
+				_context.SaveChanges();
+				return true;
+			}
+			return false;
+
 		}
 
 		public List<CustomerModel> CreateAt()

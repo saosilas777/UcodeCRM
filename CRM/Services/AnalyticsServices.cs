@@ -159,11 +159,13 @@ namespace CRM.Services
 
 			int currentMonth = currentDate.Month;
 			int workDays = 0;
+			int daysInTheMonth = 0;
 			int sundaysOrHollyday = 0;
 			
 
 			while (currentDate.Month == currentMonth)
 			{
+				daysInTheMonth++;
 				if (IsHollyday(currentDate))
 				{
 					sundaysOrHollyday++;
@@ -172,13 +174,10 @@ namespace CRM.Services
 				{
 					sundaysOrHollyday++;
 				}
-				else
-				{
-					workDays++;
-				}
+				
 				currentDate = currentDate.AddDays(1);
 			}
-			
+			workDays = daysInTheMonth - sundaysOrHollyday;
 			double pwr = (commission / workDays) * sundaysOrHollyday;
 			AnalyticsModel analytics = new();
 
@@ -418,18 +417,19 @@ namespace CRM.Services
 		{
 			day = DateTime.Parse(day.ToShortDateString());
 			#region dateArray
-			string[] hollydays = new string[11];
+			string[] hollydays = new string[12];
 			hollydays[0] = "01/01/2025";
 			hollydays[1] = "18/04/2025";
 			hollydays[2] = "21/04/2025";
 			hollydays[3] = "01/05/2025";
-			hollydays[4] = "09/07/2025";
-			hollydays[5] = "07/09/2025";
-			hollydays[6] = "12/10/2025";
-			hollydays[7] = "02/11/2025";
-			hollydays[8] = "15/11/2025";
-			hollydays[9] = "20/11/2025";
-			hollydays[10] = "25/12/2025";
+			hollydays[4] = "19/06/2025";
+			hollydays[5] = "09/07/2025";
+			hollydays[6] = "07/09/2025";
+			hollydays[7] = "12/10/2025";
+			hollydays[8] = "02/11/2025";
+			hollydays[9] = "15/11/2025";
+			hollydays[10] = "20/11/2025";
+			hollydays[11] = "25/12/2025";
 
 
 			#endregion
