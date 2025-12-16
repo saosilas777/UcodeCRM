@@ -167,7 +167,10 @@
 	})
 
 	async function sendToDelete(id){
-		const url = `http://192.168.15.100:83/Sellers/PurchaseDelete/${id}`
+		const currentUrl = document.URL.split('/')
+
+		const url = `${currentUrl[0]}//${currentUrl[2]}/Sellers/PurchaseDelete/${id}`
+
 		
 		let result = await fetch(url)
 		if (result.ok) {

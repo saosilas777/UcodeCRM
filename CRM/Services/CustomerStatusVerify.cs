@@ -15,19 +15,17 @@ namespace CRM.Services
 		}
 		public void StatusVerify(List<CustomerModel> customers)
 		{
-			var today = DateTime.Today;
-
+			var date = DateTime.Now;
 			List<CustomerModel> _customers = customers;
 			foreach (var item in _customers)
 			{
+				item.LastUpdated = date.Date;
 				var purchase = item.CustomerPurchases.LastOrDefault();
 				if (purchase != null)
 				{
-					var inactiveDays = purchase.PurchaseDate - today;
-					item.LastUpdated = today.Date;
-					var newDate = $"{item.NextContactDate.ToString("yyyy-MM-dd")} 09:00:00";
-					item.NextContactDate = DateTime.Parse(newDate);
-					if (inactiveDays.Days > -90)
+					TimeSpan inactiveDays = date - purchase.PurchaseDate;
+
+					if (inactiveDays.Days < 90)
 					{
 						item.Status = true;
 					}
@@ -35,15 +33,25 @@ namespace CRM.Services
 					{
 						item.Status = false;
 					}
-					
-
 				}
+				else
+				{
+					item.Status = false;
+				}
+				if (item.NextContactDate < date)
+				{
+					item.NextContactDate = DateTime.Parse(date.ToShortDateString() + " " +  item.NextContactDate.ToShortTimeString() + ":00");
+				}
+
+
+
+
 
 
 			}
 			_customerRepository.AtualizarTodos(_customers);
 		}
-		
+
 
 
 	}

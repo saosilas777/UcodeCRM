@@ -1,0 +1,32 @@
+﻿<td class="priority">
+	@*@if (item.Priority.ToString() == "green")*@
+	{
+		<label>
+			<span hidden>1</span>
+			<input id="green" class="priorityRadio priorityRadioGreen" name="@*@item.Id*@" type="radio" checked />
+		</label>
+	}
+	else
+	{
+		<label>
+
+			<input id="green" class="priorityRadio priorityRadioGreen" name="@*@item.Id*@" type="radio" />
+		</label>
+	}
+	@*@if (item.Priority.ToString() == "red")*@
+	{
+		<label>
+			<span hidden>2</span>
+			<input id="red" class="priorityRadio priorityRadioRed" name="@*@item.Id*@" type="radio" checked />
+		</label>
+	}
+	else
+	{
+		<label>
+
+			<input id="red" class="priorityRadio priorityRadioRed" name="@*@item.Id*@" type="radio" />
+		</label>
+
+	}
+</td>
+<td>

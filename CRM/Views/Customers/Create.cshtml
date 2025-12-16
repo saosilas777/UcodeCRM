@@ -23,36 +23,37 @@
 		<form id="formCustomerCreate" class="formCreateCustomer" method="post" asp-action="Create" asp-controller="Customers">
 			<label for="codigo" class="span2">
 				<p>Código</p>
-				<input id="codigo" value="" type="text" maxlength="5" data-val="true"
-					   data-val-required="The Codigo field is required." name="Codigo">
+				<input id="codigo" type="text" maxlength="5" data-val="true"
+					   data-val-required="The Codigo field is required." name="Codigo" asp-for="@Model.Codigo">
 			</label>
-			<label for="cnpj" class="span4">
+			<label for="cnpj" class="span4 dataSearch">
 				<p class="bgWhite">
 					Cnpj
 				</p>
-				<input id="cnpj" value="" type="text" data-val="true" data-val-required="The Cnpj field is required."
-					   name="Cnpj">
+				<input id="cnpj" oninput="this.value = this.value.replace(/[^0-9\.\-\/]/g, '')" type="text" data-val="true" maxlength="18" name="Cnpj" value="@Model.Cnpj">
+				@**@
+				<button id="dataSearchBtn"><i class="fa-solid fa-magnifying-glass"></i></button>
 			</label>
 			<label for="razaoSocial" class="">
 				<p>
 					Razão Social
 				</p>
-				<input id="razaoSocial" value="" type="text" data-val="true"
-					   data-val-required="The RazaoSocial field is required." name="RazaoSocial">
+				<input id="razaoSocial" type="text" data-val="true"
+					   data-val-required="The RazaoSocial field is required." name="RazaoSocial" asp-for="@Model.RazaoSocial">
 			</label>
 			<label for="contato" class="span2">
 				<p class="bgWhite">
 					Contato / Comprador
 				</p>
-				<input id="contato" value="" type="text" data-val="true"
-					   data-val-required="The Contato field is required." name="Contato">
+				<input id="contato" type="text" data-val="true"
+					   data-val-required="The Contato field is required." name="Contato" asp-for="@Model.Contato">
 			</label>
-			<label class="zipCode ">
+			<label >
 				<p>
 					CEP
 				</p>
-				<input id="zipCodeInput" type="text" required maxlength="8">
-				<button id="zipCodeBtn"><i class="fa-solid fa-magnifying-glass"></i></button>
+				<input id="zipCodeInput" type="text" maxlength="8" asp-for="@Model.Cep">
+				
 			</label>
 
 			<label for="cidade" class=" inputCountry ">
@@ -60,15 +61,15 @@
 					Cidade
 				</p>
 
-				<input id="city" value="" type="text" data-val="true" data-val-required="The Cidade field is required."
-					   name="Cidade">
+				<input id="city" type="text"
+					   name="Cidade" asp-for="@Model.Cidade">
 
 			</label>
 			<label for="uf" class="select span2">
 				<p>
 					UF
 				</p>
-				<select id="uf" name="Uf">
+				<select id="uf" name="Uf" asp-for="@Model.Uf">
 					<option value=""></option>
 					<option value="RO">RO</option>
 					<option value="AC">AC</option>
@@ -107,19 +108,19 @@
 					<p>
 						Email
 					</p>
-					<input id="email1" value="" type="email" name="Emails" required>
+					<input id="email1"  type="email" name="Emails" asp-for="@Model.Emails[0]">
 				</label>
 				<label for="email2" class="">
 					<p>
 						Email
 					</p>
-					<input id="email2" value="" type="email" name="Emails">
+					<input id="email2"  type="email" name="Emails" asp-for="@Model.Emails[1]">
 				</label>
 				<label for="email3" class="">
 					<p>
 						Email
 					</p>
-					<input id="email13" value="" type="email" name="Emails">
+					<input id="email13" type="email" name="Emails" asp-for="@Model.Emails[2]">
 				</label>
 			</div>
 			<div id="phone" class=" inputPhone">
@@ -127,26 +128,26 @@
 					<p>
 						Telefone
 					</p>
-					<input id="phone1" type="text" name="Phones" value="" required>
+					<input id="phone1" type="text" name="Phones" asp-for="@Model.Phones[0]">
 				</label>
 				<label for="phone2" class="">
 					<p>
 						Telefone
 					</p>
-					<input id="phone2" type="text" name="Phones" value="">
+					<input id="phone2" type="text" name="Phones"  asp-for="@Model.Phones[1]">
 				</label>
 				<label for="phone3" class="">
 					<p>
 						Telefone
 					</p>
-					<input id="phone3" type="text" name="Phones" value="">
+					<input id="phone3" type="text" name="Phones"  asp-for="@Model.Phones[2]">
 				</label>
 
 			</div>
 			<div class="formCreateCustomer_buttons">
-				<button class="backBtn" formaction="/Customers/Index">Voltar</button>
-				<button class="cleanBtn" type="reset">Limpar campos</button>
-				<button class="saveBtn" type="submit">Salvar</button>
+				<a asp-action="Index" asp-controller="Customers" class="backBtn" type="button">Voltar</a>
+				<button id="resetForm" class="cleanBtn" type="button">Limpar campos</button>
+				<button id="saveBtn" class="saveBtn" type="button">Salvar</button>
 			</div>
 		</form>
 	</div>
@@ -155,9 +156,11 @@
 	<p> &copy; <a href="#">U.Code</a> development</p>
 	<p class="footer_link">Visite nosso site <a href="#">U.code</a> </p>
 </footer>
-<script src="/js/InsertNewField.js"></script>
+
 <script src="/js/Alerts.js"></script>
-<script src="/js/GetZipCode.js"></script>
+<script src="~/js/GetNewCustomerData.js"></script>
+
+
 <script>
 
 </script>

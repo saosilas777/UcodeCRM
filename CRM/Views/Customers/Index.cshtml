@@ -1,7 +1,20 @@
 ﻿@using System.Text
 @using System.Globalization
 @model List<CustomerModel>
-
+<div id="RegistrationContainer">
+	<form class="registrationModal" asp-controller="Customers" asp-action="RegistrationContact">
+		<p id="customerCode"></p>
+		<p id="customerIdentity"></p>
+		<textarea id="customerNewAnotation" name="anotation" placeholder="Novo registro de contato"></textarea>
+		<input class="nextContactDate nextContactDateRed" name="date" id="registrationDate" type="datetime-local" />
+		<input name="id" id="customerId" hidden />
+		<input name="index" value="1" hidden />
+		<div style="display:flex;gap:1rem" class="registrationModalActions ">
+			<button id="registrationClose" type="button">Cancelar</button>
+			<button type="submit">Enviar</button>
+		</div>
+	</form>
+</div>
 
 <div class="main">
 	@await Component.InvokeAsync("Header")
@@ -28,19 +41,30 @@
 		</div>
 
 	}
+
 	<div class="actionsContainer">
 		<div class="envio-arquivos">
-			<div class="arquivos_title">
-				<span>Faça o upload de sua planilha <b class="excel">excel</b> aqui!</span>
-			</div>
-
 			<form asp-action="SendFile" asp-controller="SendFile" method="post" enctype="multipart/form-data">
-				<label for="btn-send-file" class="btn btn-primary input-file col-md-2 text-center">Procurar Arquivo</label>
-				<input id="btn-send-file" class="btn btn-success input-file col-md-2 text-center" name="uploadFile" type="file" multiple hidden />
-				<button id="sendFileBtn" class="col-md-2 input-file-btn" type="submit">Enviar</button>
+				@*<label for="btn-send-file" class="btn btn-primary input-file col-md-2 text-center">Procurar Arquivo</label>*@
+				@*<input id="btn-send-file" class="btn btn-success input-file col-md-2 text-center" name="uploadFile" type="file" multiple hidden />*@
+				<label for="btn-send-file" class="sendFile_dropArea">
+					<p>Faça upload de sua planilha excel <b>(.xlsx)</b></p>
+					<i class="fa-solid fa-cloud-arrow-up"></i>
+					<input id="btn-send-file" type="file" name="uploadFile" />
+					<div id="inputFileName"></div>
+				</label>
+				<div class="sendFileCta">
+					<a class="exportXlsFile" asp-action="ExportXls" asp-controller="Customers">Exportar Clientes <i class="fa-solid fa-file-arrow-down"></i></a>
+					<div>
+						<button id="cancelFileBtn" class="col-md-2 input-file-btn cancelFileBtn" type="reset">Cancelar</button>
+						<button id="sendFileBtn" class="col-md-2 input-file-btn" type="submit">Enviar</button>
+					</div>
+				</div>
 			</form>
-			<a class="exportXlsFile" asp-action="ExportXls" asp-controller="Customers">Exportar Clientes</a>
-			<div id="inputFileName"></div>
+		</div>
+		<div class="informationsToday">
+			<h3>Contatos para hoje</h3>
+			<p id="contactToday"></p>
 		</div>
 	</div>
 
@@ -89,9 +113,9 @@
 								Próximo Contato em:
 							</th>
 
-							<th id="prioritySorting">
-								Prioridade
-							</th>
+							@*<th id="prioritySorting">
+							Prioridade
+							</th>*@
 							<th>
 								Ações
 							</th>
@@ -199,7 +223,7 @@
 									double purchaseValue = 0;
 									int counter = item.CustomerPurchases.Count();
 
-									if (item.CustomerPurchases.Count() > 1)
+									if (item.CustomerPurchases.Count() >= 1)
 									{
 										for (int i = 0; i < counter; i++)
 										{
@@ -212,11 +236,11 @@
 									}
 
 									var daysInactive = today - purchaseDate;
-										<td class="dateConvert">
-											<span hidden>@purchaseDate.ToString("yyyy-MM-dd")</span>
-											<p>@purchaseDate.ToString("dd/MM/yyyy")</p>
-											<p>Dias inativo: <b style="color:red">@daysInactive.Days </b></p>
-										</td>
+												<td class="dateConvert">
+													<span hidden>@purchaseDate.ToString("yyyy-MM-dd")</span>
+													<p>@purchaseDate.ToString("dd/MM/yyyy")</p>
+													<p>Dias inativo: <b style="color:red">@daysInactive.Days </b></p>
+												</td>
 								}
 								<td>
 									<p>
@@ -225,68 +249,39 @@
 								</td>
 
 
-								<td>
-									@{
-										var count = item.ContactRecords.Count();
-										DateTime firstDate = new DateTime(1999, 1, 1);
-											@if (@item.ContactRecords.Count() == 0)
+								<td >
+									<div class="lastRegistration">
+										@if (item.ContactRecords.Count() > 0)
 										{
-												<p hidden>@firstDate</p>
-												<p>Contato em: 01/01/1999</p>
-												<p>Nenhum registro de contato</p>
+											var count = item.ContactRecords.Count();
+											<p hidden>@item.ContactRecords[count-1].RegistrationDate.ToString("yyyy-MM-dd")</p>
+											<p>Contato em: <b>@item.ContactRecords[count-1].RegistrationDate.ToShortDateString()</b></p>
+											<p class="lastContactBox">@item.ContactRecords[count-1].Anotation</p>
+
 										}
 										else
 										{
-												<p hidden>@item.ContactRecords[count-1].RegistrationDate.ToString("yyyy-MM-dd")</p>
-												<p>Contato em: <b>@item.ContactRecords[count-1].RegistrationDate.ToShortDateString()</b></p>
-												<p class="lastContactBox">@item.ContactRecords[count-1].Anotation</p>
+											<p hidden>1999-01-01</p>
+											<p>Nenhum registro de contato</p>
 										}
-									}
+										<div class="lastRegistrationPlus">
+											<i data="@item.Id" class="fa-solid fa-pen-to-square"></i>
+										</div>
+									</div>
 								</td>
 								<td>
 
 									@{
-										<span hidden>@item.NextContactDate.ToString("yyyy-MM-dd")</span>
-										<input class="nextContactDate data_de_contato" id="@item.Id" type="date" value="@item.NextContactDate.ToString("yyyy-MM-dd")" />
+													<span hidden>@item.NextContactDate.ToString("yyyy-MM-dd")</span>
+
 										if (today < item.NextContactDate)
 										{
-												<input class="nextContactDate hora_de_contato" id="@item.Id" type="time" value="@item.NextContactDate.ToString("HH:mm")" />
+														<input class="nextContactDate data_de_contato" id="@item.Id" type="datetime-local" value="@item.NextContactDate.ToString("yyyy-MM-dd HH:mm")" />
 										}
 										else
 										{
-												<input class="nextContactDate nextContactDateRed hora_de_contato" id="@item.Id" type="time" value="@item.NextContactDate.ToString("HH:mm")" />
+														<input class="nextContactDate nextContactDateRed data_de_contato" id="@item.Id" type="datetime-local" value="@item.NextContactDate.ToString("yyyy-MM-dd HH:mm")" />
 										}
-
-									}
-								</td>
-								<td class="priority">
-									@if (item.Priority.ToString() == "green")
-									{
-										<label>
-											<span hidden>1</span>
-											<input id="green" class="priorityRadio priorityRadioGreen" name="@item.Id" type="radio" checked />
-										</label>
-									}
-									else
-									{
-										<label>
-
-											<input id="green" class="priorityRadio priorityRadioGreen" name="@item.Id" type="radio" />
-										</label>
-									}
-									@if (item.Priority.ToString() == "red")
-									{
-										<label>
-											<span hidden>2</span>
-											<input id="red" class="priorityRadio priorityRadioRed" name="@item.Id" type="radio" checked />
-										</label>
-									}
-									else
-									{
-										<label>
-
-											<input id="red" class="priorityRadio priorityRadioRed" name="@item.Id" type="radio" />
-										</label>
 
 									}
 								</td>
@@ -371,13 +366,13 @@
 
 				var nextContact = e.target.parentNode
 				var date = nextContact.querySelector('.data_de_contato').value
-				var hour = nextContact.querySelector('.hora_de_contato').value
-				
-				_customersData[parseInt(customerIndex)].nextContactDate = `${date} ${hour}:00`
+
+
+				_customersData[parseInt(customerIndex)].nextContactDate = `${date}:00`
 				UpdateSendBtn.style.display = 'flex'
 
 
-				if (e.target.value > currentDateValue) {
+				if (e.target.value >= currentDateValue) {
 					e.target.classList.remove('nextContactDateRed')
 				}
 				localStorage.setItem('Customers', JSON.stringify(_customersData))
@@ -425,17 +420,7 @@
 
 	})
 </script>
-<script>
-	const date = new Date()
-	const nextContactDateInput = document.querySelectorAll('.nextContactDate')
-	nextContactDateInput.forEach(function (e) {
-		let _date = new Date(e.value.replace("-", "/"))
-		if (_date <= date) {
-			e.classList.toggle('nextContactDateRed')
 
-		}
-	})
-</script>
 <script>
 	const exportXlsFile = document.querySelector('.exportXlsFile')
 	exportXlsFile.addEventListener('click', () => {
@@ -446,19 +431,60 @@
 	})
 </script>
 <script>
-	@*let citySelection = document.querySelector('#citySelection')
-		let citys = document.querySelectorAll('[data]')
-		let arr = []
-		citys.forEach(city => arr.push(city.innerText.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "")))
-		arr = arr.filter((item, i) => arr.indexOf(item) === i).sort()
-		arr.forEach((item) => {
-
-		citySelection.innerHTML += `<option value="${item}">${item}</option>`
-		})
-		const _trs = myTable.querySelectorAll('tr')
-		citySelection.addEventListener('change', () => {
-		_trs.forEach(function(item){
-
-		})
-		})*@
+	const cancelFileBtn = document.querySelector("#cancelFileBtn")
+	cancelFileBtn.addEventListener('click', () => {
+		document.getElementById('inputFileName').innerText = ''
+		btnSendFile.files[0] = ''
+	})
 </script>
+<script>
+	let dates = document.querySelectorAll('.nextContactDate')
+	let count = 0
+	let todayy = new Date()
+	let _date = new Date()
+	todayy = `${todayy.getDate()}/${todayy.getMonth()}/${todayy.getFullYear()}`
+	dates.forEach((date) => {
+
+		let newDay = new Date(date.value)
+		newDay = `${newDay.getDate()}/${newDay.getMonth()}/${newDay.getFullYear()}`;
+
+		if (newDay == todayy) {
+
+			count++
+		}
+		document.querySelector('#contactToday').innerText = count
+
+	})
+
+
+
+
+</script>
+<script>
+	let date = new Date();
+	let day = date.getDate() > 10 ? date.getDate() : `0${date.getDate()}`
+	date = `${date.getFullYear()}-${date.getMonth() + 1}-${day}T08:00`
+	tbody.addEventListener('click', function (e) {
+		if (e.target.classList.contains('fa-pen-to-square')) {
+			let customers = JSON.parse(localStorage.getItem("Customers"))
+			document.querySelector('#RegistrationContainer').style.display = 'flex'
+			let id = e.target.getAttribute('data')
+			let customer = customers.find(x => x.customerId == id)
+			document.querySelector('#customerIdentity').textContent = customer.customerName
+			document.querySelector('#customerCode').textContent = 'Código: ' + customer.customerCode
+			document.querySelector('#customerId').value = customer.customerId
+			document.querySelector('#registrationDate').value = date
+		}
+	})
+	document.querySelector('#registrationClose').addEventListener('click', () => {
+
+		document.querySelector('#customerNewAnotation').value = ''
+		document.querySelector('#RegistrationContainer').style.display = 'none'
+	})
+	let registrationDateInput = document.querySelector('#registrationDate')
+	registrationDateInput.addEventListener('change', () => {
+
+		registrationDateInput.classList.remove('nextContactDateRed')
+	})
+</script>
+

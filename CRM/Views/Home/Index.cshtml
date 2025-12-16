@@ -1,8 +1,4 @@
 ﻿@model CRM.Models.ViewModels.HomeViewModels
-@{
-	var date = DateTime.Now;
-	string lastAnotationData = "";
-}
 
 <div class="main">
 	@await Component.InvokeAsync("Header")
@@ -11,49 +7,6 @@
 			<h1>Bem Vindo, @Model.User.FirstName</h1>
 
 		</section>
-		
-
-@*		<section>
-			<article>
-				<h2>Agendamentos prioritários</h2>
-				<div class="pd-1">
-					<ul class="customersToday">
-						@foreach (var item in Model.Customers)
-						{
-							if (item.NextContactDate <= @date)
-							{
-								<a asp-action="Editar" asp-controller="Customer" asp-route-id="@item.Id">
-								<li>
-									<div>
-										<p class="customerData">@item.Codigo - @item.RazaoSocial</p>
-										@{
-											if (item.ContactRecords.Any())
-											{
-												var lastAnotationCount = item.ContactRecords.Count();
-												lastAnotationData = item.ContactRecords[lastAnotationCount - 1].Anotation;
-
-											}
-											else{
-												lastAnotationData = "Nenhum registro de contato.";
-											}
-
-										}
-									<p class="customerAnotation">@lastAnotationData</p>
-									</div>
-									<div class="customerContent">
-									
-									<p class="customerAnotationDate">@item.NextContactDate.ToShortDateString()</p>
-									</div>
-								</li>
-								</a>
-							}
-
-
-						}
-					</ul>
-				</div>
-			</article>
-		</section>*@
 	</div>
 
 </div>

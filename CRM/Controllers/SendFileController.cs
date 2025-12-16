@@ -57,20 +57,21 @@ namespace CRM.Controllers
 			}
 		}
 
-		public IActionResult sendFileImage()
+		/*public IActionResult sendFileImage()
 		{
 			return View();
-		}
+		}*/
 
 		[HttpPost]
 		public IActionResult sendFileImage(string url)
 		{
 			try
 			{
-				if (url == null || url == "")
+				///TODO
+				if (url == null || url == "" || url == "data:,")
 				{
 					TempData["ErrorMessage"] = "Nenhum arquivo foi selecionado ou não é suportado, tente novamente!";
-					return RedirectToAction("sendFileImage", "SendFile");
+					return RedirectToAction("Index", "Customers");
 				}
 
 				var user = _session.GetUserSection();
@@ -79,7 +80,7 @@ namespace CRM.Controllers
 				image.UserId = user.Id;
 
 				_sendFileImageRepository.SendFileImage(image);
-				return View(image);
+				return RedirectToAction("Index", "Customers");
 
 			}
 			catch (Exception e)

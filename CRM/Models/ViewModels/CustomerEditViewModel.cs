@@ -18,7 +18,9 @@ namespace CRM.Models.ViewModels
 		public DateTime LastPurchaseDate { get; set; } = DateTime.Now;
 		public double LastPurchaseValue { get; set; } = 0;
 		public List<ContactRecords> ContactRecords { get; set; } = new();
-		public string NextContactDate { get; set; } = string.Empty;
+		public DateTime NextContactDate { get; set; } = DateTime.Now;
 		public Guid UserId { get; set; }
+
+		public int InactiveDays = 0;
 	}
 }

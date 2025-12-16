@@ -1,12 +1,114 @@
 ﻿@model CRM.Models.ViewModels.CustomerEditViewModel
 @{
 	string date;
-	date = DateTime.Parse(@Model.NextContactDate).ToString("yyyy-MM-dd");
+	date = @Model.NextContactDate.ToString("yyyy-MM-dd HH:mm");
 	var lastPurchaseValue = double.Parse(Model.LastPurchaseValue.ToString());
 	string lastPurchase = lastPurchaseValue.ToString("C2", new System.Globalization.CultureInfo("pt-BR"));
 }
+<form class="customerDataEditForm" asp-controller="Customers" asp-action="Edit">
+	<div class="customerDataEditFormContainer">
+		<h3>Alterar dados</h3>
+		<input value="@Model.Id" asp-for="@Model.Id" hidden />
+		<label for="codigo">
+			Código
+			<input id="codigo" type="text" value="@Model.Codigo" asp-for="@Model.Codigo" maxlength="5" />
+		</label>
+		<label>
+			Razão Social
+			<input value="@Model.RazaoSocial" asp-for="@Model.RazaoSocial" />
+		</label>
+		<label>
+			CNPJ
+			<input value="@Model.Cnpj" asp-for="@Model.Cnpj" />
+		</label>
+		<label>
+			Comprador(es)
+			<input value="@Model.Contact" asp-for="@Model.Contact" />
+		</label>
+		<label>
+			Status
+			<span class="selctPhantom"></span>
+			<select style="color:red" name="status" asp-for="@Model.Status">
+				<option value="true">Ativo</option>
+				<option value="false">Inativo</option>
+			</select>
 
+		</label>
+		@{
+			var count = 0;
+			foreach (var phone in Model.Phones)
+			{
+				
+				<label>
+					Telefone
+					<input type="text" value="@phone.Phone" asp-for="@Model.Phones[count].Phone" />
+				</label>
+				count++;
+
+			}
+
+			count = 0;
+			foreach (var mail in Model.Emails)
+			{
+
+				<label>
+						Email
+						<input type="text" value="@mail.Email" Id="@mail.Id" asp-for="@Model.Emails[count].Email" />
+					</label>
+				count++;
+
+			}
+		}
+		<label>
+			Cidade:
+			<input type="text" value="@Model.Cidade" asp-for="@Model.Cidade" />
+		</label>
+		<label>
+			Uf
+			<span class="selctPhantom"></span>
+			<select id="uf" name="Uf" asp-for="@Model.Uf">
+				<option value="AC">AC</option>
+				<option value="AL">AL</option>
+				<option value="AM">AM</option>
+				<option value="AP">AP</option>
+				<option value="BA">BA</option>
+				<option value="CE">CE</option>
+				<option value="DF">DF</option>
+				<option value="ES">ES</option>
+				<option value="GO">GO</option>
+				<option value="MA">MA</option>
+				<option value="MG">MG</option>
+				<option value="MS">MS</option>
+				<option value="MT">MT</option>
+				<option value="PA">PA</option>
+				<option value="PB">PB</option>
+				<option value="PE">PE</option>
+				<option value="PI">PI</option>
+				<option value="PR">PR</option>
+				<option value="RJ">RJ</option>
+				<option value="RN">RN</option>
+				<option value="RO">RO</option>
+				<option value="RR">RR</option>
+				<option value="RS">RS</option>
+				<option value="SC">SC</option>
+				<option value="SE">SE</option>
+				<option value="SP">SP</option>
+				<option value="TO">TO</option>
+			</select>
+		</label>
+		<input type="text" value="@Model.NextContactDate" asp-for="@Model.NextContactDate" hidden />
+		<input type="text" value="@Model.LastPurchaseDate" asp-for="@Model.LastPurchaseDate" hidden />
+		<input type="text" value="@Model.LastPurchaseValue" asp-for="@Model.LastPurchaseValue" hidden />
+
+		<div class="customerDataEditFormCta">
+			<button asp-action="Delete" type="submit" id="customerDataEditFormDelet">Deletar</button>
+			<button type="reset" id="customerDataEditFormCancel">Cancelar</button>
+			<button type="button" id="customerDataEditFormSave">Salvar</button>
+		</div>
+	</div>
+</form>
 <div class="main">
+
 	@await Component.InvokeAsync("Header")
 	@if (TempData["ErrorMessage"] != null)
 	{
@@ -30,223 +132,109 @@
 		</div>
 
 	}
-	<section class="customerBody">
-		<article class="customerCard">
-			<div id="spanAlertContainer">
-				<div id="spanAlert" class="spanAlert">
-					<span>
-						Deseja realmente deletar o cliente:<br />
-						<b>@Model.RazaoSocial</b>
-					</span>
+
+	<div class="customerEdit">
+
+		<section class="customerBody">
+			<article class="customerCard">
+				<div id="spanAlertContainer">
+					<div id="spanAlert" class="spanAlert">
+						<span>
+							Deseja realmente deletar o cliente:<br />
+							<b>@Model.RazaoSocial</b>
+						</span>
+					</div>
 				</div>
-			</div>
-			<h3>Informações</h3>
 
-			<div class="card_container">
-				<section class="registrationsContainer">
-					<form asp-controller="Customers" asp-action="RegistrationContact" method="post">
-						<div class="registrationsContent">
-							<div class="registrationTitle">
-								<h1>Registros de contato</h1>
-							</div>
-							@{
-								if (Model.ContactRecords.Count() <= 0)
-								{
-									<div>
-										<p>Ainda não há registros de contatos recentes</p>
-									</div>
-								}
-								else
-								{
-									for (int i = Model.ContactRecords.Count(); i >= 1; i--)
-									{
-										<div class="registrationsCard">
-											<span>@Model.ContactRecords[i-1].RegistrationDate - @Model.RazaoSocial</span>
-											<div class="contentRegistration">
-												@Model.ContactRecords[i-1].Anotation
-											</div>
-										</div>
-									}
-								}
+				<div class="card_container">
 
+					<section class="customerData">
+						<h3>Informações do cliente:</h3>
+						<p><span>Código:</span> @Model.Codigo</p>
+						<p><span>Razão Social:</span> @Model.RazaoSocial</p>
+						<p><span>CNPJ:</span> @Model.Cnpj</p>
+						<p><span>Comprador(es):</span> @Model.Contact</p>
+						@if (Model.Status == true)
+						{
+
+							<p><span>Status:</span> Ativo</p>
+						}
+						else
+						{
+							<p><span>Status:</span> Inativo</p>
+						}
+						@foreach (var phone in Model.Phones)
+						{
+							if (phone.Phone != "" && phone.Phone != null)
+							{
+								<p><span>Telefone:</span> @phone.Phone</p>
 							}
-						</div>
+						}
+						@foreach (var mail in Model.Emails)
+						{
+							if (mail.Email != "" && mail.Email != null)
+							{
+								<p><span>Email:</span> @mail.Email</p>
+							}
 
-						<div class="registrationInput">
+						}
+						<p><span>Cidade:</span> @Model.Cidade</p>
+						<p><span>Uf:</span> @Model.Uf</p>
+						<p><span>Última compra:</span> @Model.LastPurchaseDate.ToString("dd/MM/yyyy") - @lastPurchase</p>
+						<p><span>Próximo contato em:</span> @Model.NextContactDate.ToString("dd/MM/yyyy HH:mm")</p>
+						<p><span>Dias inativos:</span> @Model.InactiveDays</p>
 
-							<textarea id="ContactRecordsAnotation" name="anotation"></textarea>
-							<div class="registrationInputCta">
-								@{
-
-									<input id="ContactRecordsDate" type="date" name="date" required />
-									<input type="text" value="@Model.Id" asp-for="@Model.Id" hidden />
-								}
-
-								<button type="submit" class="card_cta-saveChanges btnInsertContact">Enviar</button>
-							</div>
-
-						</div>
-					</form>
-				</section>
-				<form asp-action="Edit" asp-controller="Customers" method="post" class="card_content" id="EditForm">
-					<input asp-for="@Model.Id" hidden />
-					<div class="contentHeader">
-						<span><b>Cliente:</b>@Model.RazaoSocial</span>
+					</section>
+					<i id="customerDataEdit" class="fa-solid fa-pen-to-square"></i>
+				</div>
+			</article>
+		</section>
+		<section class="registrationsContainer">
+			<form asp-controller="Customers" asp-action="RegistrationContact" method="post">
+				<div class="registrationsContent">
+					<div class="registrationTitle">
+						<h1>Registros de contato</h1>
 					</div>
-					<div class="editContainer">
-						<div class="contentBody">
-							<div class="contentBody-inputs">
-								<div>
-									<label>
-										Código:
-										<input class="editable" value="@Model.Codigo" asp-for="@Model.Codigo" disabled />
-									</label>
-								</div>
-								<div>
-									<label>
-										CNPJ:
-										<input class="editable" value="@Model.Cnpj" asp-for="@Model.Cnpj" disabled />
-									</label>
-								</div>
-								<div class="span6">
-									<label>
-										Razão Social:
-										<input class="editable " value="@Model.RazaoSocial" asp-for="@Model.RazaoSocial" disabled />
-									</label>
-								</div>
-								<div>
-									<label>
-										Comprador(es)
-										<input class="editable" value="@Model.Contact" asp-for="@Model.Contact" disabled />
-									</label>
-								</div>
-								<div>
-									<label for="select_disabled">
-										Status:
-										<select class="editable" type="text" value="@Model.Status" asp-for="@Model.Status"
-												disabled>
-											<option value="true">Ativo</option>
-											<option value="false">Inativo</option>
-										</select>
-									</label>
-								</div>
-								@{
-									var count = 1;
-								}
-								@for (int i = 2; i >= 0; i--)
-								{
-
-									<div id="phoneNumber">
-										<label>
-											Telefone @count
-											<input class="editable" value="@Model.Phones[i].Phone" asp-for="@Model.Phones[i].Phone" disabled />
-											<input class="editable" value="@Model.Phones[i].Id" asp-for="@Model.Phones[i].Id" disabled hidden />
-
-										</label>
+					@{
+						if (Model.ContactRecords.Count() <= 0)
+						{
+							<div>
+								<p>Ainda não há registros de contatos recentes</p>
+							</div>
+						}
+						else
+						{
+							for (int i = Model.ContactRecords.Count(); i >= 1; i--)
+							{
+								<div class="registrationsCard">
+									<span>@Model.ContactRecords[i-1].RegistrationDate - @Model.RazaoSocial</span>
+									<div class="contentRegistration">
+										@Model.ContactRecords[i-1].Anotation
 									</div>
-									<div id="addEmail">
-										<label class="mailInput">
-											Email @count
-											<input class="editable " value="@Model.Emails[i].Email" asp-for="@Model.Emails[i].Email" disabled />
-											<input class="editable " value="@Model.Emails[i].Id" asp-for="@Model.Emails[i].Id" disabled hidden />
-										</label>
-									</div>
-									count++;
-								}
-
-								<div>
-									<label>
-										Cidade:
-										<input class="editable" value="@Model.Cidade" asp-for="@Model.Cidade" disabled />
-									</label>
 								</div>
-								<div>
-									<label>
-										UF:
-										<select class="editable" id="uf" asp-for="@Model.Uf" disabled>
-											<option value=""></option>
-											<option value="RO">RO</option>
-											<option value="AC">AC</option>
-											<option value="AM">AM</option>
-											<option value="RR">RR</option>
-											<option value="PA">PA</option>
-											<option value="AP">AP</option>
-											<option value="TO">TO</option>
-											<option value="MA">MA</option>
-											<option value="PI">PI</option>
-											<option value="CE">CE</option>
-											<option value="RN">RN</option>
-											<option value="PB">PB</option>
-											<option value="PE">PE</option>
-											<option value="AL">AL</option>
-											<option value="SE">SE</option>
-											<option value="BA">BA</option>
-											<option value="MG">MG</option>
-											<option value="ES">ES</option>
-											<option value="RJ">RJ</option>
-											<option value="SP">SP</option>
-											<option value="PR">PR</option>
-											<option value="SC">SC</option>
-											<option value="RS">RS</option>
-											<option value="MS">MS</option>
-											<option value="MT">MT</option>
-											<option value="GO">GO</option>
-											<option value="DF">DF</option>
+							}
+						}
 
-										</select>
-									</label>
-								</div>
-								<div>
-									<label>
-										Data última compra:
-										<input class="editable" type="date" value="@Model.LastPurchaseDate.ToString("yyyy-MM-dd")" asp-for="@Model.LastPurchaseDate" disabled />
-									</label>
-								</div>
-								<div>
-									<label>
-										Última compra:
-										<input id="lastPurchaseValue" class="editable" value="@lastPurchase" asp-for="@Model.LastPurchaseValue" name="LastPurchaseValue" disabled />
-									</label>
-								</div>
-								@{
+					}
+				</div>
 
-									<div>
-										<label>
-											Próximo contato:
-											<input class="editable" id="reciver" type="date" value="@date" asp-for="@Model.NextContactDate" disabled />
-										</label>
-									</div>
+				<div class="registrationInput">
 
-								}
+					<textarea id="ContactRecordsAnotation" name="anotation"></textarea>
+					<div class="registrationInputCta">
+						@{
 
-							</div>
+							<input id="ContactRecordsDate" type="datetime-local" value="@date" name="date" required />
+							<input type="text" value="@Model.Id" asp-for="@Model.Id" hidden />
+						}
 
-
-
-						</div>
-						<div class="card_cta">
-							<div id="editOrDelete">
-								<button type="button" class="card_cta-edit" id="btnEdit">Editar</button>
-								<button type="button" class="card_cta-delet" id="deletarBtn">Deletar</button>
-							</div>
-							<div id="cancelOrSave">
-								<button type="reset" class="card_cta-delet cancelDelete" id="cancelEdit">Cancelar</button>
-								<button type="button" class="card_cta-saveChanges" id="card_cta-saveChanges">Salvar</button>
-							</div>
-
-							<div class="spanAlertContainer" id="deleteConfirm">
-								<button type="reset" class="card_cta-delet cancelDelete" id="cancelDelete">Cancelar</button>
-								<button type="button" class="card_cta-saveChanges" id="confirmDelete">Confirmar</button>
-							</div>
-							<button id="btnSubmitDelete" class="btnSubmit" type="submit" asp-action="Delete" disabled></button>
-							<button id="btnSubmitEdit" class="btnSubmit" type="submit" asp-action="Edit" disabled></button>
-						</div>
+						<button type="submit" class="card_cta-saveChanges btnInsertContact">Enviar</button>
 					</div>
-				</form>
-			</div>
-		</article>
-	</section>
 
+				</div>
+			</form>
+		</section>
+	</div>
 </div>
 <footer class="footer">
 	<p> &copy; <a href="#">U.Code</a> development</p>

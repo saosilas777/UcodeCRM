@@ -123,7 +123,7 @@ namespace CRM.Services
 							Contact = worksheet.Cells[row, 7].Value.ToString(),
 							Cidade = worksheet.Cells[row, 8].Value.ToString(),
 							Uf = worksheet.Cells[row, 9].Value.ToString(),
-							NextContactDate = DateTime.Parse(worksheet.Cells[row, 13].Value.ToString()),
+							NextContactDate = DateTime.Parse(worksheet.Cells[row, 14].Value.ToString()),
 							UserId = user.Id,
 
 						};

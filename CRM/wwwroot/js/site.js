@@ -20,10 +20,10 @@ if (url.includes('Home')) {
 if (url.includes('Analytics')) {
     analytics.classList.add('bgImageLink')
 }
-if (url.includes('Customers/Index')) {
+if (url.includes('Customers/Index') || url.includes('Customers/Editar')) {
     customer.classList.add('bgImageLink')
 }
-if(url.includes('Customers/Create')) {
+if (url.includes('Customers/Create') ) {
     customerAdd.classList.add('bgImageLink')
 }
 if (url.includes('ChangePassword')) {
@@ -36,7 +36,7 @@ if (url.includes('Seller')) {
 $(document).ready(function () {
     const myTable = document.getElementById("myTable")
 
-    let _order = [[7, 'asc']]
+    let _order = [[6, 'asc']]
     let _orderable = 1
     if (myTable.className.endsWith('sales')) {
         _order = []

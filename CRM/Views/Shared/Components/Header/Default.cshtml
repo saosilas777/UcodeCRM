@@ -20,17 +20,80 @@
 			@if (@Model.Image.Url != "")
 			{
 				<div class="avatar">
-					<a asp-controller="SendFile" asp-action="sendFileImage"><img src="@Model.Image.Url" alt="Avatar"></a>
+					<img src="@Model.Image.Url" alt="Avatar">
 				</div>
 			}
 			else
 			{
 				<div class="avatar">
-					<a asp-controller="SendFile" asp-action="sendFileImage"><img src="/lib/Images/Avatar.png" style="background-color:white"></a>
+					<img src="/lib/Images/Avatar.png" style="background-color:white">
 				</div>
 			}
-		</div>
+			<div class="userCardInfo">
+				<span class="closeIcon"><i class="fa-solid fa-xmark"></i></span>
+				<div class="userInfoName_photo">
+					<p>@Model.User.FirstName @Model.User.LastName </p>
+					<img src="@Model.Image.Url" />
+				</div>
+				<div class="lineTop">
+				</div>
+				<p class="">Cargo: Vendedor </p>
+				<br>
+				<p class="userPhotoUploadTitle">Foto Upload</p>
+				<form class="sendImgForm" asp-action="sendFileImage" asp-controller="SendFile" method="post">
+					<label for="photoFileInput" class="userPhotoUpload">
+						<div id="dropzone">
+							<span>clique ou arraste aqui.</span>
+						</div>
+						<i class="fa-solid fa-cloud-arrow-up"></i>
+						<input id="fileInputUrl" name="url" type="text" hidden />
+						<span class="userPhotoDescription"></span>
+					</label>
+				<div class="userPhotoUploadText">
+					<p>
+						Suportado:jpg/png
+					</p>
+					<p>
+						Tam. máximo:25MB
+					</p>
+				</div>
+				<div class="userPhotoUploadButtons">
+					<button id="uploadPhotoCancel">Cancelar</button>
+					<button id="uploadPhotoSave">Enviar</button>
+				</div>
+						<input id="photoFileInput" class="fileInput" type="file" />
+				</form>
+				<div id="apresentar"></div>
 
+			</div>
+
+		</div>
 	</div>
+	<script>
+		const userPhotoUpload = document.querySelector('.userPhotoUpload')
+		const userPhotoDescription = document.querySelector('.userPhotoDescription')
+		const photoFileInput = document.querySelector('#photoFileInput')
+		const closeIcon = document.querySelector('.closeIcon')
+		const userCardInfo = document.querySelector('.userCardInfo')
+		const avatar = document.querySelector('.avatar')
+
+		closeIcon.addEventListener('click', () => {
+			userCardInfo.style.display = 'none'
+
+		})
+		avatar.addEventListener('click', () => {
+			userCardInfo.style.display = 'flex'
+		})
+
+
+
+		photoFileInput.addEventListener("change", (e) => {
+			userPhotoDescription.textContent = `Arquivo: ${e.target.files[0].name}`
+		})
+
+	</script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
+	<script src="/js/ConvertImageBase64.js"></script>
 </nav>
 

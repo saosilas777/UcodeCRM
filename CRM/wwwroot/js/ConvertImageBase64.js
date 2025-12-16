@@ -1,30 +1,42 @@
-﻿const btn_sendFile = document.getElementById('btn-send-file')
-btn_sendFile.addEventListener('click', function () {
-    document.getElementById('sendImgFile').removeAttribute("disabled")
+﻿
+const _fileInput = document.getElementById('photoFileInput')
+const _fileInputUrl = document.getElementById('fileInputUrl')
+const uploadPhotoCancel = document.getElementById('uploadPhotoCancel')
+const uploadPhotoSave = document.getElementById('uploadPhotoSave')
+const sendImgForm = document.querySelector('.sendImgForm')
+
+_fileInput.addEventListener('change', function () {
+    apresentar.style.display = 'block'
 })
+uploadPhotoCancel.addEventListener('click', function () {
+    apresentar.style.display = 'none'
+})
+uploadPhotoSave.addEventListener('click', () => {
+    setTimeout(function () {
+
+        sendImgForm.submit()
+    }, 1000)
+})
+
 let redimensionar = $('#apresentar').croppie({
 
     enableExif: true,
     enableOrientation: true,
 
     viewport: {
-        width: 300,
-        height: 300,
+        width: 200,
+        height: 200,
         type: 'square'
     },
     boundary: {
-        width: 400,
-        height: 400
+        width: 220,
+        height: 220
     }
 
-
-
-
 })
-$('#btn-send-file').on('change', function () {
+$('#photoFileInput').on('change', function () {
 
     var reader = new FileReader();
-    
     reader.onload = function (e) {
         redimensionar.croppie('bind', {
             url: e.target.result,
@@ -35,7 +47,7 @@ $('#btn-send-file').on('change', function () {
     reader.readAsDataURL(this.files[0])
 })
 
-$('#sendImgFile').on('click', function () {
+$('#uploadPhotoSave').on('click', function () {
     redimensionar.croppie('result', {
         type: 'canvas',
         size: 'viewport'
@@ -45,17 +57,9 @@ $('#sendImgFile').on('click', function () {
 })
 
 
-const sendImgFile = document.getElementById('sendImgFile')
-
-sendImgFile.addEventListener('click', function () {
-    document.getElementById('sendImg').removeAttribute("disabled")
-})
-
 
 function sendImg(url) {
-    let send = document.querySelector('#btn-send-text')
-
-    send.value = url
+    _fileInputUrl.value = url
 }
 
 

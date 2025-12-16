@@ -58,7 +58,7 @@ namespace CRM.Repository
 		public CustomerEditViewModel BuscarPorId(Guid id)
 		{
 			var custumerDb = _context.Customers.Include(x => x.ContactRecords).Include(x => x.Emails).Include(x => x.Phones).Include(x => x.CustomerPurchases).FirstOrDefault(x => x.Id == id);
-
+			DateTime today = DateTime.Now;
 
 			CustomerEditViewModel _CustomerEditView = new()
 			{
@@ -73,16 +73,21 @@ namespace CRM.Repository
 				Phones = custumerDb.Phones,
 				Contact = custumerDb.Contact,
 				ContactRecords = custumerDb.ContactRecords,
-				NextContactDate = custumerDb.NextContactDate.ToShortDateString(),
+				NextContactDate = custumerDb.NextContactDate,
 				UserId = custumerDb.UserId
 
 			};
+
 			if (custumerDb.CustomerPurchases.Count() > 0)
 			{
 				_CustomerEditView.LastPurchaseDate = custumerDb.CustomerPurchases.OrderBy(p => p.PurchaseDate).LastOrDefault().PurchaseDate;
 				_CustomerEditView.LastPurchaseValue = custumerDb.CustomerPurchases.OrderBy(p => p.PurchaseDate).LastOrDefault().PurchaseValue;
-
+				TimeSpan daysInactive = today - _CustomerEditView.LastPurchaseDate;
+				_CustomerEditView.InactiveDays = daysInactive.Days;
 			}
+
+
+
 
 			return (_CustomerEditView);
 
@@ -111,18 +116,27 @@ namespace CRM.Repository
 			List<EmailModel> emails = new List<EmailModel>();
 			List<PhoneModel> phones = new List<PhoneModel>();
 
-
+			string formatedCnpj = "";
+			if (customer.Cnpj.Length < 18)
+			{
+				formatedCnpj = Convert.ToUInt64(customer.Cnpj).ToString(@"00\.000\.000\/0000\-00");
+			}
+			else
+			{
+				formatedCnpj = customer.Cnpj;
+			}
 
 			CustomerModel customerModel = new()
 			{
 				UserId = user.Id,
 				Codigo = customer.Codigo,
-				Cnpj = customer.Cnpj,
+				Cnpj = formatedCnpj,
 				RazaoSocial = customer.RazaoSocial,
 				Contact = customer.Contato,
 				Cidade = customer.Cidade,
 				Uf = customer.Uf,
-				Priority = Enums.Priority.green
+				Priority = Enums.Priority.green,
+				NextContactDate = DateTime.Now
 
 
 
@@ -255,7 +269,7 @@ namespace CRM.Repository
 				}
 
 				var purchase = customerDb.CustomerPurchases.FirstOrDefault(x => x.PurchaseValue == _customer.LastPurchaseValue && x.PurchaseDate == _customer.LastPurchaseDate);
-				if (_customer.LastPurchaseValue > 0 && purchase != null || _customer.LastPurchaseValue != 0)
+				if (_customer.LastPurchaseValue > 0 && purchase == null)
 				{
 					PurchaseModel _purchase = new();
 					customerDb.Status = true;
@@ -267,7 +281,7 @@ namespace CRM.Repository
 					_purchase.UserId = user.Id;
 					_context.Purchases.Add(_purchase);
 				}
-				customerDb.NextContactDate = DateTime.Parse(_customer.NextContactDate);
+				customerDb.NextContactDate = _customer.NextContactDate;
 
 				_context.Customers.Update(customerDb);
 				_context.SaveChanges();

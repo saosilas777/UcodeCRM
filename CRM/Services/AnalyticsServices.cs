@@ -82,23 +82,23 @@ namespace CRM.Services
 				}
 			}
 
-			List<CustomerModel> customer = _context.Customers.Include(x => x.CustomerPurchases).Where(x => x.UserId == user.Id).ToList();
+			List<CustomerModel> customers = _context.Customers.Include(x => x.CustomerPurchases).Where(x => x.UserId == user.Id).ToList();
 
 			double total = 0;
 			int active = 0;
 			int inactive = 0;
 
-			for (int i = 0; i < customer.Count(); i++)
+			for (int i = 0; i < customers.Count(); i++)
 			{
-				if (customer[i].CustomerPurchases.Count() > 0)
+				if (customers[i].CustomerPurchases.Count() > 0)
 				{
-					for (int j = 0; j < customer[i].CustomerPurchases.Count(); j++)
+					for (int j = 0; j < customers[i].CustomerPurchases.Count(); j++)
 					{
-						if (customer[i].CustomerPurchases[j].PurchaseDate >= DateTime.Parse(initialDate) && customer[i].CustomerPurchases[j].PurchaseDate <= DateTime.Parse(finalDate))
+						if (customers[i].CustomerPurchases[j].PurchaseDate >= DateTime.Parse(initialDate) && customers[i].CustomerPurchases[j].PurchaseDate <= DateTime.Parse(finalDate))
 						{
 
-							total += customer[i].CustomerPurchases[j].PurchaseValue;
-							customer[i].Status = true;
+							total += customers[i].CustomerPurchases[j].PurchaseValue;
+							customers[i].Status = true;
 						}
 
 
@@ -106,7 +106,7 @@ namespace CRM.Services
 
 				}
 
-				if (customer[i].Status == true)
+				if (customers[i].Status == true)
 				{
 					active++;
 				}
@@ -154,13 +154,14 @@ namespace CRM.Services
 					commission = total * 0.020;
 					break;
 			}
+			
+			DateTime currentDate = new DateTime(date.Year, month != 0 ? month : date.Month, 1);
 
-			DateTime currentDate = new DateTime(date.Year, date.Month, 1);
-
-			int currentMonth = currentDate.Month;
+			int currentMonth = month == 0? currentDate.Month : month;
 			int workDays = 0;
 			int daysInTheMonth = 0;
-			int sundaysOrHollyday = 0;
+			int sundays = 0;
+			int hollydays = 0;
 			
 
 			while (currentDate.Month == currentMonth)
@@ -168,25 +169,25 @@ namespace CRM.Services
 				daysInTheMonth++;
 				if (IsHollyday(currentDate))
 				{
-					sundaysOrHollyday++;
+					hollydays++;
 				}
 				if (currentDate.DayOfWeek.ToString() == "Sunday")
 				{
-					sundaysOrHollyday++;
+					sundays++;
 				}
 				
 				currentDate = currentDate.AddDays(1);
 			}
-			workDays = daysInTheMonth - sundaysOrHollyday;
-			double pwr = (commission / workDays) * sundaysOrHollyday;
+			workDays = daysInTheMonth - sundays;
+			double pwr = (commission / workDays) * (hollydays + sundays);
 			AnalyticsModel analytics = new();
 
 			analytics.TotalSalesMonth = total;
-			analytics.TotalCustomers = customer.Count();
+			analytics.TotalCustomers = customers.Count();
 			analytics.ActiveCustomers = active;
 			analytics.InactiveCustomers = inactive;
 
-			analytics.BaseSalary = 2155;
+			analytics.BaseSalary = 2277;
 			analytics.Commission = double.Parse(commission.ToString("F2"));
 			analytics.PaidWeeklyRest = double.Parse(pwr.ToString("F2"));
 			analytics.TotalPayment = 2155 + commission + pwr;
@@ -201,11 +202,11 @@ namespace CRM.Services
 
 			List<PurchaseModel> purchases = new();
 
-			for (int i = 0; i < customer.Count(); i++)
+			for (int i = 0; i < customers.Count(); i++)
 			{
-				for (int j = 0; j < customer[i].CustomerPurchases.Count(); j++)
+				for (int j = 0; j < customers[i].CustomerPurchases.Count(); j++)
 				{
-					purchases.Add(customer[i].CustomerPurchases[j]);
+					purchases.Add(customers[i].CustomerPurchases[j]);
 				}
 			}
 
@@ -221,7 +222,7 @@ namespace CRM.Services
 				{
 					totalAnnualSales.January += item.PurchaseValue;
 
-					var _customer = customer.Find(x => x.Id == item.Id);
+					var _customer = customers.Find(x => x.Id == item.Id);
 					if (!_customers.Contains(item.Customer))
 					{
 						_customers.Add(item.Customer);
@@ -436,7 +437,7 @@ namespace CRM.Services
 
 			for (int i = 0; i < hollydays.Length;i++)
 			{
-				if (DateTime.Parse(hollydays[i]) == day)
+				if (DateTime.Parse(hollydays[i]) == day && day.DayOfWeek.ToString() != "Sunday")
 				{
 					return true;
 				}

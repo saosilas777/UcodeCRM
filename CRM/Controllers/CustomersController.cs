@@ -52,7 +52,7 @@ namespace CRM.Controllers
 				if (initialDate == null || finalDate == null)
 				{
 					customers = _customerRepository.BuscarTodos(user.Id);
-					if (customers[0].LastUpdated.Date < date.Date)
+					if (!customers.IsNullOrEmpty() && customers[0].LastUpdated.Date < date.Date)
 					{
 						_statusVerify.StatusVerify(customers);
 					}
@@ -153,12 +153,12 @@ namespace CRM.Controllers
 			return RedirectToAction("Editar", "Customers", new { customer.Id });
 		}
 		[HttpPost]
-		public IActionResult RegistrationContact(string anotation, string id, string date)
+		public IActionResult RegistrationContact(string anotation, string id, string date, string index)
 		{
 			_customerRepository.RegistrationContact(anotation, date, Guid.Parse(id));
-			/*return RedirectToAction("Editar", "Customers", new { customer.Id });*/
 			Guid _id = Guid.Parse(id);
-			return RedirectToAction("Editar", "Customers", new { id = _id });
+			if(index == null) return RedirectToAction("Editar", "Customers", new { id = _id });
+			return RedirectToAction("Index", "Customers");
 		}
 
 		[HttpPost]
