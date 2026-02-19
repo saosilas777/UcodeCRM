@@ -38,24 +38,38 @@
 			var count = 0;
 			foreach (var phone in Model.Phones)
 			{
-				
 				<label>
 					Telefone
 					<input type="text" value="@phone.Phone" asp-for="@Model.Phones[count].Phone" />
 				</label>
 				count++;
+				
+				if(count > 3)
+				{
+					<label>
+						Add+
+						<input type="text" value="@phone.Phone" asp-for="@Model.Phones[count].Phone" />
+					</label>
+				}
 
 			}
 
 			count = 0;
 			foreach (var mail in Model.Emails)
 			{
-
 				<label>
 						Email
 						<input type="text" value="@mail.Email" Id="@mail.Id" asp-for="@Model.Emails[count].Email" />
 					</label>
 				count++;
+				if (count > 3)
+				{
+					<label>
+						Add+
+						<input type="text" value="@mail.Email" Id="@mail.Id" asp-for="@Model.Emails[count].Email" />
+					</label>
+				}
+				
 
 			}
 		}

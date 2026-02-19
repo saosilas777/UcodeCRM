@@ -6,41 +6,67 @@ let finalDate
 let workDays = 0
 let workedDays = 0
 let remainingDays = 0
-let hollydays = ['01/01/2025','18/04/2025','21/04/25','01/05/25','19/06/2025','09/07/2025','07/09/2025','12/10/2025','20/11/2025','25/12/2025']
+let hollydays = [];
+GetHollidaysYear()
+
+async function GetHollidaysYear() {
+    currentYear = currentDate.getFullYear() - 1
+    for (var j = 0; j <= 2; j++) {
+       
+
+        let url = "https://brasilapi.com.br/api/feriados/v1/" + currentYear
+        let hollydaysInYear = await fetch(url)
+            .then(response => response.json())
+            .then(data => data)
+            .catch(err => error = err)
+        for (var i = 0; i < hollydaysInYear.length; i++) {
+            let [year, month, day] = hollydaysInYear[i].date.split('-')
+            const fomratedDate = `${day}/${month}/${year}`
+             hollydays.push(fomratedDate.toString())
+        }
+        currentYear++
+
+    }
+    AddDays()
+    
+}
+
 
 const totalSales = parseFloat(document.getElementById('totalSales').innerText)
 let salesToday = document.getElementById('salesToday')
 let salesPrevision = document.getElementById('salesPrevision')
 
 if (currentDate.getDate() > 20) {
-    initialDate = new Date(2025, currentDate.getMonth(), 21)
-    finalDate = new Date(2025, currentDate.getMonth() + 1, 20)
+    initialDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 21)
+    finalDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 20)
 }
 else {
-    initialDate = new Date(2025, currentDate.getMonth() - 1, 21)
-    finalDate = new Date(2025, currentDate.getMonth(), 20)
+    initialDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 21)
+    finalDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 20)
 }
 
 
 function AddDays() {
-    currentDate.setDate(currentDate.getDate() - 1)
+    
+    /*currentDate.setDate(currentDate.getDate() - 1)*/
     currentDate.setHours(0)
     currentDate.setMinutes(0)
     currentDate.setSeconds(0)
     while (initialDate <= finalDate) {
-
-        for (var i = 0; i < hollydays.length; i++) {
-            if (hollydays[i] == initialDate.toLocaleDateString()) {
-                workDays--
-            }
-
-        }
-        if (initialDate.getDay() != 0 && initialDate.getDay() != 6 ) {
+       
+        if (initialDate.getDay() != 0 && initialDate.getDay() != 6 )  {
             workDays++
-            if (initialDate < currentDate) {
+
+            if (initialDate <= currentDate) {
                 workedDays++
             }
             
+        }
+        for (var h = 0; h < hollydays.length; h++) {
+            if (hollydays[h] == initialDate.toLocaleDateString()) {
+                workDays--
+            }
+
         }
         initialDate.setDate(initialDate.getDate() + 1)
 
@@ -52,4 +78,3 @@ function AddDays() {
 
 
 }
-AddDays()

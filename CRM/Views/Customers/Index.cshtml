@@ -41,6 +41,15 @@
 		</div>
 
 	}
+	<div class="alertEnvioContatoContainer">
+		<div class="alertEnvioContato">
+			<div id="spanAlert" class="spanAlertSuccess">
+				<span>
+					<b>Atualizado com sucesso</b>
+				</span>
+			</div>
+		</div>
+	</div>
 
 	<div class="actionsContainer">
 		<div class="envio-arquivos">
@@ -236,11 +245,11 @@
 									}
 
 									var daysInactive = today - purchaseDate;
-												<td class="dateConvert">
-													<span hidden>@purchaseDate.ToString("yyyy-MM-dd")</span>
-													<p>@purchaseDate.ToString("dd/MM/yyyy")</p>
-													<p>Dias inativo: <b style="color:red">@daysInactive.Days </b></p>
-												</td>
+									<td class="dateConvert">
+										<span hidden>@purchaseDate.ToString("yyyy-MM-dd")</span>
+										<p>@purchaseDate.ToString("dd/MM/yyyy")</p>
+										<p>Dias inativo: <b style="color:red">@daysInactive.Days </b></p>
+									</td>
 								}
 								<td>
 									<p>
@@ -249,14 +258,14 @@
 								</td>
 
 
-								<td >
+								<td>
 									<div class="lastRegistration">
 										@if (item.ContactRecords.Count() > 0)
 										{
 											var count = item.ContactRecords.Count();
-											<p hidden>@item.ContactRecords[count-1].RegistrationDate.ToString("yyyy-MM-dd")</p>
-											<p>Contato em: <b>@item.ContactRecords[count-1].RegistrationDate.ToShortDateString()</b></p>
-											<p class="lastContactBox">@item.ContactRecords[count-1].Anotation</p>
+											<p hidden>@item.ContactRecords[count - 1].RegistrationDate.ToString("yyyy-MM-dd")</p>
+											<p>Contato em: <b>@item.ContactRecords[count - 1].RegistrationDate.ToShortDateString()</b></p>
+											<p class="lastContactBox">@item.ContactRecords[count - 1].Anotation</p>
 
 										}
 										else
@@ -272,15 +281,15 @@
 								<td>
 
 									@{
-													<span hidden>@item.NextContactDate.ToString("yyyy-MM-dd")</span>
+										<span hidden>@item.NextContactDate.ToString("yyyy-MM-dd")</span>
 
 										if (today < item.NextContactDate)
 										{
-														<input class="nextContactDate data_de_contato" id="@item.Id" type="datetime-local" value="@item.NextContactDate.ToString("yyyy-MM-dd HH:mm")" />
+											<input class="nextContactDate data_de_contato" id="@item.Id" type="datetime-local" value="@item.NextContactDate.ToString("yyyy-MM-dd HH:mm")" />
 										}
 										else
 										{
-														<input class="nextContactDate nextContactDateRed data_de_contato" id="@item.Id" type="datetime-local" value="@item.NextContactDate.ToString("yyyy-MM-dd HH:mm")" />
+											<input class="nextContactDate nextContactDateRed data_de_contato" id="@item.Id" type="datetime-local" value="@item.NextContactDate.ToString("yyyy-MM-dd HH:mm")" />
 										}
 
 									}
@@ -382,8 +391,20 @@
 	})
 
 	UpdateSendBtn.addEventListener('click', function () {
-		document.querySelector('#reciverStringfy').value = JSON.stringify(_customersData)
-		document.querySelector('#StringfySendBtn').click()
+		const url = window.location.href.replace('Index','UpdateNextContactDate')
+
+		fetch(url,{
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+
+		body: localStorage.getItem('Customers')
+
+		}).then(AlertaEnvioProximoContato)
+	.then()
+	.catch(error => console.error('Erro:', error));
+
 	})
 	UpdateAlert()
 	function UpdateAlert() {
@@ -399,8 +420,37 @@
 			UpdateSendBtn.classList.remove('updateSendBtnAlert')
 		}, 300)
 	}
+	function AlertaEnvioProximoContato(){
+		UpdateSendBtn.style.display = 'none'
+		document.querySelector('.alertEnvioContatoContainer').style.display = 'flex'
+		ordenarTabela()
+			setTimeout(() => {
+				document.querySelector('.alertEnvioContatoContainer').style.display = 'none'
 
+			}, 2500)
+	}
+	function ordenarTabela(){
+		const linhas = Array.from(tbody.querySelectorAll('tr'))
 
+		linhas.sort((a,b) =>{
+
+			const nextContactA = new  Date(a.cells[5].querySelector('input').value)
+			const nextContactB = new Date(b.cells[5].querySelector('input').value)
+
+			return (nextContactA - nextContactB)
+
+		})
+
+		tbody.innerHTML = ''
+		linhas.forEach((item)=>{
+			if(new Date(item.querySelector('input').value) < new Date()){
+				item.querySelector('input').classList.add('nextContactDateRed')
+			}
+			tbody.appendChild(item)
+			var dates = document.querySelectorAll('.nextContactDate')
+			contactsToday()
+		})
+	}
 
 </script>
 <script>
@@ -438,12 +488,15 @@
 	})
 </script>
 <script>
+	contactsToday()
+	function contactsToday(){
 	let dates = document.querySelectorAll('.nextContactDate')
 	let count = 0
 	let todayy = new Date()
 	let _date = new Date()
 	todayy = `${todayy.getDate()}/${todayy.getMonth()}/${todayy.getFullYear()}`
-	dates.forEach((date) => {
+
+		dates.forEach((date) => {
 
 		let newDay = new Date(date.value)
 		newDay = `${newDay.getDate()}/${newDay.getMonth()}/${newDay.getFullYear()}`;
@@ -455,6 +508,8 @@
 		document.querySelector('#contactToday').innerText = count
 
 	})
+	}
+
 
 
 
@@ -462,8 +517,10 @@
 </script>
 <script>
 	let date = new Date();
-	let day = date.getDate() > 10 ? date.getDate() : `0${date.getDate()}`
-	date = `${date.getFullYear()}-${date.getMonth() + 1}-${day}T08:00`
+	let day = date.getDate() >= 10 ? date.getDate() : `0${date.getDate()}`
+	let month = date.getMonth() + 1
+	month = month >= 10 ? month : `0${month}`
+	date = `${date.getFullYear()}-${month}-${day}T08:00`
 	tbody.addEventListener('click', function (e) {
 		if (e.target.classList.contains('fa-pen-to-square')) {
 			let customers = JSON.parse(localStorage.getItem("Customers"))
@@ -487,4 +544,7 @@
 		registrationDateInput.classList.remove('nextContactDateRed')
 	})
 </script>
+<script src="/js/MinDateInput.js"></script>
+<script>
 
+</script>

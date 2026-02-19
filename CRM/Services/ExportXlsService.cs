@@ -24,7 +24,7 @@ namespace CRM.Services
 					status = "INATIVO";
 				}
 				string _mail = "";
-				for (int i = 0; i <= 2; i++)
+				for (int i = 0; i < item.Emails.Count(); i++)
 				{
 					if(item.Emails[i].Email != null && item.Emails[i].Email != "")
 					{

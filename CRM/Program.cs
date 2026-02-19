@@ -15,9 +15,11 @@ using CRM.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 string? conn = builder.Configuration.GetConnectionString(name: "DataBase");
+string? conection = conn.Replace("machineName", Environment.MachineName);
+
 
 builder.Services.AddDbContext<Context>(options =>
-options.UseSqlServer((conn) ?? throw new InvalidOperationException("Connection string 'CRM' not found.")));
+options.UseSqlServer((conection) ?? throw new InvalidOperationException("Connection string 'CRM' not found.")));
 //Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();

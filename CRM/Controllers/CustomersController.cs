@@ -56,7 +56,8 @@ namespace CRM.Controllers
 					{
 						_statusVerify.StatusVerify(customers);
 					}
-
+					//var _customers = AddEmptyContacts(customers);
+					//_customerRepository.AtualizarTodos(_customers);
 					return View(customers);
 				}
 				else
@@ -69,6 +70,32 @@ namespace CRM.Controllers
 			/*TempData["ErrorMessage"] = "É necessário efetuar seu login!";*/
 			return RedirectToAction("Login", "Login");
 		}
+		//public List<CustomerModel> AddEmptyContacts(List<CustomerModel> customers)
+		//{
+		//	foreach (var customer in customers)
+		//	{
+		//		while(customer.Phones.Count() < 3)
+		//		{
+		//			customer.Phones.Add(new PhoneModel
+		//			{
+		//				Customer = customer,
+		//				Phone = "",
+		//				RegistrationDate = DateTime.Now
+		//			});
+		//		}
+		//		while (customer.Emails.Count() < 3)
+		//		{
+		//			customer.Emails.Add(new EmailModel
+		//			{
+		//				Customer = customer,
+		//				Email = "",
+		//				RegistrationDate = DateTime.Now
+		//			});
+		//		}
+		//	}
+		//	return customers;
+
+		//}
 
 		[HttpGet]
 		public IActionResult ExportXls()
@@ -182,11 +209,12 @@ namespace CRM.Controllers
 
 		}
 		[HttpPost]
-		public IActionResult UpdateNextContactDate(string reciverStringfy)
+		public ActionResult<List<CustomerModel>> UpdateNextContactDate([FromBody] List<UpdateNextContactDateViewModel> reciverStringfy)
 		{
+			
 			UpdateCustomerContacts(reciverStringfy);
-			TempData["SuccessMessage"] = "Atualização feita com sucesso";
-			return RedirectToAction("Index");
+			//TempData["SuccessMessage"] = "Atualização feita com sucesso";
+			return Ok();
 		}
 		public FileStreamResult ExportFile()
 		{
@@ -218,11 +246,9 @@ namespace CRM.Controllers
 			return RedirectToAction("Index");
 		}
 
-		public void UpdateCustomerContacts(string reciverStringfy)
+		public void UpdateCustomerContacts(List<UpdateNextContactDateViewModel> reciverStringfy)
 		{
-			var updates = JsonConvert.DeserializeObject<List<UpdateNextContactDateViewModel>>(reciverStringfy);
-
-			_customerRepository.UpdateNextContactDates(updates);
+			_customerRepository.UpdateNextContactDates(reciverStringfy);
 		}
 
 	}
