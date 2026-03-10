@@ -897,7 +897,7 @@ img {
 
 
 
-.card_header {
+.table_header {
     width: 100%;
     position: relative;
     height: 3rem;
@@ -932,13 +932,13 @@ img {
 }
 
 #table_row {
-    height: 68vh;
+    height: calc(100vh - 24rem);
     overflow: auto;
-    margin: .3rem 0 0 0;
+    margin: 0;
     border-radius: 0 0 1rem 1rem;
 }
     #table_row::-webkit-scrollbar {
-        background-image: linear-gradient(43deg, var(--hero-nav2) 40%, var(--hero-nav1) 80%);
+        background-color: var(--table-bg);
         border-radius: 0 0 1rem 0;
     }
     #table_row::-webkit-scrollbar-thumb {
@@ -1085,6 +1085,18 @@ table.myTable {
 
 #tbody .show {
     display: none;
+}
+#tbody tr td:first-child {
+    width: 30%;
+}
+#tbody tr td:nth-child(3) {
+    width: 14%;
+}
+#tbody tr td:nth-child(5) {
+    width: 20%;
+}
+#tbody tr td:nth-child(7) {
+    flex: 1;
 }
 
 #moreInformations {
@@ -1597,7 +1609,9 @@ p.newField {
         color: #f2f2f2;
     }
 
-
+.nextContactDateContainer{    
+    text-align:center;
+}
 .nextContactDate {
     width: fit-content;
     height: 1.5rem;
@@ -2031,11 +2045,13 @@ p.newField {
     display: flex;
     flex-direction: column;
 }
-
+/*
 .maxWidth {
     max-width: 12rem;
+}*/
+.lastRegistration p{
+    width:fit-content;
 }
-
 /*TODO*/
 /*Avaliar esses 2 estilos abaixo*/
 .homeContainer {
@@ -2715,11 +2731,25 @@ span.salesTooltip {
 }
 
 .lastRegistrationPlus {
-    width: 100%;
+    width: 80%;
     text-align: end;
     color: #1a73e8;
 }
 
     .lastRegistrationPlus i {
         cursor: pointer;
+    }
+#purchaseDeleteBtn{
+    background-color:#d81b60;
+    color:white;
+    outline:none;
+    border:none;
+    padding:.3rem;
+    border-radius:.4rem;
+    box-shadow:1px 1px 3px black;
+    cursor:pointer;
+
+}
+    #purchaseDeleteBtn:hover {
+        background-color: #b20645;
     }

@@ -32,21 +32,21 @@
 		</div>
 
 	}
-
+	<div class="table_header">
+		<div class="table_float">
+			Clientes
+			<form class="table_float-dates" asp-action="SalesSeller" asp-controller="Sellers" method="post">
+				<span>Buscar pedidos entre:</span>
+				<input type="date" id="initialDate" name="initialDate" />
+				<input type="date" id="finalDate" name="finalDate" />
+				<button id="dataFindBtn" class="dataFindBtn" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+			</form>
+		</div>
+	</div>
 	<section id="table_row">
 		<!-- <table id="myTable2" class="table_Securytis"> -->
 		<div class="card">
-			<div class="card_header">
-				<div class="table_float">
-					Clientes
-					<form class="table_float-dates" asp-action="SalesSeller" asp-controller="Sellers" method="post">
-						<span>Buscar proximos contatos entre:</span>
-						<input type="date" id="initialDate" name="initialDate" />
-						<input type="date" id="finalDate" name="finalDate" />
-						<button id="dataFindBtn" class="dataFindBtn" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-					</form>
-				</div>
-			</div>
+			
 			<div class="card_body">
 				<table id="myTable" class="myTable2 myTable display wrap sales">
 					<thead>
@@ -103,7 +103,7 @@
 
 									</td>
 									@*<td><a asp-controller="Sellers" asp-action="PurchaseDelete" asp-route-id="@item.Id">Excluir</a></td>*@
-									<td><button type="button" id="purchaseDeleteBtn">Deletar</button></td>
+									<td><button type="button" id="purchaseDeleteBtn">excluir</button></td>
 								</tr>
 								
 								x++;

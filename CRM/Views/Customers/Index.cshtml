@@ -76,22 +76,22 @@
 			<p id="contactToday"></p>
 		</div>
 	</div>
+	<div class="table_header">
+		<div class="table_float">
+			Clientes
 
+			<form class="table_float-dates" asp-action="Index" asp-controller="Customers" method="get">
+				<span>Buscar proximos contatos entre:</span>
+				<input type="date" id="initialDate" name="initialDate" />
+				<input type="date" id="finalDate" name="finalDate" />
+				<button id="dataFindBtn" class="dataFindBtn findByDateBtn" type="submit"><i class="findByDateBtn fa-solid fa-magnifying-glass"></i></button>
+				<span class="findByDateText">Para visualizar todos os clientes, não informe nenhuma data!</span>
+			</form>
+		</div>
+	</div>
 	<section id="table_row">
 		<div class="card">
-			<div class="card_header">
-				<div class="table_float">
-					Clientes
-					@*<select id="citySelection"></select>*@
-					<form class="table_float-dates" asp-action="Index" asp-controller="Customers" method="get">
-						<span>Buscar proximos contatos entre:</span>
-						<input type="date" id="initialDate" name="initialDate" />
-						<input type="date" id="finalDate" name="finalDate" />
-						<button id="dataFindBtn" class="dataFindBtn findByDateBtn" type="submit"><i class="findByDateBtn fa-solid fa-magnifying-glass"></i></button>
-						<span class="findByDateText">Para visualizar todos os clientes, não informe nenhuma data!</span>
-					</form>
-				</div>
-			</div>
+			
 			<div class="card_body">
 
 				<table id="myTable" class="myTable myTable1 display wrap">
@@ -115,19 +115,20 @@
 							<th id="lastPurchase">
 								R$
 							</th>
-							<th class="maxWidth">
+							<th>
 								Último Contato
 							</th>
-							<th id="proximoContato">
+							
+							<th id="proximoContato" >
 								Próximo Contato em:
 							</th>
 
 							@*<th id="prioritySorting">
 							Prioridade
 							</th>*@
-							<th>
+							@* <th>
 								Ações
-							</th>
+							</th> *@
 						</tr>
 					</thead>
 
@@ -142,7 +143,7 @@
 
 									<p class="customerId" hidden>@item.Id</p>
 									<p>
-										<b>Código:</b><span class="customerCode"> @item.Codigo</span>
+										<b>Código:</b><span class="customerCode"><a asp-action="Editar" asp-controller="Customers" asp-route-id="@item.Id" class="table_actions link"> @item.Codigo</a></span>
 									</p>
 
 									<p>
@@ -158,7 +159,7 @@
 										{
 											<b>Razão Social: </b>
 											<span class="customerName">
-												@item.RazaoSocial.ToString().Substring(0, 20)
+												@item.RazaoSocial.ToString()
 											</span>
 										}
 									</p>
@@ -278,7 +279,8 @@
 										</div>
 									</div>
 								</td>
-								<td>
+							
+								<td >
 
 									@{
 										<span hidden>@item.NextContactDate.ToString("yyyy-MM-dd")</span>
@@ -294,7 +296,7 @@
 
 									}
 								</td>
-								<td>
+								@*<td>
 									<a asp-action="Editar" asp-controller="Customers" asp-route-id="@item.Id" class="table_actions link">
 										<div class="contact_cta">
 											<i class="fa-solid fa-pen-to-square"></i>
@@ -303,7 +305,7 @@
 
 									</a>
 
-								</td>
+								</td>*@
 
 
 							</tr>
