@@ -46,12 +46,14 @@ namespace CRM.Controllers
 		{
 			var date = DateTime.Now;
 			var user = _session.GetUserSection();
-			if (user != null)
+			if (user == null) throw new Exception("Não foi possível realizada a solicitação!");
+
+			if (user.Perfil == Enums.Perfil.padrao)
 			{
-				List<CustomerModel> customers = new();
+
 				if (initialDate == null || finalDate == null)
 				{
-					customers = _customerRepository.BuscarTodos(user.Id);
+					var customers = _customerRepository.BuscarTodos().Where(c => c.UserId == user.Id).ToList();
 					if (!customers.IsNullOrEmpty() && customers[0].LastUpdated.Date < date.Date)
 					{
 						_statusVerify.StatusVerify(customers);
@@ -62,12 +64,16 @@ namespace CRM.Controllers
 				}
 				else
 				{
-					customers = _customerRepository.BuscarTodos(user.Id).Where(x => x.NextContactDate >= DateTime.Parse(initialDate) && x.NextContactDate <= DateTime.Parse(finalDate)).ToList();
+					var customers = _customerRepository.BuscarTodos().Where(x => x.NextContactDate >= DateTime.Parse(initialDate) && x.NextContactDate <= DateTime.Parse(finalDate)).Where(x => x.UserId == user.Id).ToList();
 					return View(customers);
 				}
 
 			}
-			/*TempData["ErrorMessage"] = "É necessário efetuar seu login!";*/
+			else if (user.Perfil == Enums.Perfil.admin)
+			{
+				var customers = _customerRepository.BuscarTodos();
+				return View(customers);
+			}
 			return RedirectToAction("Login", "Login");
 		}
 		//public List<CustomerModel> AddEmptyContacts(List<CustomerModel> customers)
@@ -101,7 +107,7 @@ namespace CRM.Controllers
 		public IActionResult ExportXls()
 		{
 			var user = _session.GetUserSection();
-			var customers = _customerRepository.BuscarTodos(user.Id);
+			var customers = _customerRepository.BuscarTodos().Where(x => x.UserId == user.Id).ToList();
 			ExportXlsService.ExportXls(customers);
 
 			return ExportFile();
@@ -110,7 +116,7 @@ namespace CRM.Controllers
 		{
 			var user = _session.GetUserSection();
 			CustomerEditViewModel customerDb = _customerRepository.BuscarPorId(id);
-			if(user == null)
+			if (user == null)
 			{
 				/*TempData["ErrorMessage"] = "É necessário efetuar seu login!";*/
 				return RedirectToAction("Login", "Login");
@@ -120,7 +126,7 @@ namespace CRM.Controllers
 			{
 				TempData["ErrorMessage"] = "Cadastro não encontrado!";
 				return RedirectToAction("Index", "Customers");
-				
+
 			}
 			return View(customerDb);
 
@@ -184,7 +190,7 @@ namespace CRM.Controllers
 		{
 			_customerRepository.RegistrationContact(anotation, date, Guid.Parse(id));
 			Guid _id = Guid.Parse(id);
-			if(index == null) return RedirectToAction("Editar", "Customers", new { id = _id });
+			if (index == null) return RedirectToAction("Editar", "Customers", new { id = _id });
 			return RedirectToAction("Index", "Customers");
 		}
 
@@ -211,7 +217,7 @@ namespace CRM.Controllers
 		[HttpPost]
 		public ActionResult<List<CustomerModel>> UpdateNextContactDate([FromBody] List<UpdateNextContactDateViewModel> reciverStringfy)
 		{
-			
+
 			UpdateCustomerContacts(reciverStringfy);
 			//TempData["SuccessMessage"] = "Atualização feita com sucesso";
 			return Ok();

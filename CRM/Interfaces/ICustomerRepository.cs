@@ -9,7 +9,7 @@ namespace CRM.Interfaces
 		public void AddNewContact(List<CustomerModel> customers);
 		CustomerModel Create(CustomerCreateViewModel customer);
 		CustomerEditViewModel BuscarPorId(Guid id);
-		List<CustomerModel> BuscarTodos(Guid id);
+		List<CustomerModel> BuscarTodos();
 		List<CustomerModel> BuscarClientesDaAgendaAtual(Guid id);
 		bool Deletar(CustomerModel customer);
 		void ContactDateEdit(DateTime date, Guid id);

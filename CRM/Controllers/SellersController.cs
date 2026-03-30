@@ -33,26 +33,12 @@ namespace CRM.Controllers
 		public IActionResult SalesSeller(string initialDate, string finalDate)
 		{
 			var user = _session.GetUserSection();
-
-			var customers = _customer.BuscarTodos(user.Id);
-
-
-			var purchases = _purchase.GetPurchases().Where(x => x.UserId == user.Id
-			&& x.PurchaseDate >= DateTime.Parse(initialDate)
-			&& x.PurchaseDate <= DateTime.Parse(finalDate)).ToList();
+			var customers = _customer.BuscarTodos();
+			var purchases = _purchase.GetPurchases().Where(x => x.PurchaseDate.Date >= DateTime.Parse(initialDate) && x.PurchaseDate <= DateTime.Parse(finalDate)).ToList();
 
 			for (int i = 0; i < purchases.Count(); i++)
 			{
-				for (int j = 0; j < customers.Count(); j++)
-				{
-					if (purchases[i].CustomerCode.ToString() == customers[j].Codigo)
-					{
-						purchases[i].Customer = customers[j];
-
-					}
-
-				}
-
+				purchases[i].Customer = customers.Find(c => c.Id == purchases[i].CustomerId);
 			}
 
 			return View(purchases);

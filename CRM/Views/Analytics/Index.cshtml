@@ -15,6 +15,7 @@
 
 <div class="main">
 	@await Component.InvokeAsync("Header")
+	@await Component.InvokeAsync("Aside")
 	<div class="positionRelative">
 		<form asp-action="Index" asp-controller="Analytics" hidden>
 			<input name="month" id="monthSelected" />

@@ -36,7 +36,7 @@ if (url.includes('Seller')) {
 $(document).ready(function () {
     const myTable = document.getElementById("myTable")
 
-    let _order = [[6, 'asc']]
+    let _order = [[5, 'asc']]
     let _orderable = 1
     if (myTable.className.endsWith('sales')) {
         _order = []

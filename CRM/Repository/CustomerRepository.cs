@@ -96,9 +96,9 @@ namespace CRM.Repository
 		{
 			return _context.Customers.FirstOrDefault(x => x.Codigo == codigo.ToString());
 		}
-		public List<CustomerModel> BuscarTodos(Guid id)
+		public List<CustomerModel> BuscarTodos()
 		{
-			return _context.Customers.Include(x => x.Emails).Include(x => x.ContactRecords).Include(x => x.CustomerPurchases.OrderBy(x => x.PurchaseDate)).Include(x => x.Phones).Where(x => x.UserId == id).OrderBy(x => x.NextContactDate).AsNoTracking().ToList();
+			return _context.Customers.Include(x => x.Emails).Include(x => x.ContactRecords).Include(x => x.CustomerPurchases.OrderBy(x => x.PurchaseDate)).Include(x => x.Phones).OrderBy(x => x.NextContactDate).AsNoTracking().ToList();
 		}
 		public List<CustomerModel> ListarTodos()
 		{

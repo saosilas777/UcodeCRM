@@ -1,6 +1,7 @@
 ﻿@model CRM.Models.ViewModels.HomeViewModels
 
 <div class="main">
+	@await Component.InvokeAsync("Aside")
 	@await Component.InvokeAsync("Header")
 	<div class="homeContainer">
 		<section id="userProfile">

@@ -82,33 +82,49 @@ namespace CRM.Services
 				}
 			}
 
+			List<PurchaseModel> purchases = _context.Purchases.Where(x => x.UserId == user.Id).ToList();
 			List<CustomerModel> customers = _context.Customers.Include(x => x.CustomerPurchases).Where(x => x.UserId == user.Id).ToList();
 
 			double total = 0;
-			int active = 0;
-			int inactive = 0;
+			
 
-			for (int i = 0; i < customers.Count(); i++)
+			for (int i = 0; i < purchases.Count(); i++)
 			{
-				if (customers[i].CustomerPurchases.Count() > 0)
+				if (purchases.Count() > 0)
 				{
-					for (int j = 0; j < customers[i].CustomerPurchases.Count(); j++)
-					{
-						if (customers[i].CustomerPurchases[j].PurchaseDate >= DateTime.Parse(initialDate) && customers[i].CustomerPurchases[j].PurchaseDate <= DateTime.Parse(finalDate))
+					
+						if (purchases[i].PurchaseDate >= DateTime.Parse(initialDate) && purchases[i].PurchaseDate <= DateTime.Parse(finalDate))
 						{
 
-							total += customers[i].CustomerPurchases[j].PurchaseValue;
-							customers[i].Status = true;
+							total += purchases[i].PurchaseValue;
+							
 						}
+					
 
 
-					}
+
 
 				}
 
-				if (customers[i].Status == true)
+
+			}
+			var active = 0;
+			var inactive = 0;
+			for (int i = 0; i < customers.Count(); i++)
+			{
+				var lastPurchase = customers[i].CustomerPurchases.LastOrDefault();
+				if(lastPurchase != null)
 				{
-					active++;
+					var ticks = date.Date - lastPurchase.PurchaseDate.Date;
+					if (ticks.TotalDays >= 90)
+					{
+						active++;
+
+					}
+					else
+					{
+						inactive++;
+					}
 				}
 				else
 				{
@@ -200,15 +216,15 @@ namespace CRM.Services
 
 			TotalAnnualSales totalAnnualSales = new TotalAnnualSales();
 
-			List<PurchaseModel> purchases = new();
+			//List<PurchaseModel> purchases = new();
 
-			for (int i = 0; i < customers.Count(); i++)
-			{
-				for (int j = 0; j < customers[i].CustomerPurchases.Count(); j++)
-				{
-					purchases.Add(customers[i].CustomerPurchases[j]);
-				}
-			}
+			//for (int i = 0; i < customers.Count(); i++)
+			//{
+			//	for (int j = 0; j < customers[i].CustomerPurchases.Count(); j++)
+			//	{
+			//		purchases.Add(customers[i].CustomerPurchases[j]);
+			//	}
+			//}
 
 			#region Canvas
 			var year = date.Year;

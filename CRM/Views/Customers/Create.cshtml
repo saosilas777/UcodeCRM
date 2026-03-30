@@ -3,6 +3,7 @@
 
 <div class="main">
 	@await Component.InvokeAsync("Header")
+	@await Component.InvokeAsync("Aside")
 	@if (TempData["ErrorMessage"] != null)
 	{
 		<div class="alertSendFile">
@@ -23,7 +24,7 @@
 		<form id="formCustomerCreate" class="formCreateCustomer" method="post" asp-action="Create" asp-controller="Customers">
 			<label for="codigo" class="span2">
 				<p>Código</p>
-				<input id="codigo" type="text" maxlength="5" data-val="true"
+				<input id="codigo" type="text" maxlength="10" data-val="true"
 					   data-val-required="The Codigo field is required." name="Codigo" asp-for="@Model.Codigo">
 			</label>
 			<label for="cnpj" class="span4 dataSearch">

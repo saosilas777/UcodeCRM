@@ -21,7 +21,7 @@ namespace CRM.ViewComponents
 		}
 		
 
-		public  async Task<IViewComponentResult> InvokeAsync()
+		public IViewComponentResult Invoke()
 		{
 			try
 			{
@@ -40,12 +40,12 @@ namespace CRM.ViewComponents
 					};
 					return View(userView);
 				}
-				userView.User = user;
+				userView.User =  user;
 
 				userView.Image = imageModel;
 
 
-				return View(userView);
+				return  View(userView);
 			}
 			catch (Exception e)
 			{

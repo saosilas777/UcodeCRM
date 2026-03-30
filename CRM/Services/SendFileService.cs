@@ -32,7 +32,7 @@ namespace CRM.Services
 			var streamFile = ReadStrem(uploadFile);
 
 			var user = _session.GetUserSection();
-			List<CustomerModel> customers = _customerRepository.BuscarTodos(user.Id);
+			List<CustomerModel> customers = _customerRepository.BuscarTodos().Where(c => c.UserId == user.Id).ToList();
 			List<PurchaseModel> purchases = new List<PurchaseModel>();
 			string result = string.Empty;
 			ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
@@ -172,7 +172,7 @@ namespace CRM.Services
 		public string VerifyDuplicatedCustomers(List<CustomerModel> customer)
 		{
 			var user = _session.GetUserSection();
-			List<CustomerModel> customerDb = _customerRepository.BuscarTodos(user.Id);
+			List<CustomerModel> customerDb = _customerRepository.BuscarTodos().Where(c => c.UserId == user.Id).ToList();
 			int customerCount = customer.Count();
 			if (customerDb.Count() > 0)
 			{

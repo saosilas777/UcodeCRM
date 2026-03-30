@@ -9,6 +9,7 @@
 <div class="main">
 	<div class="deletAlert"></div>
 	@await Component.InvokeAsync("Header")
+	@await Component.InvokeAsync("Aside")
 
 	@if (TempData["ErrorMessage"] != null)
 	{

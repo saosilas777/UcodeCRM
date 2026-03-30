@@ -124,6 +124,7 @@
 <div class="main">
 
 	@await Component.InvokeAsync("Header")
+	@await Component.InvokeAsync("Aside")
 	@if (TempData["ErrorMessage"] != null)
 	{
 		<div class="alertSendFile">
